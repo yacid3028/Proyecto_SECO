@@ -1,7 +1,6 @@
 package seco;
 
 import javax.swing.JFrame;
-import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
