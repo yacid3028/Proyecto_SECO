@@ -76,70 +76,107 @@ public class productos extends JPanel {
 		JPanel pam = new JPanel(new BorderLayout());
 		add(pam, BorderLayout.CENTER);
 
-		JPanel superior = new JPanel(new BorderLayout());
-		superior.setPreferredSize(new Dimension(Integer.MAX_VALUE, 50));
-		pam.add(superior, BorderLayout.NORTH);
+		JPanel superior = new JPanel();
+		superior.setLayout(new BoxLayout(superior, BoxLayout.Y_AXIS));
+		superior.setPreferredSize(new Dimension(Integer.MAX_VALUE, 80));
 
+		// Fila del título
+		JPanel tituloPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		tituloPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 		JLabel titulo = new JLabel("Inventario de Productos");
-		titulo.setFont(new Font("Arial", Font.BOLD, 30));
-		superior.add(titulo, BorderLayout.CENTER);
+		titulo.setFont(new Font("Arial", Font.BOLD, 24));
+		tituloPanel.add(titulo);
+		superior.add(tituloPanel);
 
-		JPanel botones = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		// Fila de los botones
+		JPanel botonesPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		botonesPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 10));
 		JButton agregar = new JButton("Agregar Producto");
 		JButton editar = new JButton("Editar");
 		JButton eliminar = new JButton("Eliminar");
+		botonesPanel.add(agregar);
+		botonesPanel.add(editar);
+		botonesPanel.add(eliminar);
+		superior.add(botonesPanel);
 
-		botones.add(agregar);
-		botones.add(editar);
-		botones.add(eliminar);
+		// Panel central que contiene superior, búsqueda, tabla
+		JPanel central = new JPanel();
+		central.setLayout(new BoxLayout(central, BoxLayout.Y_AXIS));
+		central.add(superior);
 
-		superior.add(botones, BorderLayout.EAST);
+		// Barra de búsqueda abajo del título
+		JPanel busquedaPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		busquedaPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+		JPanel buscador = new JPanel(new BorderLayout(5, 5));
+		JTextField buscar = new JTextField("Buscar producto...");
+		buscar.setPreferredSize(new Dimension(300, 25));
+		buscador.add(buscar, BorderLayout.CENTER);
+		JButton filtro = new JButton("Filtrar");
+		buscador.add(filtro, BorderLayout.EAST);
+		busquedaPanel.add(buscador);
+		central.add(busquedaPanel);
 
-		pam.add(panelTabla(), BorderLayout.CENTER);
+		central.add(panelTabla());
+		pam.add(central, BorderLayout.CENTER);
 
-		JPanel ge = new JPanel(new BorderLayout());
-		ge.setPreferredSize(new Dimension(300, 50));
+		// Paginación inferior
+		JPanel inferior = new JPanel(new BorderLayout());
+		inferior.setPreferredSize(new Dimension(Integer.MAX_VALUE, 50));
+		inferior.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		JPanel as= new JPanel(new FlowLayout(FlowLayout.LEFT));
-		as.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
-		pam.add(as, BorderLayout.SOUTH);
+		JLabel info = new JLabel("Mostrando 6 de 250 productos");
+		inferior.add(info, BorderLayout.WEST);
 
-		pam.add(ge, BorderLayout.EAST);
+		JPanel paginas = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+		paginas.add(new JButton("<"));
+		paginas.add(new JButton("1"));
+		paginas.add(new JButton("2"));
+		paginas.add(new JButton("3"));
+		paginas.add(new JButton("4"));
+		paginas.add(new JButton(">"));
+		inferior.add(paginas, BorderLayout.CENTER);
+
+		JButton cerrar = new JButton("Cerrar");
+		inferior.add(cerrar, BorderLayout.EAST);
+
+		pam.add(inferior, BorderLayout.SOUTH);
 
 	}
 
 	private JPanel panelTabla() {
 
 		JPanel panel = new JPanel(new BorderLayout());
-		panel.setPreferredSize(new Dimension(300, 300));
-		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		String[] columnas = { "ID", "Producto", "Categoría", "Stock", "Precio" };
+		String[] columnas = {"ID","Producto","Categoria","Stock","Precio"};
 
 		Object[][] datos = {
-				{ "#10106", "Teclado Inalámbrico", "Electrónica", 80, "Disponible" },
-				{ "#10105", "Cafetera Eléctrica", "Electrónica", 12, "Disponible" },
-				{ "#10109", "Galletas Chocolate", "Alimentos", 6, "Disponible" },
+			{"#10106","Teclado Inalámbrico","Electrónica","80","Disponible"},
+			{"#10105","Cafetera Eléctrica","Electrónica","12","Disponible"},
+			{"#10109","Galletas Chocolate","Alimentos","6","Disponible"},
+			{"#10110","Mouse Gamer","Electrónica","15","Disponible"},
+			{"#10111","Monitor 24","Electrónica","9","Disponible"},
+			{"#10112","USB 32GB","Electrónica","30","Disponible"}
 		};
 
 		JTable tabla = new JTable(datos, columnas);
+		tabla.setRowHeight(30);
+		tabla.setShowGrid(false);
+		tabla.setSelectionBackground(new Color(184,207,229));
 		tabla.setFillsViewportHeight(true);
-		tabla.setRowHeight(15);
-		tabla.setPreferredScrollableViewportSize(new Dimension(300, 250));
 
 		JScrollPane scroll = new JScrollPane(tabla);
-		scroll.setPreferredSize(new Dimension(300, 300));
 
 		if (tabla.getColumnModel().getColumnCount() > 0) {
-			tabla.getColumnModel().getColumn(0).setPreferredWidth(50);
-			tabla.getColumnModel().getColumn(1).setPreferredWidth(140);
-			tabla.getColumnModel().getColumn(2).setPreferredWidth(60);
-			tabla.getColumnModel().getColumn(3).setPreferredWidth(30);
-			tabla.getColumnModel().getColumn(4).setPreferredWidth(20);
+			tabla.getColumnModel().getColumn(0).setPreferredWidth(60);
+			tabla.getColumnModel().getColumn(1).setPreferredWidth(150);
+			tabla.getColumnModel().getColumn(2).setPreferredWidth(80);
+			tabla.getColumnModel().getColumn(3).setPreferredWidth(50);
+			tabla.getColumnModel().getColumn(4).setPreferredWidth(70);
 		}
 
 		panel.add(scroll, BorderLayout.CENTER);
 
 		return panel;
+
 	}
 }
