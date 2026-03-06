@@ -19,7 +19,7 @@ public class executable extends JFrame {
 	public executable() {
 
 		setTitle("SECO Stock Control");
-		setSize(1000, 700);
+		setSize(1200, 700);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 

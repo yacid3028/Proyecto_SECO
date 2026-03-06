@@ -83,7 +83,6 @@ public class dashboard extends JPanel {
 		JPanel cont = new JPanel(new BorderLayout());
 		cont.setBackground(new Color(240, 240, 240));
 
-		// ================= HEADER =================
 		JPanel logoPanel = new JPanel(new BorderLayout());
 		logoPanel.setBackground(new Color(240, 240, 240));
 
@@ -117,8 +116,7 @@ public class dashboard extends JPanel {
 
 		logoPanel.add(btPanel, BorderLayout.EAST);
 
-		// ================= TARJETAS =================
-
+		// BLOQUES DE INFORMACION
 		JPanel cards = new JPanel(new GridLayout(1, 4, 15, 0));
 		cards.setBackground(new Color(240, 240, 240));
 		cards.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
