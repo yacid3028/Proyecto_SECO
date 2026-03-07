@@ -38,3 +38,11 @@ public class testCon {
 
     }
 }
+/*
+ * INSERT INTO productos(id_Producto,Nombre,Descripcion,Precio_venta,Stock)
+ * values(??????);
+ * DELETE * FROM productos WHERE id_Producto = ?;
+ * UPDATE * FROM productos SET Nombre = ?, Descripcion = ?, Precio_venta = ?,
+ * Stock = ?
+ * SELECT * FROM productos;
+ */
