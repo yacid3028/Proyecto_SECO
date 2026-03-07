@@ -214,6 +214,7 @@ public class dashboard extends JPanel {
 		return card;
 	}
 
+	// CREA LA GRIFICA
 	private JPanel panelGrafica() {
 
 		JPanel p = new JPanel(new BorderLayout());
@@ -231,36 +232,40 @@ public class dashboard extends JPanel {
 		JPanel graf = new JPanel() {
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
-
+				// CREA LA GRAFICA PLANA
 				Graphics2D g2 = (Graphics2D) g;
 				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 						RenderingHints.VALUE_ANTIALIAS_ON);
-
-				int[] valores = { 90, 70, 60, 50, 30 };
-
+				// DECLARA LOS VALORES DE LA TABLA
+				int[] valores = { 90, 10, 60, 50, 30, 50, 60, 70, 80 };
+				// DECLARA LOS COLORES OPCIONAL
 				Color[] colores = {
 						new Color(52, 152, 219),
 						new Color(46, 204, 113),
 						new Color(241, 196, 15),
 						new Color(155, 89, 182),
+						new Color(52, 73, 94),
+						new Color(52, 73, 94),
+						new Color(52, 73, 94),
+						new Color(52, 73, 94),
 						new Color(52, 73, 94)
 				};
 
-				int x = 50;
-
+				int x = 10;
+				// LLENA Y CREA LOS ESPACIOS DE LA TABLA CON LO VALORES
 				for (int i = 0; i < valores.length; i++) {
 
 					g2.setColor(colores[i]);
 
 					g2.fillRoundRect(
-							x,
-							getHeight() - valores[i] - 40,
-							40,
-							valores[i],
-							10,
+							x, // DISTANCIA LATERAL
+							getHeight() - valores[i] - 10, // DISTANCIA VERTICAL
+							30, // ANCHO
+							valores[i], // VALOR DE ALTO
+							10, // ROUND BORDER
 							10);
 
-					x += 70;
+					x += 50;
 				}
 			}
 		};
@@ -340,7 +345,7 @@ public class dashboard extends JPanel {
 		Object[][] data = {
 				{ "#1023", "TecnoCom", "En Camino" },
 				{ "#1022", "Moda Express", "Pendiente" },
-				{ "#1021", "Distribuidora Alfa", "Pendiente" }
+				{ "#1021", "Distribuidora Alfa", "Solicitado" }
 		};
 
 		JTable table = new JTable(data, cols);
