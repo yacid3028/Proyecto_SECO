@@ -11,16 +11,16 @@ public class testCon {
         String sql = "INSERT INTO Productos(id_Producto,Nombre,Descripcion,Precio_venta,Stock) values(?,?,?,?,?)";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
-            ps.setInt(1, 1);
-            ps.setString(2, "paleta");
-            ps.setString(3, "paleta de paleta");
-            ps.setDouble(4, 3.50);
-            ps.setInt(5, 15);
+            ps.setInt(1, 10);
+            ps.setString(2, "Myonesa");
+            ps.setString(3, "Crema de mayonesa");
+            ps.setDouble(4, 23.50);
+            ps.setInt(5, 20);
 
             ps.executeUpdate();
 
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println("error de consulta");
         }
 
         try {
