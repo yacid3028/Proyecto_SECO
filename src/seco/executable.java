@@ -1,16 +1,13 @@
 package seco;
 
 import java.awt.CardLayout;
-import java.awt.Color;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatLightLaf;
-
-import javafx.geometry.Insets;
 
 public class executable extends JFrame {
 	private CardLayout cardlayout;
