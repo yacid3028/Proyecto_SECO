@@ -11,8 +11,14 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 public class ventas extends JPanel {
 	private executable executable;
@@ -21,6 +27,7 @@ public class ventas extends JPanel {
 		this.executable = frame;
 		setLayout(new BorderLayout());
 		Menu_lateral();
+		Cont_central();
 	}
 
 	// MENU LATERAL ELEMENTOS, BOTONES, ACCIONES
@@ -73,5 +80,147 @@ public class ventas extends JPanel {
 		boton.addActionListener(e -> executable.mostrarVista(vista));
 
 		return boton;
+	}
+
+	private void Cont_central() {
+
+		Font labelFont = new Font("Arial", Font.BOLD, 15);
+		Font inputFont = new Font("Arial", Font.BOLD, 14);
+		Font buttonFont = new Font("Arial", Font.BOLD, 15);
+		Font totalFont = new Font("Arial", Font.BOLD, 20);
+
+		JPanel contenedor = new JPanel();
+		contenedor.setBackground(new Color(245, 245, 245));
+		contenedor.setLayout(new BorderLayout(10, 10));
+		contenedor.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+		add(contenedor, BorderLayout.CENTER);
+
+		// PANEL BUSCAR PRODUCTO
+		JPanel buscarPanel = new JPanel(new BorderLayout(10, 10));
+		buscarPanel.setBackground(Color.WHITE);
+		buscarPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		JLabel buscarLabel = new JLabel("Buscar producto por ID:");
+		buscarLabel.setFont(labelFont);
+
+		JTextField buscarField = new JTextField();
+		buscarField.setFont(inputFont);
+
+		JButton agregarBtn = new JButton("Agregar");
+		agregarBtn.setBackground(new Color(255, 140, 0));
+		agregarBtn.setForeground(Color.WHITE);
+		agregarBtn.setFocusPainted(false);
+		agregarBtn.setFont(buttonFont);
+
+		buscarPanel.add(buscarLabel, BorderLayout.WEST);
+		buscarPanel.add(buscarField, BorderLayout.CENTER);
+		buscarPanel.add(agregarBtn, BorderLayout.EAST);
+
+		contenedor.add(buscarPanel, BorderLayout.NORTH);
+
+		// PANEL CENTRAL
+		JPanel panelCentral = new JPanel();
+		panelCentral.setLayout(new BorderLayout(10, 10));
+		panelCentral.setBackground(new Color(245, 245, 245));
+		contenedor.add(panelCentral, BorderLayout.CENTER);
+
+		// PANEL PRODUCTO AGREGADO
+		JPanel productoPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+		productoPanel.setBackground(Color.WHITE);
+		productoPanel.setBorder(BorderFactory.createTitledBorder("Producto agregado"));
+
+		JLabel nombreLabel = new JLabel("Nombre:");
+		nombreLabel.setFont(labelFont);
+		productoPanel.add(nombreLabel);
+
+		JComboBox<String> nombre = new JComboBox<>();
+		nombre.addItem("Mouse inalámbrico");
+		nombre.setFont(inputFont);
+		productoPanel.add(nombre);
+
+		JLabel prodLabel = new JLabel("Producto:");
+		prodLabel.setFont(labelFont);
+		productoPanel.add(prodLabel);
+
+		JTextField cantidad = new JTextField("30");
+		cantidad.setFont(inputFont);
+		productoPanel.add(cantidad);
+
+		JLabel fechaLabel = new JLabel("Fecha:");
+		fechaLabel.setFont(labelFont);
+		productoPanel.add(fechaLabel);
+
+		JTextField fecha = new JTextField("22/04/2024");
+		fecha.setFont(inputFont);
+		productoPanel.add(fecha);
+
+		panelCentral.add(productoPanel, BorderLayout.NORTH);
+
+		// TABLA
+		String columnas[] = { "ID", "Producto", "Cantidad", "Precio", "Subtotal" };
+
+		DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
+
+		modelo.addRow(new Object[] { "101", "Mouse inalámbrico", "15", "12", "30" });
+		modelo.addRow(new Object[] { "105", "Teclado", "25", "31", "25" });
+
+		JTable tabla = new JTable(modelo);
+		tabla.setFont(new Font("Arial", Font.BOLD, 14));
+		tabla.setRowHeight(28);
+		tabla.getTableHeader().setFont(new Font("Arial", Font.BOLD, 15));
+
+		JScrollPane scroll = new JScrollPane(tabla);
+
+		panelCentral.add(scroll, BorderLayout.CENTER);
+
+		// PANEL TOTALES
+		JPanel totales = new JPanel(new GridLayout(3, 2, 10, 10));
+		totales.setBackground(Color.WHITE);
+		totales.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		JLabel subtotalLabel = new JLabel("Subtotal:");
+		subtotalLabel.setFont(labelFont);
+		totales.add(subtotalLabel);
+
+		JLabel subtotalValor = new JLabel("$55");
+		subtotalValor.setFont(labelFont);
+		totales.add(subtotalValor);
+
+		JLabel impuestoLabel = new JLabel("Impuestos:");
+		impuestoLabel.setFont(labelFont);
+		totales.add(impuestoLabel);
+
+		JLabel impuestoValor = new JLabel("38");
+		impuestoValor.setFont(labelFont);
+		totales.add(impuestoValor);
+
+		JLabel totalLabel = new JLabel("TOTAL:");
+		totalLabel.setFont(totalFont);
+		totales.add(totalLabel);
+
+		JLabel total = new JLabel("$63");
+		total.setFont(totalFont);
+		totales.add(total);
+
+		panelCentral.add(totales, BorderLayout.SOUTH);
+
+		// BOTONES
+		JPanel botones = new JPanel(new GridLayout(1, 2, 20, 10));
+		botones.setBackground(new Color(245, 245, 245));
+
+		JButton cancelar = new JButton("Cancelar Venta");
+		cancelar.setBackground(Color.WHITE);
+		cancelar.setFont(buttonFont);
+
+		JButton cobrar = new JButton("Cobrar");
+		cobrar.setBackground(new Color(255, 140, 0));
+		cobrar.setForeground(Color.WHITE);
+		cobrar.setFont(buttonFont);
+
+		botones.add(cancelar);
+		botones.add(cobrar);
+
+		contenedor.add(botones, BorderLayout.SOUTH);
 	}
 }
