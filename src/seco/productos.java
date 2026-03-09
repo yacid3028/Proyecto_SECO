@@ -76,24 +76,20 @@ public class productos extends JPanel {
 		JPanel pam = new JPanel(new BorderLayout());
 		add(pam, BorderLayout.CENTER);
 
-		JPanel superior = new JPanel();
-		superior.setLayout(new BoxLayout(superior, BoxLayout.Y_AXIS));
-		superior.setPreferredSize(new Dimension(Integer.MAX_VALUE, 120));
+		JPanel superior = new JPanel(new BorderLayout());
+		superior.setPreferredSize(new Dimension(Integer.MAX_VALUE, 80));
 
-		// Fila del título
-		JPanel tituloPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		tituloPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+		// Título a la izquierda
 		JLabel titulo = new JLabel("Inventario de Productos");
 		titulo.setFont(new Font("Arial", Font.BOLD, 24));
-		tituloPanel.add(titulo);
-		superior.add(tituloPanel);
+		titulo.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+		superior.add(titulo, BorderLayout.WEST);
 
-		// Fila de los botones
-		JPanel botonesPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		botonesPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
+		// Botones a la derecha
+		JPanel botonesPanel = new JPanel();
 		JButton agregar = new JButton("Agregar Producto");
 		agregar.setPreferredSize(new Dimension(140, 40));
-		agregar.setBackground(new Color(255,140,0));
+		agregar.setBackground(new Color(255, 140, 0));
 		agregar.setForeground(Color.WHITE);
 
 		JButton editar = new JButton("Editar");
@@ -101,10 +97,11 @@ public class productos extends JPanel {
 
 		JButton eliminar = new JButton("Eliminar");
 		eliminar.setPreferredSize(new Dimension(140, 40));
+
 		botonesPanel.add(agregar);
 		botonesPanel.add(editar);
 		botonesPanel.add(eliminar);
-		superior.add(botonesPanel);
+		superior.add(botonesPanel, BorderLayout.EAST);
 
 		// Panel central que contiene superior, búsqueda, tabla
 		JPanel central = new JPanel();
@@ -154,21 +151,21 @@ public class productos extends JPanel {
 
 		JPanel panel = new JPanel(new BorderLayout());
 
-		String[] columnas = {"ID","Producto","Categoria","Stock","Precio"};
+		String[] columnas = { "ID", "Producto", "Categoria", "Stock", "Precio" };
 
 		Object[][] datos = {
-			{"#10106","Teclado Inalámbrico","Electrónica","80","Disponible"},
-			{"#10105","Cafetera Eléctrica","Electrónica","12","Disponible"},
-			{"#10109","Galletas Chocolate","Alimentos","6","Disponible"},
-			{"#10110","Mouse Gamer","Electrónica","15","Disponible"},
-			{"#10111","Monitor 24","Electrónica","9","Disponible"},
-			{"#10112","USB 32GB","Electrónica","30","Disponible"}
+				{ "#10106", "Teclado Inalámbrico", "Electrónica", "80", "Disponible" },
+				{ "#10105", "Cafetera Eléctrica", "Electrónica", "12", "Disponible" },
+				{ "#10109", "Galletas Chocolate", "Alimentos", "6", "Disponible" },
+				{ "#10110", "Mouse Gamer", "Electrónica", "15", "Disponible" },
+				{ "#10111", "Monitor 24", "Electrónica", "9", "Disponible" },
+				{ "#10112", "USB 32GB", "Electrónica", "30", "Disponible" }
 		};
 
 		JTable tabla = new JTable(datos, columnas);
 		tabla.setRowHeight(30);
 		tabla.setShowGrid(false);
-		tabla.setSelectionBackground(new Color(184,207,229));
+		tabla.setSelectionBackground(new Color(184, 207, 229));
 		tabla.setFillsViewportHeight(true);
 
 		JScrollPane scroll = new JScrollPane(tabla);
