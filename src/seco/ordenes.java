@@ -11,8 +11,14 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 
 public class ordenes extends JPanel {
 	private executable executable;
@@ -21,6 +27,7 @@ public class ordenes extends JPanel {
 		this.executable = frame;
 		setLayout(new BorderLayout());
 		Menu_lateral();
+		contenidoOrdenes();
 	}
 	
 
@@ -78,4 +85,88 @@ public class ordenes extends JPanel {
 
 			    return boton;
 			}
+			
+			//CONTENIDO PRINCIPAL DE ORDENES
+			private void contenidoOrdenes() {
+				JPanel content = new JPanel(new BorderLayout());
+				add(content, BorderLayout.CENTER);
+				
+				// PANEL SUPERIOR
+		        JPanel panelTop = new JPanel(new BorderLayout());
+
+		        JLabel titulo = new JLabel("Órdenes");
+		        titulo.setFont(new Font("Arial", Font.BOLD, 22));
+		        panelTop.add(titulo, BorderLayout.WEST);
+
+		        JPanel botonesTop = new JPanel();
+
+		        JButton nuevaOrden = new JButton("Nueva Orden");
+		        nuevaOrden.setBackground(new Color(255,140,0));
+		        nuevaOrden.setForeground(Color.WHITE);
+		        nuevaOrden.setPreferredSize(new Dimension(140, 40));
+
+		        JButton cambiarEstado = new JButton("Cambiar Estado");
+		        cambiarEstado.setPreferredSize(new Dimension(140, 40));
+
+		        JButton eliminar = new JButton("Eliminar");
+		        eliminar.setPreferredSize(new Dimension(140, 40));
+
+		        JButton exportar = new JButton("Exportar");
+		        exportar.setPreferredSize(new Dimension(140, 40));
+
+		        botonesTop.add(nuevaOrden);
+		        botonesTop.add(cambiarEstado);
+		        botonesTop.add(eliminar);
+		        botonesTop.add(exportar);
+
+		        panelTop.add(botonesTop, BorderLayout.EAST);
+
+		        content.add(panelTop, BorderLayout.NORTH);
+
+
+		        // PANEL TARJETAS
+		        JPanel panelTarjetas = new JPanel(new GridLayout(1,3,20,20));
+		        panelTarjetas.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+
+		        panelTarjetas.add(crearTarjeta("Órdenes Pendientes","10"));
+		        panelTarjetas.add(crearTarjeta("Órdenes En Camino","5"));
+		        panelTarjetas.add(crearTarjeta("Órdenes Recibidas","12"));
+
+		        content.add(panelTarjetas, BorderLayout.CENTER);
+
+
+		        // TABLA
+		        String columnas[] = {"Orden","Proveedor","Fecha","Productos","Total","Estado"};
+
+		        DefaultTableModel modelo = new DefaultTableModel(null,columnas);
+
+		        modelo.addRow(new Object[]{"#1021","TecnoCom","20/04/2024","3","$3200","Pendiente"});
+		        modelo.addRow(new Object[]{"#1022","Moda Express","19/04/2024","5","$1750","En camino"});
+		        modelo.addRow(new Object[]{"#1023","Distribuidor Alfa","18/04/2024","2","$800","Recibida"});
+
+		        JTable tablaOrdenes = new JTable(modelo);
+
+		        JScrollPane scroll = new JScrollPane(tablaOrdenes);
+
+		        content.add(scroll, BorderLayout.SOUTH);
+			}
+			
+			// Método para crear tarjetas
+		    private JPanel crearTarjeta(String titulo, String valor){
+
+		        JPanel tarjeta = new JPanel();
+		        tarjeta.setLayout(new GridLayout(2,1));
+		        tarjeta.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
+		        JLabel lblTitulo = new JLabel(titulo, SwingConstants.CENTER);
+		        lblTitulo.setFont(new Font("Arial", Font.PLAIN, 14));
+
+		        JLabel lblValor = new JLabel(valor, SwingConstants.CENTER);
+		        lblValor.setFont(new Font("Arial", Font.BOLD, 22));
+
+		        tarjeta.add(lblTitulo);
+		        tarjeta.add(lblValor);
+
+		        return tarjeta;
+		    }
 }
