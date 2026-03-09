@@ -78,7 +78,7 @@ public class productos extends JPanel {
 
 		JPanel superior = new JPanel();
 		superior.setLayout(new BoxLayout(superior, BoxLayout.Y_AXIS));
-		superior.setPreferredSize(new Dimension(Integer.MAX_VALUE, 80));
+		superior.setPreferredSize(new Dimension(Integer.MAX_VALUE, 120));
 
 		// Fila del título
 		JPanel tituloPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -90,10 +90,17 @@ public class productos extends JPanel {
 
 		// Fila de los botones
 		JPanel botonesPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		botonesPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 10));
+		botonesPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
 		JButton agregar = new JButton("Agregar Producto");
+		agregar.setPreferredSize(new Dimension(140, 40));
+		agregar.setBackground(new Color(255,140,0));
+		agregar.setForeground(Color.WHITE);
+
 		JButton editar = new JButton("Editar");
+		editar.setPreferredSize(new Dimension(140, 40));
+
 		JButton eliminar = new JButton("Eliminar");
+		eliminar.setPreferredSize(new Dimension(140, 40));
 		botonesPanel.add(agregar);
 		botonesPanel.add(editar);
 		botonesPanel.add(eliminar);

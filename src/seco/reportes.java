@@ -11,8 +11,12 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 
 public class reportes extends JPanel {
 	private executable executable;
@@ -21,6 +25,7 @@ public class reportes extends JPanel {
 		this.executable = frame;
 		setLayout(new BorderLayout());
 		Menu_lateral();
+		contenidoReportes();
 	}
 
 	// MENU LATERAL ELEMENTOS, BOTONES, ACCIONES
@@ -73,6 +78,107 @@ public class reportes extends JPanel {
 		boton.addActionListener(e -> executable.mostrarVista(vista));
 
 		return boton;
+
 	}
 
+	// CONTENIDO PRINCIPAL DE REPORTES
+	private void contenidoReportes() {
+		JPanel content = new JPanel(new BorderLayout());
+		add(content, BorderLayout.CENTER);
+
+		// PANEL SUPERIOR
+		JPanel panelSuperior = new JPanel(new BorderLayout());
+
+		JLabel titulo = new JLabel("Reportes");
+		titulo.setFont(new Font("Arial", Font.BOLD, 22));
+		panelSuperior.add(titulo, BorderLayout.WEST);
+
+		// Botones en esquina superior derecha
+		JPanel botonesSuperiorDerecha = new JPanel();
+		JButton agregar = new JButton("Agregar Reporte");
+		agregar.setPreferredSize(new Dimension(140, 40));
+		agregar.setBackground(new Color(255, 140, 0));
+		agregar.setForeground(Color.WHITE);
+
+		JButton editar = new JButton("Editar Reporte");
+		editar.setPreferredSize(new Dimension(140, 40));
+
+		JButton eliminar = new JButton("Eliminar Reporte");
+		eliminar.setPreferredSize(new Dimension(140, 40));
+
+		botonesSuperiorDerecha.add(editar);
+		botonesSuperiorDerecha.add(eliminar);
+		botonesSuperiorDerecha.add(agregar);
+
+		panelSuperior.add(botonesSuperiorDerecha, BorderLayout.EAST);
+		content.add(panelSuperior, BorderLayout.NORTH);
+
+		// TARJETAS
+		JPanel tarjetas = new JPanel(new GridLayout(1, 4, 10, 10));
+		tarjetas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		tarjetas.add(crearTarjeta("Reportes Totales", "2"));
+		tarjetas.add(crearTarjeta("Reporte Servicio", "2"));
+		tarjetas.add(crearTarjeta("Reporte Ventas", "1"));
+		tarjetas.add(crearTarjeta("Reporte Sofware", "7"));
+
+		content.add(tarjetas, BorderLayout.CENTER);
+
+		// PANEL INFERIOR (TABLA + BOTONES)
+		JPanel panelInferior = new JPanel(new BorderLayout());
+
+		// TABLA
+		String columnas[] = { "Categoria", "Descripción", "Usuario", "Fecha" };
+
+		DefaultTableModel modelo = new DefaultTableModel(null, columnas);
+
+		modelo.addRow(new Object[] { "S.A.C", "El quiente se quejo", "Yacid", "date" });
+		modelo.addRow(new Object[] { "Productos", "Salio producto dañado", "Esteban", "date" });
+		modelo.addRow(new Object[] { "Sucursal", "Inmobiliario dañado", "Caleb", "date" });
+		modelo.addRow(new Object[] { "S.R.S", "El sistema tuvo problemas", "Santi", "date" });
+
+		JTable tabla = new JTable(modelo);
+
+		JScrollPane scroll = new JScrollPane(tabla);
+		scroll.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+		panelInferior.add(scroll, BorderLayout.CENTER);
+
+		// PANEL DE BOTONES
+		JPanel panelBotones = new JPanel(new BorderLayout());
+		panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+		// Botón derecha (Exportar)
+		JPanel botonesDerecha = new JPanel();
+		JButton exportar = new JButton("Exportar");
+		exportar.setPreferredSize(new Dimension(140, 40));
+		exportar.setBackground(new Color(255, 140, 0));
+		exportar.setForeground(Color.WHITE);
+
+		botonesDerecha.add(exportar);
+
+		panelBotones.add(botonesDerecha, BorderLayout.EAST);
+
+		panelInferior.add(panelBotones, BorderLayout.SOUTH);
+
+		content.add(panelInferior, BorderLayout.SOUTH);
+	}
+
+	// Crear tarjetas
+	private JPanel crearTarjeta(String titulo, String valor) {
+
+		JPanel panel = new JPanel(new GridLayout(2, 1));
+		panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
+		JLabel lblTitulo = new JLabel(titulo, SwingConstants.CENTER);
+		lblTitulo.setFont(new Font("Arial", Font.PLAIN, 14));
+
+		JLabel lblValor = new JLabel(valor, SwingConstants.CENTER);
+		lblValor.setFont(new Font("Arial", Font.BOLD, 20));
+
+		panel.add(lblTitulo);
+		panel.add(lblValor);
+
+		return panel;
+	}
 }
