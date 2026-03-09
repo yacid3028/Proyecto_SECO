@@ -64,6 +64,7 @@ public class productos extends JPanel {
 		}
 		boton.setForeground(Color.WHITE);
 		boton.setFocusPainted(false);
+		boton.setHorizontalAlignment(SwingConstants.LEFT);
 		boton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
 		boton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
 
