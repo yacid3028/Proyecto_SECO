@@ -6,12 +6,13 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -104,7 +105,7 @@ public class ventas extends JPanel {
 		JLabel buscarLabel = new JLabel("Buscar producto por ID:");
 		buscarLabel.setFont(labelFont);
 
-		JTextField buscarField = new JTextField();
+		JTextField buscarField = new JTextField("#");
 		buscarField.setFont(inputFont);
 
 		JButton agregarBtn = new JButton("Agregar");
@@ -134,16 +135,16 @@ public class ventas extends JPanel {
 		nombreLabel.setFont(labelFont);
 		productoPanel.add(nombreLabel);
 
-		JComboBox<String> nombre = new JComboBox<>();
-		nombre.addItem("Mouse inalámbrico");
+		JTextField nombre = new JTextField("Mouse inalámbrico");
 		nombre.setFont(inputFont);
+		nombre.setEditable(false);
 		productoPanel.add(nombre);
 
-		JLabel prodLabel = new JLabel("Producto:");
+		JLabel prodLabel = new JLabel("Cantidad:");
 		prodLabel.setFont(labelFont);
 		productoPanel.add(prodLabel);
 
-		JTextField cantidad = new JTextField("30");
+		JTextField cantidad = new JTextField("1");
 		cantidad.setFont(inputFont);
 		productoPanel.add(cantidad);
 
@@ -151,8 +152,11 @@ public class ventas extends JPanel {
 		fechaLabel.setFont(labelFont);
 		productoPanel.add(fechaLabel);
 
-		JTextField fecha = new JTextField("22/04/2024");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		String fechaActual = sdf.format(new Date());
+		JTextField fecha = new JTextField(fechaActual);
 		fecha.setFont(inputFont);
+		fecha.setEditable(false);
 		productoPanel.add(fecha);
 
 		panelCentral.add(productoPanel, BorderLayout.NORTH);
