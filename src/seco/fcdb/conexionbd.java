@@ -1,4 +1,4 @@
-package seco;
+package seco.fcdb;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
