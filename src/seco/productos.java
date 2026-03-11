@@ -99,9 +99,9 @@ public class productos extends JPanel {
 		JButton eliminar = new JButton("Eliminar");
 		eliminar.setPreferredSize(new Dimension(140, 40));
 
-		botonesPanel.add(agregar);
 		botonesPanel.add(editar);
 		botonesPanel.add(eliminar);
+		botonesPanel.add(agregar);
 		superior.add(botonesPanel, BorderLayout.EAST);
 
 		// Panel central que contiene superior, búsqueda, tabla
@@ -141,7 +141,7 @@ public class productos extends JPanel {
 		paginas.add(new JButton(">"));
 		inferior.add(paginas, BorderLayout.CENTER);
 
-		JButton cerrar = new JButton("Cerrar");
+		JButton cerrar = new JButton("Exportar");
 		inferior.add(cerrar, BorderLayout.EAST);
 
 		pam.add(inferior, BorderLayout.SOUTH);
