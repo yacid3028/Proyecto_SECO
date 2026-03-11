@@ -82,16 +82,25 @@ public class reportes extends JPanel {
 		// Botones en esquina superior derecha
 		JPanel botonesSuperiorDerecha = new JPanel();
 		JButton agregar = new JButton("Agregar Reporte");
-		agregar.setPreferredSize(new Dimension(140, 40));
+		agregar.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
+                BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+        ));
 		agregar.setBackground(new Color(255, 140, 0));
 		agregar.setForeground(Color.WHITE);
 
 		JButton editar = new JButton("Editar Reporte");
-		editar.setPreferredSize(new Dimension(140, 40));
+		editar.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(new Color(200, 200, 200)), // Borde exterior
+				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+		));
+		
 
 		JButton eliminar = new JButton("Eliminar Reporte");
-		eliminar.setPreferredSize(new Dimension(140, 40));
-
+		eliminar.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(new Color(200, 200, 200)), // Borde exterior
+				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+		));
 		botonesSuperiorDerecha.add(editar);
 		botonesSuperiorDerecha.add(eliminar);
 		botonesSuperiorDerecha.add(agregar);

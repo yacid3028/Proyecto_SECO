@@ -12,6 +12,8 @@ import javax.swing.*;
 
 public class productos extends JPanel {
 	private executable executable;
+	// color used for button borders
+	private final Color COLOR_BORDE_GRIS = new Color(225, 230, 235);
 
 	public productos(executable frame) {
 		this.executable = frame;
@@ -89,16 +91,25 @@ public class productos extends JPanel {
 		// Botones a la derecha
 		JPanel botonesPanel = new JPanel();
 		JButton agregar = new JButton("Agregar Producto");
-		agregar.setPreferredSize(new Dimension(140, 40));
 		agregar.setBackground(new Color(255, 140, 0));
 		agregar.setForeground(Color.WHITE);
+		// apply uniform compound border for padding and outline
+		agregar.setBorder(BorderFactory.createCompoundBorder(
+			BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
+			BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+		));
 
 		JButton editar = new JButton("Editar");
-		editar.setPreferredSize(new Dimension(140, 40));
+		editar.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
+                BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+        ));
 
-		JButton eliminar = new JButton("Eliminar");
-		eliminar.setPreferredSize(new Dimension(140, 40));
-
+		JButton eliminar = new JButton("Eliminar");		// ensure same border treatment as agregar producto
+		eliminar.setBorder(BorderFactory.createCompoundBorder(
+			BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
+			BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+		));
 		botonesPanel.add(editar);
 		botonesPanel.add(eliminar);
 		botonesPanel.add(agregar);

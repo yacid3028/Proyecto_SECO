@@ -100,13 +100,22 @@ public class ordenes extends JPanel {
 		JButton nuevaOrden = new JButton("Nueva Orden");
 		nuevaOrden.setBackground(new Color(255, 140, 0));
 		nuevaOrden.setForeground(Color.WHITE);
-		nuevaOrden.setPreferredSize(new Dimension(140, 40));
+		nuevaOrden.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
+                BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+        ));
 
 		JButton cambiarEstado = new JButton("Cambiar Estado");
-		cambiarEstado.setPreferredSize(new Dimension(140, 40));
+		cambiarEstado.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
+                BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+        ));
 
 		JButton eliminar = new JButton("Eliminar");
-		eliminar.setPreferredSize(new Dimension(140, 40));
+		eliminar.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
+				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+		));
 
 		botonesTop.add(cambiarEstado);
 		botonesTop.add(eliminar);
