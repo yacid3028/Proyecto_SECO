@@ -170,6 +170,7 @@ public class productos extends JPanel {
 		tabla.setFillsViewportHeight(true);
 
 		JScrollPane scroll = new JScrollPane(tabla);
+		scroll.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
 		if (tabla.getColumnModel().getColumnCount() > 0) {
 			tabla.getColumnModel().getColumn(0).setPreferredWidth(60);

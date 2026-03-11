@@ -51,13 +51,14 @@ public class reportes extends JPanel {
 	private JButton crearBoton(String texto, String vista, Icon icono) {
 		// AGREGA IMAGEN AL BOTON Y TEXTO
 		JButton boton = new JButton(texto, icono);
-		if (texto == "Ordenes") {
+		if (texto == "Reportes") {
 			boton.setBackground(new Color(33, 150, 243));
 		} else {
 			boton.setBackground(new Color(10, 20, 100));
 		}
 		boton.setForeground(Color.WHITE);
 		boton.setFocusPainted(false);
+		boton.setHorizontalAlignment(SwingConstants.LEFT);
 		boton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
 		boton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
 
