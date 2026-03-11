@@ -83,22 +83,21 @@ public class provedores extends JPanel {
 		return boton;
 	}
 
-	private JPanel crearTarjeta(String titulo, String numero) {
+	private JPanel crearTarjeta(String titulo, String valor) {
 
-		JPanel tarjeta = new JPanel(new BorderLayout());
-		tarjeta.setPreferredSize(new Dimension(200, 70));
-		tarjeta.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+		JPanel panel = new JPanel(new GridLayout(2, 1));
+		panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 
-		JLabel t = new JLabel(titulo);
-		t.setBorder(BorderFactory.createEmptyBorder(5, 10, 0, 0));
+		JLabel lblTitulo = new JLabel(titulo, SwingConstants.CENTER);
+		lblTitulo.setFont(new Font("Arial", Font.PLAIN, 14));
 
-		JLabel num = new JLabel(numero, SwingConstants.CENTER);
-		num.setFont(new Font("Arial", Font.BOLD, 22));
+		JLabel lblValor = new JLabel(valor, SwingConstants.CENTER);
+		lblValor.setFont(new Font("Arial", Font.BOLD, 20));
 
-		tarjeta.add(t, BorderLayout.NORTH);
-		tarjeta.add(num, BorderLayout.CENTER);
+		panel.add(lblTitulo);
+		panel.add(lblValor);
 
-		return tarjeta;
+		return panel;
 	}
 
 	private void Cont_central() {
@@ -108,80 +107,97 @@ public class provedores extends JPanel {
 
 		JLabel jl = new JLabel("");
 		p.add(jl);
-		{
 
-			JPanel contenedor = new JPanel(new BorderLayout());
-			contenedor.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-			add(contenedor, BorderLayout.CENTER);
+		JPanel contenedor = new JPanel(new BorderLayout());
+		contenedor.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		add(contenedor, BorderLayout.CENTER);
 
-			// BARRA SUPERIOR
-			JPanel barraSuperior = new JPanel(new BorderLayout());
+		// CABECERA: TITULO + BUSQUEDA + NUEVO PROVEEDOR + EDITAR/ELIMINAR
+		JTextField buscar = new JTextField("Buscar proveedor...");
+		buscar.setPreferredSize(new Dimension(360, 30));
 
-			JTextField buscar = new JTextField("Buscar proveedor...");
-			buscar.setPreferredSize(new Dimension(200, 30));
+		JButton nuevoProveedor = new JButton("Nuevo Proveedor");
+		nuevoProveedor.setBackground(new Color(255, 140, 0));
+		nuevoProveedor.setForeground(Color.WHITE);
+		nuevoProveedor.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
+				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+		));
 
-			JButton nuevoProveedor = new JButton("Nuevo Proveedor");
+		JButton editar = new JButton("Editar");
+		editar.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
+				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+		));
 
-			barraSuperior.add(buscar, BorderLayout.WEST);
-			barraSuperior.add(nuevoProveedor, BorderLayout.EAST);
+		JButton eliminar = new JButton("Eliminar");
+		eliminar.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
+				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+		));
 
-			contenedor.add(barraSuperior, BorderLayout.NORTH);
+		JPanel cabecera = new JPanel(new BorderLayout());
+		cabecera.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
-			// CONTENIDO CENTRAL
-			JPanel contenido = new JPanel();
-			contenido.setLayout(new BorderLayout());
-			contenido.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+		JLabel titulo = new JLabel("Proveedores", SwingConstants.CENTER);
+		titulo.setFont(new Font("Arial", Font.BOLD, 20));
+		cabecera.add(titulo, BorderLayout.WEST);
 
-			contenedor.add(contenido, BorderLayout.CENTER);
+		JPanel buscaCentro = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+		buscaCentro.add(buscar);
+		cabecera.add(buscaCentro, BorderLayout.CENTER);
 
-			// TITULO
-			JLabel titulo = new JLabel("Proveedores");
-			titulo.setFont(new Font("Arial", Font.BOLD, 20));
+		JPanel nuevoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+		nuevoPanel.add(editar);
+		nuevoPanel.add(eliminar);
+		nuevoPanel.add(nuevoProveedor);
+		cabecera.add(nuevoPanel, BorderLayout.EAST);
 
-			contenido.add(titulo, BorderLayout.NORTH);
+		contenedor.add(cabecera, BorderLayout.NORTH);
 
-			// PANEL DE TARJETAS
-			JPanel tarjetas = new JPanel(new GridLayout(1, 3, 20, 20));
-			tarjetas.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+		// CONTENIDO CENTRAL
+		JPanel contenido = new JPanel();
+		contenido.setLayout(new BorderLayout());
+		contenido.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
-			tarjetas.add(crearTarjeta("Proveedores", "15"));
-			tarjetas.add(crearTarjeta("Activos", "13"));
-			tarjetas.add(crearTarjeta("Órdenes", "5"));
+		contenedor.add(contenido, BorderLayout.CENTER);
 
-			contenido.add(tarjetas, BorderLayout.CENTER);
+		// PANEL DE TARJETAS (ligeramente menor para ocupar menos espacio)
+		JPanel tarjetas = new JPanel(new GridLayout(1, 3, 20, 20));
+		tarjetas.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+		tarjetas.setPreferredSize(new Dimension(0, 150));
 
-			// TABLA
-			String[] columnas = { "ID", "Nombre", "Teléfono", "Email" };
+		tarjetas.add(crearTarjeta("Proveedores", "15"));
+		tarjetas.add(crearTarjeta("Activos", "13"));
+		tarjetas.add(crearTarjeta("Órdenes", "5"));
 
-			DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
+		contenido.add(tarjetas, BorderLayout.NORTH);
 
-			modelo.addRow(new Object[] { "#001", "Juan Pérez", "TecnoCom", "563231" });
-			modelo.addRow(new Object[] { "#002", "Laura Díaz", "Moda Express", "563777" });
-			modelo.addRow(new Object[] { "#003", "Ricardo Sosa", "Distribuidor Alfa", "552221" });
-			modelo.addRow(new Object[] { "#004", "Marta Garcia", "Electrohogar", "637897" });
+		// TABLA
+		String[] columnas = { "ID", "Nombre", "Teléfono", "Email" };
 
-			JTable tabla = new JTable(modelo);
+		DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
 
-			JScrollPane scroll = new JScrollPane(tabla);
+		modelo.addRow(new Object[] { "#001", "Juan Pérez", "TecnoCom", "563231" });
+		modelo.addRow(new Object[] { "#002", "Laura Díaz", "Moda Express", "563777" });
+		modelo.addRow(new Object[] { "#003", "Ricardo Sosa", "Distribuidor Alfa", "552221" });
+		modelo.addRow(new Object[] { "#004", "Marta Garcia", "Electrohogar", "637897" });
 
-			contenido.add(scroll, BorderLayout.SOUTH);
+		JTable tabla = new JTable(modelo);
+		JScrollPane scroll = new JScrollPane(tabla);
 
-			// BOTONES INFERIORES
-			JPanel botones = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+		// BOTONES ACCION EN TABLA: ya se mueven al encabezado desde aquí
+		JPanel tablaPanel = new JPanel(new BorderLayout());
+		tablaPanel.add(scroll, BorderLayout.CENTER);
 
-			JButton ver = new JButton("Ver Orden");
-			JButton editar = new JButton("Editar");
-			JButton eliminar = new JButton("Eliminar");
-			JButton exportar = new JButton("Exportar");
+		contenido.add(tablaPanel, BorderLayout.CENTER);
 
-			botones.add(ver);
-			botones.add(editar);
-			botones.add(eliminar);
-			botones.add(exportar);
-
-			contenedor.add(botones, BorderLayout.SOUTH);
-
-		}
+		// BOTON EXPORTAR EN PARTE INFERIOR
+		JPanel botonesBottom = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+		JButton exportar = new JButton("Exportar");
+		exportar.setMaximumSize(new Dimension(120, 40));
+		botonesBottom.add(exportar);
+		contenedor.add(botonesBottom, BorderLayout.SOUTH);
 
 	}
 
