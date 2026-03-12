@@ -9,7 +9,7 @@ public class conexionbd {
         try {
             String ruta = "jdbc:ucanaccess://C:\\Users\\yacit\\OneDrive\\Escritorio\\seco\\db\\Inventario proyecto.accdb";
             conexion = DriverManager.getConnection(ruta);
-            System.out.println("todo good");
+            System.out.println("Connection successful");
         } catch (Exception e) {
             System.out.println("error de conexion");
             e.printStackTrace();

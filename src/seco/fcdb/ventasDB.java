@@ -10,30 +10,33 @@ import javax.swing.table.DefaultTableModel;
 import seco.fcdb.conexionbd;
 
 public class ventasDB {
+    ResultSet rs;
 
     public void consultarVentas(DefaultTableModel modelo) {
 
         Connection con = conexionbd.conect();
-        String sql = "SELECT * FROM ventas";
+        String sql = "SELECT * FROM Ventas";
 
         try {
             Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
+            rs = st.executeQuery(sql);
 
             while (rs.next()) {
 
-                int id = rs.getInt("id");
-                String fecha = rs.getString("fecha");
-                String producto = rs.getString("producto");
-                int cantidad = rs.getInt("cantidad");
-                double subtotal = rs.getDouble("subtotal");
+                String id = rs.getString("id_Ventas");
+                String fecha = rs.getString("Fecha");
+                String producto = rs.getString("Producto");
+                int cantidad = rs.getInt("cantidades");
+                double subtotal = rs.getDouble("Subtotal");
+                double total = rs.getDouble("Total");
 
                 modelo.addRow(new Object[] {
-                        "#V-" + id,
-                        fecha,
+                        id,
                         producto,
                         cantidad,
-                        "$" + subtotal
+                        "$" + subtotal,
+                        "$" + total,
+                        fecha
                 });
             }
 
