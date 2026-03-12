@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class productos extends JPanel {
 	private executable executable;
@@ -163,18 +164,24 @@ public class productos extends JPanel {
 
 		JPanel panel = new JPanel(new BorderLayout());
 
-		String[] columnas = { "ID", "Producto", "Categoria", "Stock", "Precio" };
+		String[] cols = { "ID", "Producto", "Categoria", "Stock", "Precio" };
 
-		Object[][] datos = {
-				{ "#10106", "Teclado Inalámbrico", "Electrónica", "80", "Disponible" },
-				{ "#10105", "Cafetera Eléctrica", "Electrónica", "12", "Disponible" },
-				{ "#10109", "Galletas Chocolate", "Alimentos", "6", "Disponible" },
-				{ "#10110", "Mouse Gamer", "Electrónica", "15", "Disponible" },
-				{ "#10111", "Monitor 24", "Electrónica", "9", "Disponible" },
-				{ "#10112", "USB 32GB", "Electrónica", "30", "Disponible" }
-		};
+DefaultTableModel modelo = new DefaultTableModel(cols, 0) {
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return false;
+    }
+};
 
-		JTable tabla = new JTable(datos, columnas);
+	
+	modelo.addRow(new Object[]{"#10106", "Teclado Inalámbrico", "Electrónica", "80", "Disponible"});
+	modelo.addRow(new Object[]{"#10105", "Cafetera Eléctrica", "Electrónica", "12", "Disponible"});
+	modelo.addRow(new Object[]{"#10109", "Galletas Chocolate", "Alimentos", "6", "Disponible"});
+	modelo.addRow(new Object[]{"#10110", "Mouse Gamer", "Electrónica", "15", "Disponible"});
+	modelo.addRow(new Object[]{"#10111", "Monitor 24", "Electrónica", "9", "Disponible"});
+	modelo.addRow(new Object[]{"#10112", "USB 32GB", "Electrónica", "30", "Disponible"});
+
+JTable tabla = new JTable(modelo);
 		tabla.setRowHeight(30);
 		tabla.setShowGrid(false);
 		tabla.setSelectionBackground(new Color(184, 207, 229));
