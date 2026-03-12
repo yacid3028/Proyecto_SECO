@@ -1,5 +1,6 @@
-package seco.fcdb;
+package seco;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -11,7 +12,7 @@ public class conexionbd {
 
         try {
 
-            String ruta = "jdbc:ucanaccess://C:\\Users\\Saul Jansenson\\Desktop\\seco\\Proyecto_SECO\\db\\Inventario proyecto.accdb";
+            String ruta = "jdbc:ucanaccess://" + new File("db/seco_db.accdb").getAbsolutePath();
 
             conexion = DriverManager.getConnection(ruta);
 
