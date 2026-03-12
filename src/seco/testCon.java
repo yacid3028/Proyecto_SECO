@@ -5,8 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import seco.fcdb.conexionbd;
-
 public class testCon {
     public static void main(String[] args) {
         Connection con = conexionbd.conect();
