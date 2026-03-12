@@ -7,8 +7,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
-import java.awt.event.KeyListener;
-import java.text.NumberFormat;
+import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,19 +16,15 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.text.NumberFormatter;
 
-import seco.fcdb.servicioDB;
+import seco.fcdb.salidasDB;
 
 public class ventas extends JPanel {
 	private executable executable;
@@ -126,12 +121,12 @@ public class ventas extends JPanel {
 		JTextField editor = (JTextField) buscarField.getEditor().getEditorComponent();
 		editor.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(java.awt.event.KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
 				String texto = editor.getText();
 				if (texto.isEmpty()) {
 					buscarField.removeAllItems();
 				} else {
-					servicioDB db = new servicioDB();
+					salidasDB db = new salidasDB();
 					String[] resultados = db.buscarProducto(texto, nombre);
 					buscarField.removeAllItems();
 					for (String resultado : resultados) {
@@ -151,7 +146,7 @@ public class ventas extends JPanel {
 			String id = (String) buscarField.getSelectedItem();
 			String cant = cantidad.getText();
 			if (id != null && !cant.isEmpty()) {
-				servicioDB db = new servicioDB();
+				salidasDB db = new salidasDB();
 				db.agregarArticulo(id, nombre.getText(), cantidad.getText(), fechaActual, modelo);
 			}
 		});
