@@ -112,19 +112,29 @@ public class entradas extends JPanel {
         tarjetas.add(crearTarjeta("Entradas Hoy", "12", Color.BLACK));
         tarjetas.add(crearTarjeta("Productos", "145", Color.BLACK));
         tarjetas.add(crearTarjeta("Valor Ingreso", "$4,520", COLOR_DINERO_VERDE));
+        // posteriormente, tendrás que refrescar estos números (por ejemplo, ejecutar
+        // de nuevo estos métodos y llamar a tarjetas.removeAll() + volver a agregar)
+
 
         // CUADRO DE LA TABLA (EL "BOX")
         JPanel contenedorTabla = new JPanel(new BorderLayout());
         contenedorTabla.setBackground(Color.WHITE);
         contenedorTabla.setBorder(BorderFactory.createLineBorder(COLOR_BORDE_GRIS)); // Dibuja el contorno del cuadro
 
+        // definimos las columnas que tendrá la tabla; el orden debe coincidir con el que
+        // usa el código de ejemplo original.
         String[] columnas = { "ID", "FECHA", "PRODUCTO", "PROVEEDOR", "CANTIDAD", "ESTADO" };
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0); // Estructura de datos de la tabla
-        for (int i = 1; i <= 10; i++)
-            modelo.addRow(new Object[] { "#00" + i, "09/03/26", "Producto " + i, "Proveedor", "50", "OK" });
+        // llenar con datos de la base de datos a través de la clase entradasDB
+        // No se modifica entradasDB aquí; simplemente instanciamos y llamamos a su método
+        // público consultarEntradas. Esta clase encapsula la conexión y la consulta SQL.
+        seco.fcdb.entradasDB db = new seco.fcdb.entradasDB();
+        db.consultarEntradas(modelo); // modelo ahora contiene los registros reales de la tabla 'entradas'
 
         JTable tabla = new JTable(modelo);
         tabla.setRowHeight(40); // Espaciado cómodo para las filas
+
+        // si la consulta tarda, podría ejecutarse en un hilo separado para no bloquear la UI
 
         JScrollPane scroll = new JScrollPane(tabla);
         scroll.setBorder(BorderFactory.createEmptyBorder()); // Quita el borde por defecto del scroll para no duplicar
