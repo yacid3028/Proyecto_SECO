@@ -17,20 +17,20 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
-import javax.swing.table.DefaultTableModel;
-import java.awt.FlowLayout;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 public class provedores extends JPanel {
 	private executable executable;
 
 	public provedores(executable frame) {
 		this.executable = frame;
+		this.db = new provedoresDB();
 		setLayout(new BorderLayout());
 		Menu_lateral();
 		Cont_central();
 	}
 
-	// MENU LATERAL ELEMENTOS, BOTONES, ACCIONES
 	private void Menu_lateral() {
 		JPanel p = new JPanel();
 		p.setPreferredSize(new Dimension(200, 0));
@@ -125,9 +125,12 @@ public class provedores extends JPanel {
 
 		JButton editar = new JButton("Editar");
 		editar.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
-				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+				BorderFactory.createLineBorder(new Color(241, 241, 241)),
+				BorderFactory.createEmptyBorder(8, 15, 8, 15)
 		));
+		editar.addActionListener(e -> {
+				
+});
 
 		JButton eliminar = new JButton("Eliminar");
 		eliminar.setBorder(BorderFactory.createCompoundBorder(

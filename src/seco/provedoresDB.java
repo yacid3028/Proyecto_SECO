@@ -26,5 +26,20 @@ public class provedoresDB {
         }
     } 
         
+    public void actualizarProveedor(int id, String nombre, String telefono, String email) {
+        Connection con = conexionbd.conect();
+        String sql = "UPDATE Provedores SET nombre=?, telefono=?, email=? WHERE id=?";
+        try {
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, nombre);
+            pst.setString(2, telefono);
+            pst.setString(3, email);
+            pst.setInt(4, id);
+            pst.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+        
 
 }
