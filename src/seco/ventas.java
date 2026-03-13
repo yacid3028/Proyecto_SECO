@@ -38,6 +38,7 @@ public class ventas extends JPanel {
 
 	JTextField nombre, cantidad;
 	String fechaActual;
+	JLabel subtotalValor, impuestoValor, totalValor;
 	DefaultTableModel modelo;
 
 	// MENU LATERAL ELEMENTOS, BOTONES, ACCIONES
@@ -147,7 +148,8 @@ public class ventas extends JPanel {
 			String cant = cantidad.getText();
 			if (id != null && !cant.isEmpty()) {
 				salidasDB db = new salidasDB();
-				db.agregarArticulo(id, nombre.getText(), cantidad.getText(), fechaActual, modelo);
+				db.agregarArticulo(id, nombre, cantidad, fechaActual, modelo, subtotalValor,
+						impuestoValor, totalValor);
 			}
 		});
 
@@ -234,7 +236,7 @@ public class ventas extends JPanel {
 		subtotalLabel.setFont(labelFont);
 		totales.add(subtotalLabel);
 
-		JLabel subtotalValor = new JLabel("$55");
+		subtotalValor = new JLabel("");
 		subtotalValor.setFont(labelFont);
 		totales.add(subtotalValor);
 
@@ -242,7 +244,7 @@ public class ventas extends JPanel {
 		impuestoLabel.setFont(labelFont);
 		totales.add(impuestoLabel);
 
-		JLabel impuestoValor = new JLabel("38");
+		impuestoValor = new JLabel("$");
 		impuestoValor.setFont(labelFont);
 		totales.add(impuestoValor);
 
@@ -250,9 +252,10 @@ public class ventas extends JPanel {
 		totalLabel.setFont(totalFont);
 		totales.add(totalLabel);
 
-		JLabel total = new JLabel("$63");
-		total.setFont(totalFont);
-		totales.add(total);
+		totalValor = new JLabel(
+				"$" + (Integer.parseInt(subtotalValor.getText()) + Integer.parseInt(impuestoValor.getText())));
+		totalValor.setFont(totalFont);
+		totales.add(totalValor);
 
 		panelCentral.add(totales, BorderLayout.SOUTH);
 
@@ -263,11 +266,37 @@ public class ventas extends JPanel {
 		JButton cancelar = new JButton("Cancelar Venta");
 		cancelar.setBackground(Color.WHITE);
 		cancelar.setFont(buttonFont);
+		cancelar.addActionListener(ActionListener -> {
+			salidasDB db = new salidasDB();
+			db.eliminarArticulo(modelo, subtotalValor, impuestoValor, totalValor);
+		});
 
 		JButton cobrar = new JButton("Cobrar");
 		cobrar.setBackground(new Color(255, 140, 0));
 		cobrar.setForeground(Color.WHITE);
 		cobrar.setFont(buttonFont);
+		cobrar.addActionListener(ActionListener -> {
+			salidasDB db = new salidasDB();
+			int i = 0;
+			String idVenta = "", producto = "";
+			int cantidad = 0;
+			while (modelo.getRowCount() > 0) {
+				idVenta += " " + (String) modelo.getValueAt(i, 0);
+				producto += " " + (String) modelo.getValueAt(i, 1);
+				String cant = (String) modelo.getValueAt(i, 2);
+				cantidad = Integer.parseInt(cant.replace("$", "").trim());
+				modelo.removeRow(i);
+				i++;
+			}
+
+			double subtotal = Double.parseDouble(subtotalValor.getText().replace("$ ", ""));
+			double total = Double.parseDouble(totalValor.getText().replace("$ ", ""));
+			db.registrarVenta(idVenta, fechaActual, producto, cantidad, subtotal, total);
+			modelo.setRowCount(0);
+			subtotalValor.setText("$ ");
+			impuestoValor.setText("$ ");
+			totalValor.setText("$ ");
+		});
 
 		botones.add(cancelar);
 		botones.add(cobrar);
