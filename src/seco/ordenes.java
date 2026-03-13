@@ -11,13 +11,11 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 public class ordenes extends JPanel {
@@ -101,15 +99,15 @@ public class ordenes extends JPanel {
 		nuevaOrden.setBackground(new Color(255, 140, 0));
 		nuevaOrden.setForeground(Color.WHITE);
 		nuevaOrden.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
-                BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-        ));
+				BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
+				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+		));
 
 		JButton cambiarEstado = new JButton("Cambiar Estado");
 		cambiarEstado.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
-                BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-        ));
+				BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
+				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+		));
 
 		JButton eliminar = new JButton("Eliminar");
 		eliminar.setBorder(BorderFactory.createCompoundBorder(
