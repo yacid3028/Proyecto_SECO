@@ -252,8 +252,7 @@ public class ventas extends JPanel {
 		totalLabel.setFont(totalFont);
 		totales.add(totalLabel);
 
-		totalValor = new JLabel(
-				"$" + (Integer.parseInt(subtotalValor.getText()) + Integer.parseInt(impuestoValor.getText())));
+		totalValor = new JLabel("$ ");
 		totalValor.setFont(totalFont);
 		totales.add(totalValor);
 
