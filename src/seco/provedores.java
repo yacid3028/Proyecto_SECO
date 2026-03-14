@@ -141,8 +141,7 @@ public class provedores extends JPanel {
     String telefono = JOptionPane.showInputDialog("Telefono");
 	String[] columnas = { "ID", "Nombre", "Teléfono", "Email" };
 
-		db.insertarProveedor(nombre,direccion,telefono);
-
+		db.editarProveedor(WIDTH, nombre, telefono, telefono);
 		modelo.setRowCount(0); // limpia tabla
 		db.consultarProvedores(modelo); // vuelve a cargar
 

@@ -29,7 +29,7 @@ public class provedoresDB {
         }
     } 
 
-    public void actualizarProveedor(int id, String nombre, String telefono, String email) {
+    public void editarProveedor(int id, String nombre, String telefono, String email) {
         Connection con = conexionbd.conect();
         String sql = "UPDATE Provedores SET nombre=?, telefono=?, email=? WHERE id=?";
         try {
@@ -43,11 +43,39 @@ public class provedoresDB {
             e.printStackTrace();
         }
     }
+    public void insertarProveedor(String nombre, String email, String telefono, String id) {
 
-    public void insertarProveedor(String nombre, String direccion, String telefono) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'insertarProveedor'");
+    Connection con = conexionbd.conect();
+    String sql = "INSERT INTO Provedores(nombre,email,telefono,id) VALUES(?,?,?,?)";
+
+    try {
+
+        PreparedStatement pst = con.prepareStatement(sql);
+
+        pst.setString(1, nombre);
+        pst.setString(2, email);
+        pst.setString(3, telefono);
+        pst.setString(4, id);
+
+        pst.executeUpdate();
+
+        System.out.println("Proveedor guardado");
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
-        
+}
+
+public void eliminarProveedor(int id) {
+    Connection con = conexionbd.conect();
+    String sql = "DELETE FROM Provedores WHERE id=?";
+    try {
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setInt(1, id);
+        pst.executeUpdate();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 
 }
