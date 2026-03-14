@@ -137,14 +137,14 @@ public class provedores extends JPanel {
 		nuevoProveedor.addActionListener(e -> {
 
     String nombre = JOptionPane.showInputDialog("Nombre");
-    String direccion = JOptionPane.showInputDialog("Direccion");
     String telefono = JOptionPane.showInputDialog("Telefono");
-	String[] columnas = { "ID", "Nombre", "Teléfono", "Email" };
+	String email = JOptionPane.showInputDialog("Email");
+	String id = JOptionPane.showInputDialog("ID");
 
-		db.editarProveedor(WIDTH, nombre, telefono, telefono);
+		db.editarProveedor( nombre, email, telefono, id);
 		modelo.setRowCount(0); // limpia tabla
 		db.consultarProvedores(modelo); // vuelve a cargar
-
+//usar R para representar "provedores"
 	});
 				
 		JButton editar = new JButton("Editar");

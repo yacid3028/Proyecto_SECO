@@ -17,19 +17,19 @@ public class provedoresDB {
             ResultSet rs = st.executeQuery(sql);
             while(rs.next()){
 
-                int id_Provedores = rs.getInt("id_Provedores");
+                String id = rs.getString("id");
                 String nombre = rs.getString("nombre");
-                String direccion = rs.getString("direccion");
+                String email = rs.getString("email");
                 int telefono = rs.getInt("telefono");
 
-                modelo.addRow(new Object[]{nombre, direccion, telefono});
+                modelo.addRow(new Object[]{nombre, email, telefono, id});
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     } 
 
-    public void editarProveedor(int id, String nombre, String telefono, String email) {
+    public void editarProveedor(String id, String nombre, String telefono, String email) {
         Connection con = conexionbd.conect();
         String sql = "UPDATE Provedores SET nombre=?, telefono=?, email=? WHERE id=?";
         try {
@@ -37,7 +37,7 @@ public class provedoresDB {
             pst.setString(1, nombre);
             pst.setString(2, telefono);
             pst.setString(3, email);
-            pst.setInt(4, id);
+            pst.setString(4, id);
             pst.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
