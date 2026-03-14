@@ -6,13 +6,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import seco.ventanas.ProvedoresAgregar;
+import seco.ventanas.ProvedoresEditrar;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
@@ -135,28 +136,31 @@ public class provedores extends JPanel {
 
 		nuevoProveedor.addActionListener(e -> {
 
-    String nombre = JOptionPane.showInputDialog("Nombre");
-    String telefono = JOptionPane.showInputDialog("Telefono");
-	String email = JOptionPane.showInputDialog("Email");
-	String id = JOptionPane.showInputDialog("ID");
+			ProvedoresAgregar agregarProveedor = new ProvedoresAgregar();
+			agregarProveedor.setVisible(true);
 
-		db.editarProveedor( nombre, email, telefono, id);
-		modelo.setRowCount(0); // limpia tabla
-		db.consultarProvedores(modelo); // vuelve a cargar
-//usar R para representar "provedores"
 	});
 				
 		JButton editar = new JButton("Editar");
 		editar.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(new Color(241, 241, 241)),
-				BorderFactory.createEmptyBorder(8, 15, 8, 15)
+				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
-		));
+			editar.addActionListener(e -> {
+
+				ProvedoresEditrar editarProveedor = new ProvedoresEditrar();
+				editarProveedor.setVisible(true);
+
+			}
+
+		);
 
 		JButton eliminar = new JButton("Eliminar");
 		eliminar.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
 				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+
+
 		));
 
 		JPanel cabecera = new JPanel(new BorderLayout());
@@ -197,12 +201,14 @@ public class provedores extends JPanel {
 		// TABLA
 		String[] columnas = { "ID", "Nombre", "Teléfono", "Email" };
 
-		DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
+		DefaultTableModel modelo = new DefaultTableModel(columnas, 0){
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false; // Hace que todas las celdas no sean editables
+			}
+		};
 
-		modelo.addRow(new Object[] { "#001", "Juan Pérez", "TecnoCom", "563231" });
-		modelo.addRow(new Object[] { "#002", "Laura Díaz", "Moda Express", "563777" });
-		modelo.addRow(new Object[] { "#003", "Ricardo Sosa", "Distribuidor Alfa", "552221" });
-		modelo.addRow(new Object[] { "#004", "Marta Garcia", "Electrohogar", "637897" });
+		 db.consultarProvedores(modelo);
 
 		JTable tabla = new JTable(modelo);
 		JScrollPane scroll = new JScrollPane(tabla);

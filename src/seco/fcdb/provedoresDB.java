@@ -20,7 +20,7 @@ public class provedoresDB {
                 String id = rs.getString("id");
                 String nombre = rs.getString("nombre");
                 String email = rs.getString("email");
-                int telefono = rs.getInt("telefono");
+                String telefono = rs.getString("telefono");
 
                 modelo.addRow(new Object[]{nombre, email, telefono, id});
 
@@ -48,12 +48,12 @@ public class provedoresDB {
     public void insertarProveedor(String nombre, String email, String telefono, String id) {
 
         Connection con = conexionbd.conect();
-        String sql = "INSERT INTO Provedores(nombre,email,telefono,id) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO Provedores(Nombre,Email,Telefono,id_Provedores) VALUES(?,?,?,?)";
 
         try {
 
             PreparedStatement pst = con.prepareStatement(sql);
-
+           
             pst.setString(1, nombre);
             pst.setString(2, email);
             pst.setString(3, telefono);
