@@ -19,7 +19,7 @@ public class productosDB {
 
             while (rs.next()) {
 
-                model.addRow(new Object[]{
+                model.addRow(new Object[] {
                         rs.getInt("id_Producto"),
                         rs.getString("Nombre"),
                         rs.getString("Descripcion"),
@@ -73,7 +73,7 @@ public class productosDB {
 
             Connection con = conexionbd.conectar();
 
-            String sql = "INSERT INTO Productos (id_Producto, Nombre, Descripcion, Precio_venta, Stock) VALUES (" 
+            String sql = "INSERT INTO Productos (id_Producto, Nombre, Descripcion, Precio_venta, Stock) VALUES ("
                     + id + ",'" + nombre + "','" + descripcion + "'," + precio + "," + stock + ")";
 
             Statement st = con.createStatement();
@@ -95,3 +95,9 @@ public class productosDB {
     }
 
 }
+
+// Validar existencia del id antes de eliminar o editar o agregar producto
+// Crear metodo para generar String Id con random
+// cambiar datos de entrada por getSelectedRow de la tabla productos
+// Agregar metodo para actualizar producto (UPDATE) con datos de la tabla
+// productos
