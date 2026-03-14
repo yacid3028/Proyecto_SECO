@@ -67,13 +67,13 @@ public class productosDB {
 
     }
 
-    public static void agregarProducto(int id, String nombre, String descripcion, double precio, int stock) {
+    public static void agregarProducto(String id, String nombre, String descripcion, double precio, int stock) {
 
         try {
 
             Connection con = conexionbd.conectar();
 
-            String sql = "INSERT INTO Productos (id_Producto, Nombre, Descripcion, Precio_venta, Stock) VALUES ("
+            String sql = "INSERT INTO Productos (id_producto, Nombre, Descripcion, Precio_venta, Stock) VALUES ("
                     + id + ",'" + nombre + "','" + descripcion + "'," + precio + "," + stock + ")";
 
             Statement st = con.createStatement();
@@ -100,4 +100,8 @@ public class productosDB {
 // Crear metodo para generar String Id con random
 // cambiar datos de entrada por getSelectedRow de la tabla productos
 // Agregar metodo para actualizar producto (UPDATE) con datos de la tabla
-// productos
+// Modificar insersion, falta categoria y precio de compra y sobra descripcion
+// VE LA BASE DE DATOS NO DEJES Q TODO LO HAGA CHAT GPT, HAZLO TU TAMBIEN, ES
+// PARA APRENDER, NO PARA QUE TE LO HAGA TODO LA IA, SI QUIERES Q TE AYUDE EN
+// ALGO ESPECIFICO PREGUNTA, PERO NO LE DIGAS Q TE HAGA TODO EL CODIGO, ESO NO
+// ESTA BIEN, APRENDE A PROGRAMAR, NO A USAR CHAT GPT PARA PROGRAMAR.

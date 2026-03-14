@@ -11,25 +11,23 @@ public class agregarProducto extends JFrame {
     private JTextField txtPrecio;
     private JTextField txtStock;
 
-    public agregarProducto(){
+    public agregarProducto() {
 
         setTitle("Agregar Producto");
-        setSize(450,380);
+        setSize(450, 380);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        
         JLabel titulo = new JLabel("Agregar un nuevo producto");
-        titulo.setFont(new Font("Arial",Font.BOLD,22));
-        titulo.setBorder(BorderFactory.createEmptyBorder(15,20,10,10));
+        titulo.setFont(new Font("Arial", Font.BOLD, 22));
+        titulo.setBorder(BorderFactory.createEmptyBorder(15, 20, 10, 10));
 
-        add(titulo,BorderLayout.NORTH);
+        add(titulo, BorderLayout.NORTH);
 
-    
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(5,2,15,15));
-        panel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        panel.setLayout(new GridLayout(5, 2, 15, 15));
+        panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JLabel lblID = new JLabel("Ingrese ID:");
         txtID = new JTextField();
@@ -61,7 +59,7 @@ public class agregarProducto extends JFrame {
         panel.add(lblStock);
         panel.add(txtStock);
 
-        add(panel,BorderLayout.CENTER);
+        add(panel, BorderLayout.CENTER);
 
         // BOTONES
         JPanel botones = new JPanel();
@@ -70,21 +68,21 @@ public class agregarProducto extends JFrame {
         JButton guardar = new JButton("Guardar");
         guardar.addActionListener(e -> {
 
-    int id = Integer.parseInt(txtID.getText());
-    String nombre = txtNombre.getText();
-    String descripcion = txtDescripcion.getText();
-    double precio = Double.parseDouble(txtPrecio.getText());
-    int stock = Integer.parseInt(txtStock.getText());
+            String id = txtID.getText();
+            String nombre = txtNombre.getText();
+            String descripcion = txtDescripcion.getText();
+            double precio = Double.parseDouble(txtPrecio.getText());
+            int stock = Integer.parseInt(txtStock.getText());
 
-    seco.fcdb.productosDB.agregarProducto(id,nombre,descripcion,precio,stock);
+            seco.fcdb.productosDB.agregarProducto(id, nombre, descripcion, precio, stock);
 
-    JOptionPane.showMessageDialog(null,"Producto agregado correctamente");
+            JOptionPane.showMessageDialog(null, "Producto agregado correctamente");
 
-    dispose();
+            dispose();
 
-});
+        });
 
-        guardar.setBackground(new Color(255,140,0));
+        guardar.setBackground(new Color(255, 140, 0));
         guardar.setForeground(Color.WHITE);
         guardar.setFocusPainted(false);
 
@@ -93,7 +91,7 @@ public class agregarProducto extends JFrame {
         botones.add(cancelar);
         botones.add(guardar);
 
-        add(botones,BorderLayout.SOUTH);
+        add(botones, BorderLayout.SOUTH);
     }
 
 }
