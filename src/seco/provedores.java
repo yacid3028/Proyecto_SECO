@@ -105,13 +105,13 @@ public class provedores extends JPanel {
 	}
 
 	DefaultTableModel modelo;
-		JTable tabla;
-		provedoresDB db = new provedoresDB();
-		String[] columnas = { "ID", "Nombre", "Teléfono", "Email" };
-	
+	JTable tabla;
+	provedoresDB db = new provedoresDB();
+	String[] columnas = { "ID", "Nombre", "Teléfono", "Email" };
+
 	private void Cont_central() {
 		JPanel p = new JPanel();
-		modelo = new DefaultTableModel(columnas,0);
+		modelo = new DefaultTableModel(columnas, 0);
 		tabla = new JTable(modelo);
 		p.setBackground(new Color(240, 240, 240));
 		add(p, BorderLayout.CENTER);
@@ -130,9 +130,8 @@ public class provedores extends JPanel {
 		nuevoProveedor.setBackground(new Color(255, 140, 0));
 		nuevoProveedor.setForeground(Color.WHITE);
 		nuevoProveedor.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(new Color(241, 241, 241)), 
-				BorderFactory.createEmptyBorder(8, 15, 8, 15)
-		)); 
+				BorderFactory.createLineBorder(new Color(241, 241, 241)),
+				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
 		nuevoProveedor.addActionListener(e -> {
 
@@ -149,13 +148,10 @@ public class provedores extends JPanel {
 				
 		JButton editar = new JButton("Editar");
 		editar.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(new Color(241, 241, 241)), 
-				BorderFactory.createEmptyBorder(8, 15, 8, 15) 
+				BorderFactory.createLineBorder(new Color(241, 241, 241)),
+				BorderFactory.createEmptyBorder(8, 15, 8, 15)
 
 		));
-
-		
-
 
 		JButton eliminar = new JButton("Eliminar");
 		eliminar.setBorder(BorderFactory.createCompoundBorder(
@@ -215,16 +211,13 @@ public class provedores extends JPanel {
 		tablaPanel.add(scroll, BorderLayout.CENTER);
 
 		contenido.add(tablaPanel, BorderLayout.CENTER);
-		
+
 		JPanel botonesBottom = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
 		JButton exportar = new JButton("Exportar");
 		exportar.setMaximumSize(new Dimension(120, 40));
 		botonesBottom.add(exportar);
 		contenedor.add(botonesBottom, BorderLayout.SOUTH);
 
-
-		
-
 	}
 
-} 
+}
