@@ -129,7 +129,6 @@ public class ventas extends JPanel {
 				} else {
 					salidasDB db = new salidasDB();
 					String[] resultados = db.buscarProducto(texto, nombre);
-					buscarField.removeAllItems();
 					for (String resultado : resultados) {
 						buscarField.addItem(resultado);
 					}
@@ -279,8 +278,9 @@ public class ventas extends JPanel {
 			int i = 0;
 			String idVenta = "", producto = "";
 			int cantidad = 0;
+
 			while (modelo.getRowCount() > 0) {
-				idVenta += " " + (String) modelo.getValueAt(i, 0);
+				idVenta += ((String) modelo.getValueAt(1, 0)).substring(2, 4);
 				producto += " " + (String) modelo.getValueAt(i, 1);
 				String cant = (String) modelo.getValueAt(i, 2);
 				cantidad = Integer.parseInt(cant.replace("$", "").trim());

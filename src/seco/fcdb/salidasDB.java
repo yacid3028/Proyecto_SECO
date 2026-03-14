@@ -96,6 +96,13 @@ public class salidasDB {
 
     public void registrarVenta(String idVenta, String fecha, String producto, int cantidad, double subtotal,
             double total) {
+        if (idVenta.length() > 6) {
+            idVenta = "V" + idVenta.substring(0, 5);
+        } else if (idVenta.length() < 6) {
+            String a = crearRandom(idVenta.length());
+            idVenta = "V" + idVenta + a;
+        }
+
         Connection con = conexionbd.conect();
         String sql = "INSERT INTO Ventas (id_venta, fecha, producto, cantidad, subtotal, total) VALUES ('"
                 + idVenta + "', '" + fecha + "', '" + producto + "', " + cantidad + ", " + subtotal + ", " + total
@@ -107,5 +114,17 @@ public class salidasDB {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    private String crearRandom(int longitud) {
+        String valrey = "";
+        int contador = 6 - longitud;
+        for (int i = 0; i < contador; i++) {
+            int random = (int) (Math.random() * 9);
+            valrey += random;
+        }
+
+        return valrey;
     }
 }

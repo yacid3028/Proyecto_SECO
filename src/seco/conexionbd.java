@@ -11,7 +11,6 @@ public class conexionbd {
 
             String ruta = "jdbc:ucanaccess://" + new File("db/seco_db.accdb").getAbsolutePath();
             conexion = DriverManager.getConnection(ruta);
-            System.out.println("Connection successful");
         } catch (Exception e) {
             System.out.println("error de conexion");
             e.printStackTrace();
