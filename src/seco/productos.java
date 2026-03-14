@@ -12,6 +12,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import seco.fcdb.productosDB;
+import seco.ventanas.agregarProducto;
+import seco.ventanas.prodcutodeditar;
 
 public class productos extends JPanel {
 
@@ -99,6 +101,12 @@ public class productos extends JPanel {
         JPanel botonesPanel = new JPanel();
 
         JButton agregar = new JButton("Agregar Producto");
+		agregar.addActionListener(e -> {
+
+    	agregarProducto ventana = new agregarProducto();
+    	ventana.setVisible(true);
+
+});
         agregar.setBackground(new Color(255,140,0));
         agregar.setForeground(Color.WHITE);
         agregar.setBorder(BorderFactory.createCompoundBorder(
@@ -110,13 +118,41 @@ public class productos extends JPanel {
         editar.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(COLOR_BORDE_GRIS),
                 BorderFactory.createEmptyBorder(8,15,8,15)
+				
         ));
+		editar.addActionListener(e -> {
+    prodcutodeditar editarVentana = new prodcutodeditar();
+    editarVentana.setVisible(true);
+});
+		prodcutodeditar editarVentana = new prodcutodeditar();
+		editar.addActionListener(e -> editarVentana.setVisible(true));
 
         JButton eliminar = new JButton("Eliminar");
-        eliminar.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(COLOR_BORDE_GRIS),
-                BorderFactory.createEmptyBorder(8,15,8,15)
-        ));
+eliminar.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createLineBorder(COLOR_BORDE_GRIS),
+        BorderFactory.createEmptyBorder(8,15,8,15)
+));
+
+eliminar.addActionListener(e -> {
+
+    String id = JOptionPane.showInputDialog(
+            null,
+            "Coloque el ID del producto que desea eliminar",
+            "Eliminar Producto",
+            JOptionPane.QUESTION_MESSAGE
+    );
+
+    if(id != null){
+
+        int idProducto = Integer.parseInt(id);
+
+        productosDB.eliminarProducto(idProducto);
+
+        JOptionPane.showMessageDialog(null,"Producto eliminado");
+
+    }
+
+});
 
         botonesPanel.add(editar);
         botonesPanel.add(eliminar);

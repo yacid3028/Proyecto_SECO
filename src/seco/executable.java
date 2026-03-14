@@ -23,11 +23,11 @@ public class executable extends JFrame {
 		ImageIcon ico = new ImageIcon("img/logo_app.png");
 		setIconImage(ico.getImage());
 
-		// CREA EL CARDLAYOUT
+		
 		cardlayout = new CardLayout();
 		container = new JPanel(cardlayout);
 
-		// AGREGA LAS CLASES PANELES
+		
 		container.add(new dashboard(this), "dashboard");
 		container.add(new productos(this), "productos");
 		container.add(new entradas(this), "entradas");

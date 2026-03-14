@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class testCon {
     public static void main(String[] args) {
-        Connection con = conexionbd.conect();
+        Connection con = conexionbd.conectar();
         String sql = "INSERT INTO Productos(id_Producto,Nombre,Descripcion,Precio_venta,Stock) values(?,?,?,?,?)";
         try {
             PreparedStatement ps = con.prepareStatement(sql);

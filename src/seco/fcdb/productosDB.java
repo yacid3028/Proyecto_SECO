@@ -13,16 +13,10 @@ public class productosDB {
 
         try {
 
-            // conexión a la base de datos
             Connection con = conexionbd.conectar();
-
-            // crear objeto para ejecutar SQL
             Statement st = con.createStatement();
-
-            // consulta SQL
             ResultSet rs = st.executeQuery("SELECT * FROM Productos");
 
-            // recorrer resultados
             while (rs.next()) {
 
                 model.addRow(new Object[]{
@@ -35,7 +29,6 @@ public class productosDB {
 
             }
 
-            // cerrar conexiones
             rs.close();
             st.close();
             con.close();
@@ -46,4 +39,59 @@ public class productosDB {
         }
 
     }
+
+    // METODO PARA ELIMINAR PRODUCTO
+    public static void eliminarProducto(int id) {
+
+        try {
+
+            Connection con = conexionbd.conectar();
+
+            String sql = "DELETE FROM Productos WHERE id_Producto = " + id;
+
+            Statement st = con.createStatement();
+
+            st.executeUpdate(sql);
+
+            st.close();
+            con.close();
+
+            System.out.println("Producto eliminado correctamente");
+
+        } catch (Exception e) {
+
+            System.out.println("Error al eliminar producto");
+            e.printStackTrace();
+
+        }
+
+    }
+
+    public static void agregarProducto(int id, String nombre, String descripcion, double precio, int stock) {
+
+        try {
+
+            Connection con = conexionbd.conectar();
+
+            String sql = "INSERT INTO Productos (id_Producto, Nombre, Descripcion, Precio_venta, Stock) VALUES (" 
+                    + id + ",'" + nombre + "','" + descripcion + "'," + precio + "," + stock + ")";
+
+            Statement st = con.createStatement();
+
+            st.executeUpdate(sql);
+
+            st.close();
+            con.close();
+
+            System.out.println("Producto agregado correctamente");
+
+        } catch (Exception e) {
+
+            System.out.println("Error al agregar producto");
+            e.printStackTrace();
+
+        }
+
+    }
+
 }
