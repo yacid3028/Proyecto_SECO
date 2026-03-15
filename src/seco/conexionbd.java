@@ -9,7 +9,7 @@ public class conexionbd {
         Connection conexion = null;
         try {
 
-            String ruta = "jdbc:ucanaccess://" + new File("db/seco_db.accdb").getAbsolutePath();
+            String ruta = "jdbc:ucanaccess://C:/Users/yacit/Desktop/seco/db/seco_db.accdb";
             conexion = DriverManager.getConnection(ruta);
         } catch (Exception e) {
             System.out.println("error de conexion");
