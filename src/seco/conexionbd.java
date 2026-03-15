@@ -1,6 +1,5 @@
 package seco;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -9,8 +8,9 @@ public class conexionbd {
         Connection conexion = null;
         try {
 
-            String ruta = "jdbc:ucanaccess://C:/Users/yacit/Desktop/seco/db/seco_db.accdb";
+            String ruta = "jdbc:ucanaccess://db/seco__db.accdb";
             conexion = DriverManager.getConnection(ruta);
+
         } catch (Exception e) {
             System.out.println("error de conexion");
             e.printStackTrace();

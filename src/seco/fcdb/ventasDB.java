@@ -20,7 +20,7 @@ public class ventasDB {
 
             while (rs.next()) {
 
-                String id = rs.getString("id_Ventas");
+                String id = rs.getString("Id_Venta");
                 String fecha = rs.getString("Fecha");
                 String producto = rs.getString("Producto");
                 int cantidad = rs.getInt("cantidades");
