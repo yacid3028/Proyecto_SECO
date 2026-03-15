@@ -6,18 +6,19 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import seco.ventanas.NuevaOrden;
+import seco.ventanas.EliminarOrden;
+import seco.ventanas.CambiarEstadoOrden;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 public class ordenes extends JPanel {
@@ -97,25 +98,52 @@ public class ordenes extends JPanel {
 
 		JPanel botonesTop = new JPanel();
 
-		JButton nuevaOrden = new JButton("Nueva Orden");
+		JButton nuevaOrden = new JButton("Nueva orden");
 		nuevaOrden.setBackground(new Color(255, 140, 0));
 		nuevaOrden.setForeground(Color.WHITE);
 		nuevaOrden.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
-                BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-        ));
+				BorderFactory.createLineBorder(new Color(241, 241, 241)),
+				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
-		JButton cambiarEstado = new JButton("Cambiar Estado");
+			nuevaOrden.addActionListener(e -> {
+
+				NuevaOrden nuevaOrdenVentana = new NuevaOrden();
+				nuevaOrdenVentana.setVisible(true);
+
+			}
+
+		);
+
+		JButton cambiarEstado = new JButton("Cambiar estado");
+		cambiarEstado.setBackground(new Color(255, 140, 0));
+		cambiarEstado.setForeground(Color.WHITE);
 		cambiarEstado.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
-                BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-        ));
+				BorderFactory.createLineBorder(new Color(241, 241, 241)),
+				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
+
+				cambiarEstado.addActionListener(e -> {
+
+				CambiarEstadoOrden cambiarEstadoOrdenVentana = new CambiarEstadoOrden();
+				cambiarEstadoOrdenVentana.setVisible(true);
+				
+				}
+				);
 
 		JButton eliminar = new JButton("Eliminar");
+		eliminar.setBackground(new Color(255, 140, 0));
+		eliminar.setForeground(Color.WHITE);
 		eliminar.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
-				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-		));
+				BorderFactory.createLineBorder(new Color(241, 241, 241)),
+				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
+
+			eliminar.addActionListener(e -> {
+
+				EliminarOrden eliminarOrdenVentana = new EliminarOrden();
+				eliminarOrdenVentana.setVisible(true);
+
+	});
+
+
 
 		botonesTop.add(cambiarEstado);
 		botonesTop.add(eliminar);

@@ -2,6 +2,7 @@ package seco.ventanas;
 
 import javax.swing.*;
 import java.awt.*;
+//import seco.fcdb.provedoresDB;
 
 public class ProvedoresEditrar extends JFrame {
 
