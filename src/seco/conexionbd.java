@@ -12,7 +12,7 @@ public class conexionbd {
 
         try {
 
-            String ruta = "jdbc:ucanaccess://" + new File("db/seco_db.accdb").getAbsolutePath();
+            String ruta = "jdbc:ucanaccess://db/seco__db.accdb";
 
             conexion = DriverManager.getConnection(ruta);
 

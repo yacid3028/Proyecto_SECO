@@ -19,6 +19,8 @@ public class productos extends JPanel {
 
     private executable executable;
     private final Color COLOR_BORDE_GRIS = new Color(225, 230, 235);
+     private JTable tabla;
+    private DefaultTableModel modelo;
 
     public productos(executable frame) {
         this.executable = frame;
@@ -121,11 +123,23 @@ public class productos extends JPanel {
 				
         ));
 		editar.addActionListener(e -> {
-    prodcutodeditar editarVentana = new prodcutodeditar();
-    editarVentana.setVisible(true);
+
+    int fila = tabla.getSelectedRow();
+
+    if(fila == -1){
+
+        JOptionPane.showMessageDialog(null,"Seleccione un producto de la tabla");
+
+        return;
+    }
+
+    int idProducto = (int) tabla.getValueAt(fila,0);
+
+    prodcutodeditar ventana = new prodcutodeditar(idProducto);
+
+    ventana.setVisible(true);
+
 });
-		prodcutodeditar editarVentana = new prodcutodeditar();
-		editar.addActionListener(e -> editarVentana.setVisible(true));
 
         JButton eliminar = new JButton("Eliminar");
 eliminar.setBorder(BorderFactory.createCompoundBorder(
@@ -147,6 +161,8 @@ eliminar.addActionListener(e -> {
         int idProducto = Integer.parseInt(id);
 
         productosDB.eliminarProducto(idProducto);
+
+        actualizarTabla();
 
         JOptionPane.showMessageDialog(null,"Producto eliminado");
 
@@ -217,8 +233,8 @@ eliminar.addActionListener(e -> {
 
         JPanel panel = new JPanel(new BorderLayout());
 
-        String[] cols = {"ID","Nombre","Descripcion","Precio venta","Stock"};
-        DefaultTableModel modelo = new DefaultTableModel(cols,0){
+        String[] cols = {"ID","Nombre","Categoria","Precio venta","Stock"};
+        modelo = new DefaultTableModel(cols,0){
             @Override
             public boolean isCellEditable(int row,int column){
                 return false;
@@ -228,7 +244,7 @@ eliminar.addActionListener(e -> {
         // CARGAR DESDE ACCESS
         productosDB.productos(modelo);
 
-        JTable tabla = new JTable(modelo);
+        tabla = new JTable(modelo);
 
         tabla.setRowHeight(30);
         tabla.setShowGrid(false);
@@ -248,8 +264,17 @@ eliminar.addActionListener(e -> {
 
         }
 
-        panel.add(scroll,BorderLayout.CENTER);
+       panel.add(scroll,BorderLayout.CENTER);
 
-        return panel;
-    }
+return panel;
+}
+
+private void actualizarTabla(){
+
+    modelo.setRowCount(0);
+
+    productosDB.productos(modelo);
+
+}
+
 }

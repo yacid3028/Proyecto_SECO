@@ -63,6 +63,18 @@ public class prodcutodeditar extends JFrame {
         botones.add(cancelar);
         botones.add(guardar);
 
-        add(botones, BorderLayout.SOUTH);
-    }
+       add(botones, BorderLayout.SOUTH);
+}
+
+public prodcutodeditar(int idProducto) {
+
+    setTitle("Editar Producto");
+    setSize(420,320);
+    setLocationRelativeTo(null);
+    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+    System.out.println("Editar producto con ID: " + idProducto);
+
+}
+
 }

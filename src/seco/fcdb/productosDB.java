@@ -22,7 +22,7 @@ public class productosDB {
                 model.addRow(new Object[] {
                         rs.getInt("id_Producto"),
                         rs.getString("Nombre"),
-                        rs.getString("Descripcion"),
+                        rs.getString("Categoria"),
                         rs.getDouble("Precio_venta"),
                         rs.getInt("Stock")
                 });
@@ -73,7 +73,7 @@ public class productosDB {
 
             Connection con = conexionbd.conectar();
 
-            String sql = "INSERT INTO Productos (id_producto, Nombre, Descripcion, Precio_venta, Stock) VALUES ("
+            String sql = "INSERT INTO Productos (id_producto, Nombre, Categoria, Precio_venta, Stock) VALUES ("
                     + id + ",'" + nombre + "','" + descripcion + "'," + precio + "," + stock + ")";
 
             Statement st = con.createStatement();
