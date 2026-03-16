@@ -22,7 +22,7 @@ public class provedoresDB {
                 String email = rs.getString("email");
                 String telefono = rs.getString("telefono");
 
-                modelo.addRow(new Object[]{nombre, email, telefono, id});
+                modelo.addRow(new Object[] { nombre, email, telefono, id });
 
             }
         } catch (Exception e) {
@@ -48,12 +48,12 @@ public class provedoresDB {
     public void insertarProveedor(String nombre, String email, String telefono, String id) {
 
         Connection con = conexionbd.conect();
-        String sql = "INSERT INTO Provedores(Nombre,Email,Telefono,id_Provedores) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO Provedores(Id,Empresa,Email,Telefono,id_Provedor) VALUES(0,?,?,?,?)";
 
         try {
 
             PreparedStatement pst = con.prepareStatement(sql);
-           
+
             pst.setString(1, nombre);
             pst.setString(2, email);
             pst.setString(3, telefono);
