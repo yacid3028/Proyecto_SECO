@@ -2,7 +2,9 @@ package seco.fcdb;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.sql.ResultSetMetaData;
 import javax.swing.table.DefaultTableModel;
 
 import seco.conexionbd;
@@ -11,34 +13,40 @@ public class productosDB {
 
     public static void productos(DefaultTableModel model) {
 
-        try {
+    try {
 
-            Connection con = conexionbd.conectar();
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM Productos");
+        Connection con = conexionbd.conectar();
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM Productos");
 
-            while (rs.next()) {
+        ResultSetMetaData meta = rs.getMetaData();
 
-                model.addRow(new Object[] {
-                        rs.getInt("id_Producto"),
-                        rs.getString("Nombre"),
-                        rs.getString("Categoria"),
-                        rs.getDouble("Precio_venta"),
-                        rs.getInt("Stock")
-                });
-
-            }
-
-            rs.close();
-            st.close();
-            con.close();
-
-        } catch (Exception e) {
-            System.out.println("Error al cargar productos");
-            e.printStackTrace();
+        for (int i = 1; i <= meta.getColumnCount(); i++) {
+            System.out.println(meta.getColumnName(i));
         }
 
+        while (rs.next()) {
+
+            model.addRow(new Object[] {
+                    rs.getInt("id_Producto"),
+                    rs.getString("Nombre"),
+                    rs.getString("Categoria"),
+                    rs.getDouble("Precio de venta"),
+                    rs.getInt("Stock")
+            });
+
+        }
+
+        rs.close();
+        st.close();
+        con.close();
+
+    } catch (Exception e) {
+        System.out.println("Error al cargar productos");
+        e.printStackTrace();
     }
+
+}
 
     // METODO PARA ELIMINAR PRODUCTO
     public static void eliminarProducto(int id) {
@@ -73,7 +81,7 @@ public class productosDB {
 
             Connection con = conexionbd.conectar();
 
-            String sql = "INSERT INTO Productos (id_producto, Nombre, Categoria, Precio_venta, Stock) VALUES ("
+            String sql = "INSERT INTO Productos (id_producto, Nombre, Categoria, [Precio de venta], Stock) VALUES ("
                     + id + ",'" + nombre + "','" + descripcion + "'," + precio + "," + stock + ")";
 
             Statement st = con.createStatement();
