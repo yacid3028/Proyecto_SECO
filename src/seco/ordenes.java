@@ -6,6 +6,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import seco.ventanas.NuevaOrden;
+import seco.ventanas.EliminarOrden;
+import seco.ventanas.CambiarEstadoOrden;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
