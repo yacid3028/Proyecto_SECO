@@ -9,8 +9,13 @@ import java.awt.Image;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+import seco.fcdb.productosDB;
 
 public class dashboard extends JPanel {
 	private executable executable;
@@ -181,6 +186,13 @@ public class dashboard extends JPanel {
 		alertas.add(alerta, BorderLayout.NORTH);
 		alertas.add(info, BorderLayout.CENTER);
 
+		alertas.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mostrarAlertas();
+			}
+		});
+
 		bottom.add(reportes);
 		bottom.add(alertas);
 
@@ -283,10 +295,6 @@ public class dashboard extends JPanel {
 		String[] cols = { "Producto", "Stock", "Estado" };
 
 		Object[][] data = {
-				{ "Audifonos Bluetooth", "3", "Bajo Stock" },
-				{ "Camiseta Negra", "5", "Bajo Stock" },
-				{ "Cafetera Electrica", "2", "Bajo Stock" },
-				{ "Galletas Chocolate", "6", "Bajo Stock" }
 		};
 
 		JTable table = new JTable(data, cols);
@@ -314,9 +322,6 @@ public class dashboard extends JPanel {
 		String[] cols = { "Fecha", "Tipo", "Producto", "Cantidad" };
 
 		Object[][] data = {
-				{ "15/04/2024", "Entrada", "Teclado Inalambrico", "20" },
-				{ "14/04/2024", "Salida", "Zapatillas Deportivas", "8" },
-				{ "13/04/2024", "Entrada", "Cafe Molido", "50" }
 		};
 
 		JTable table = new JTable(data, cols);
@@ -344,9 +349,6 @@ public class dashboard extends JPanel {
 		String[] cols = { "Orden", "Proveedor", "Estado" };
 
 		Object[][] data = {
-				{ "#1023", "TecnoCom", "En Camino" },
-				{ "#1022", "Moda Express", "Pendiente" },
-				{ "#1021", "Distribuidora Alfa", "Solicitado" }
 		};
 
 		JTable table = new JTable(data, cols);
@@ -366,6 +368,30 @@ public class dashboard extends JPanel {
 		p.add(new JScrollPane(table), BorderLayout.CENTER);
 
 		return p;
+	}
+
+	private void mostrarAlertas() {
+		JFrame frame = new JFrame("Alertas de Inventario");
+		frame.setSize(500, 400);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setLocationRelativeTo(null);
+
+		String[] cols = { "Producto", "Stock", "Estado" };
+		DefaultTableModel modelo = new DefaultTableModel(cols, 0);
+
+		productosDB db = new productosDB();
+		db.consultarAlertas(modelo);
+
+		JTable table = new JTable(modelo);
+		table.setRowHeight(28);
+		table.setShowVerticalLines(false);
+		table.setGridColor(new Color(230, 230, 230));
+		table.getTableHeader().setBackground(new Color(245, 245, 245));
+		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+
+		JScrollPane scroll = new JScrollPane(table);
+		frame.add(scroll);
+		frame.setVisible(true);
 	}
 
 }

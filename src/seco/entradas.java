@@ -1,6 +1,7 @@
 package seco;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -17,6 +18,18 @@ public class entradas extends JPanel {
     private final Color COLOR_BORDE_GRIS = new Color(225, 230, 235); // Color sutil para marcos y divisiones
     private final Color COLOR_TEXTO_SEC = new Color(110, 115, 130); // Gris para etiquetas menos importantes
 
+    // Componentes de la vista (DECLARACIÓN)
+    // - "modelo" y "tabla" se usan en cargarEntradas()/mostrarDialogoEntrada()/eliminarEntradaSeleccionada().
+    // - "db" es el objeto que llama a la base de datos (métodos CRUD en src/seco/fcdb/entradasDB.java).
+    private DefaultTableModel modelo;
+    private JTable tabla;
+    private final seco.fcdb.entradasDB db = new seco.fcdb.entradasDB();
+
+    // Tarjetas informativas (para refrescar con datos reales)
+    private JPanel tarjetaEntradasHoy;
+    private JPanel tarjetaProductos;
+    private JPanel tarjetaValor;
+
     public entradas(executable frame) {
         this.executable = frame;
         this.setLayout(new BorderLayout()); // Divide el panel en secciones (Norte, Sur, Centro, etc.)
@@ -24,6 +37,9 @@ public class entradas extends JPanel {
 
         Menu_lateral();
         crearPanelCentral();
+        // Carga los datos de la BD en la tabla al abrir esta pantalla.
+        // (Llama a consultarEntradas() en src/seco/fcdb/entradasDB.java)
+        cargarEntradas();
     }
 
     private void Menu_lateral() {
@@ -90,28 +106,42 @@ public class entradas extends JPanel {
         JPanel pBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         pBotones.setOpaque(false);
 
-        pBotones.add(crearBotonBlanco("Editar"));
-        pBotones.add(crearBotonBlanco("Eliminar"));
+        // BOTONES DE ACCIÓN (Editar / Eliminar / Nueva Entrada)
+        // - Editar: abre el diálogo con los datos de la fila seleccionada (carga desde tabla)
+        // - Eliminar: borra la fila seleccionada (usa el ID de la tabla)
+        // - Nueva Entrada: abre el diálogo vacío para crear un registro nuevo
+        JButton btnEditar = crearBotonBlanco("Editar");
+        JButton btnEliminar = crearBotonBlanco("Eliminar");
+        JButton btnNueva = new JButton("Nueva Entrada");
 
-        JButton btnNu = new JButton("Nueva Entrada");
-        btnNu.setBackground(COLOR_NARANJA);
-        btnNu.setForeground(Color.WHITE);
-        btnNu.setFocusPainted(false);
-        btnNu.setBorder(BorderFactory.createCompoundBorder(
+        btnEditar.addActionListener(e -> mostrarDialogoEntrada(true));
+        btnEliminar.addActionListener(e -> eliminarEntradaSeleccionada());
+
+        btnNueva.setBackground(COLOR_NARANJA);
+        btnNueva.setForeground(Color.WHITE);
+        btnNueva.setFocusPainted(false);
+        btnNueva.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
                 BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
         ));
-        pBotones.add(btnNu);
+        btnNueva.addActionListener(e -> mostrarDialogoEntrada(false));
+
+        pBotones.add(btnEditar);
+        pBotones.add(btnEliminar);
+        pBotones.add(btnNueva);
 
         header.add(lblTitle, BorderLayout.WEST);
         header.add(pBotones, BorderLayout.EAST);
 
-        // TARJETAS INFORMATIVAS
+        // TARJETAS INFORMATIVAS (conectadas a BD)
         JPanel tarjetas = new JPanel(new GridLayout(1, 3, 20, 0)); // Rejilla de 1 fila y 3 columnas iguales
         tarjetas.setOpaque(false);
-        tarjetas.add(crearTarjeta("Entradas Hoy", "12", Color.BLACK));
-        tarjetas.add(crearTarjeta("Productos", "145", Color.BLACK));
-        tarjetas.add(crearTarjeta("Valor Ingreso", "$4,520", COLOR_DINERO_VERDE));
+        tarjetaEntradasHoy = crearTarjeta("Entradas Hoy", "0", Color.BLACK);
+        tarjetaProductos = crearTarjeta("Productos", "0", Color.BLACK);
+        tarjetaValor = crearTarjeta("Valor Ingreso", "$0", COLOR_DINERO_VERDE);
+        tarjetas.add(tarjetaEntradasHoy);
+        tarjetas.add(tarjetaProductos);
+        tarjetas.add(tarjetaValor);
         // posteriormente, tendrás que refrescar estos números (por ejemplo, ejecutar
         // de nuevo estos métodos y llamar a tarjetas.removeAll() + volver a agregar)
 
@@ -123,16 +153,17 @@ public class entradas extends JPanel {
 
         // definimos las columnas que tendrá la tabla; el orden debe coincidir con el que
         // usa el código de ejemplo original.
-        String[] columnas = { "ID", "FECHA", "PRODUCTO", "PROVEEDOR", "CANTIDAD", "ESTADO" };
-        DefaultTableModel modelo = new DefaultTableModel(columnas, 0); // Estructura de datos de la tabla
-        // llenar con datos de la base de datos a través de la clase entradasDB
-        // No se modifica entradasDB aquí; simplemente instanciamos y llamamos a su método
-        // público consultarEntradas. Esta clase encapsula la conexión y la consulta SQL.
-        seco.fcdb.entradasDB db = new seco.fcdb.entradasDB();
-        db.consultarEntradas(modelo); // modelo ahora contiene los registros reales de la tabla 'entradas'
+        String[] columnas = { "ID", "FECHA", "PRODUCTO", "PROVEDOR", "CANTIDAD", "ESTADO" };
+        modelo = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Evita edición directa en la tabla
+            }
+        }; // Estructura de datos de la tabla
 
-        JTable tabla = new JTable(modelo);
+        tabla = new JTable(modelo);
         tabla.setRowHeight(40); // Espaciado cómodo para las filas
+        tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         // si la consulta tarda, podría ejecutarse en un hilo separado para no bloquear la UI
 
@@ -165,6 +196,182 @@ public class entradas extends JPanel {
         main.add(areaSuperior, BorderLayout.NORTH);
         main.add(contenedorTabla, BorderLayout.CENTER); // La tabla ocupa el espacio restante
         add(main, BorderLayout.CENTER);
+    }
+
+    private void cargarEntradas() {
+        if (modelo == null) {
+            return;
+        }
+        // Limpia los datos actuales y vuelve a cargar desde la base de datos.
+        modelo.setRowCount(0);
+        // Llama a consultarEntradas() en src/seco/fcdb/entradasDB.java
+        db.consultarEntradas(modelo);
+        // Refresca las tarjetas con datos calculados de la BD
+        refrescarTarjetas();
+    }
+
+    // Método para actualizar las tarjetas con datos reales de la BD
+    private void refrescarTarjetas() {
+        int entradasHoy = db.contarEntradasHoy();
+        int totalProductos = db.sumarCantidadesTotales();
+        // Para Valor Ingreso, por ahora fijo (no hay precios en entradas), pero se puede calcular si se agrega precio
+        String valorIngreso = "$0"; // TODO: calcular basado en precio * cantidad si se agrega columna precio
+
+        actualizarTarjeta(tarjetaEntradasHoy, "Entradas Hoy", String.valueOf(entradasHoy), Color.BLACK);
+        actualizarTarjeta(tarjetaProductos, "Productos", String.valueOf(totalProductos), Color.BLACK);
+        actualizarTarjeta(tarjetaValor, "Valor Ingreso", valorIngreso, COLOR_DINERO_VERDE);
+    }
+
+    // Método auxiliar para actualizar el contenido de una tarjeta
+    private void actualizarTarjeta(JPanel tarjeta, String titulo, String valor, Color colorValor) {
+        tarjeta.removeAll(); // Quita los componentes anteriores
+        tarjeta.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Marco de la tarjeta
+                new EmptyBorder(15, 15, 15, 15) // Espacio para que el texto no toque el marco
+        ));
+
+        JLabel t = new JLabel(titulo);
+        t.setForeground(COLOR_TEXTO_SEC); // Título en gris
+        JLabel v = new JLabel(valor);
+        v.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        v.setForeground(colorValor);
+
+        tarjeta.add(t, BorderLayout.NORTH);
+        tarjeta.add(v, BorderLayout.CENTER);
+        tarjeta.revalidate(); // Refresca la UI
+        tarjeta.repaint();
+    }
+
+    private void mostrarDialogoEntrada(boolean esEdicion) {
+        String titulo = esEdicion ? "Editar Entrada" : "Nueva Entrada";
+        String botonGuardar = esEdicion ? "Guardar" : "Agregar";
+
+        // Se usa array para que pueda ser modificado dentro del ActionListener (lambda)
+        // (Java exige que las variables capturadas sean efectivamente finales, por eso arreglo)
+        final int[] idSeleccionado = new int[] { -1 };
+        String producto = "";
+        String proveedor = "";
+        int cantidad = 1;
+
+        if (esEdicion) {
+            int fila = tabla.getSelectedRow();
+            if (fila < 0) {
+                JOptionPane.showMessageDialog(this, "Seleccione una fila para editar.", "Atención",
+                        JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            try {
+                idSeleccionado[0] = Integer.parseInt(String.valueOf(tabla.getValueAt(fila, 0)));
+            } catch (NumberFormatException ignored) {
+                idSeleccionado[0] = -1;
+            }
+            producto = String.valueOf(tabla.getValueAt(fila, 2));
+            proveedor = String.valueOf(tabla.getValueAt(fila, 3));
+            try {
+                cantidad = Integer.parseInt(String.valueOf(tabla.getValueAt(fila, 4)));
+            } catch (NumberFormatException ignored) {
+                cantidad = 1;
+            }
+        }
+
+        JDialog dialog = new JDialog(SwingUtilities.getWindowAncestor(this), titulo, Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dialog.setSize(400, 260);
+        dialog.setLocationRelativeTo(this);
+
+        JPanel form = new JPanel(new GridLayout(0, 2, 10, 10));
+        form.setBorder(new EmptyBorder(15, 15, 15, 15));
+
+        JTextField tfProducto = new JTextField(producto);
+        JTextField tfProveedor = new JTextField(proveedor);
+        JSpinner spCantidad = new JSpinner(new SpinnerNumberModel(cantidad, 1, Integer.MAX_VALUE, 1));
+
+        form.add(new JLabel("Producto:"));
+        form.add(tfProducto);
+        form.add(new JLabel("Proveedor:"));
+        form.add(tfProveedor);
+        form.add(new JLabel("Cantidad (Lote):"));
+        form.add(spCantidad);
+
+        JPanel botones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        JButton btnCancelar = new JButton("Cancelar");
+        JButton btnGuardar = new JButton(botonGuardar);
+        botones.add(btnCancelar);
+        botones.add(btnGuardar);
+
+        btnCancelar.addActionListener(e -> dialog.dispose());
+        btnGuardar.addActionListener(e -> {
+            String prod = tfProducto.getText().trim();
+            String prov = tfProveedor.getText().trim();
+            int cant = (int) spCantidad.getValue();
+
+            if (prod.isEmpty() || prov.isEmpty() || cant < 1) {
+                JOptionPane.showMessageDialog(dialog, "Complete todos los campos correctamente.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            boolean ok;
+            if (esEdicion) {
+                // Guardar cambios existentes: actualiza registro usando el ID cargado desde la tabla
+                int id = idSeleccionado[0];
+                if (id > 0) {
+                    ok = db.actualizarEntrada(id, prod, prov, cant);
+                } else {
+                    ok = false;
+                }
+            } else {
+                // Insertar nuevo registro en la base de datos
+                ok = db.agregarEntrada(prod, prov, cant);
+            }
+
+            if (ok) {
+                cargarEntradas();
+                dialog.dispose();
+            } else {
+                JOptionPane.showMessageDialog(dialog, "No se pudo guardar la entrada. Revise la conexión.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        dialog.setLayout(new BorderLayout());
+        dialog.add(form, BorderLayout.CENTER);
+        dialog.add(botones, BorderLayout.SOUTH);
+        dialog.setVisible(true);
+    }
+
+    private void eliminarEntradaSeleccionada() {
+        // Se asegura que el usuario tenga una fila seleccionada.
+        int fila = tabla.getSelectedRow();
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione una fila para eliminar.", "Atención",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // El ID viene del primer campo de la fila (columna 0).
+        String idSeleccionado = String.valueOf(tabla.getValueAt(fila, 0));
+        int opcion = JOptionPane.showConfirmDialog(this, "¿Desea eliminar la entrada seleccionada?", "Confirmar",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (opcion != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            int id = Integer.parseInt(idSeleccionado);
+            // Llama al método en src/seco/fcdb/entradasDB.java que ejecuta el DELETE
+            boolean ok = db.eliminarEntrada(id);
+            if (ok) {
+                // Refresca la tabla para que ya no aparezca la fila eliminada
+                cargarEntradas();
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo eliminar la entrada.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "El ID seleccionado no es válido.", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private JButton crearBotonBlanco(String t) {
