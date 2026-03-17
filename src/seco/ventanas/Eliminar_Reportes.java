@@ -19,11 +19,10 @@ public class Eliminar_Reportes extends JFrame {
         setLayout(null);
 
         JLabel titulo = new JLabel("Eliminar Reporte");
-        titulo.setFont(new Font("Arial", Font.BOLD,18));
         titulo.setBounds(90,20,200,30);
         add(titulo);
 
-        JLabel idReporte = new JLabel("ID del reporte:");
+        JLabel idReporte = new JLabel("ID:");
         idReporte.setBounds(40,80,120,25);
         add(idReporte);
 
@@ -39,27 +38,11 @@ public class Eliminar_Reportes extends JFrame {
 
             String id = campoIDReporte.getText();
 
-            if(id.isEmpty()){
-                JOptionPane.showMessageDialog(this, "Ingrese un ID");
-                return;
-            }
+            seco.fcdb.reportesDB.eliminarReporte(id);
+            panelReportes.actualizarTabla();
 
-            // 🔥 CONFIRMACIÓN (PRO)
-            int confirm = JOptionPane.showConfirmDialog(this,
-                    "¿Seguro que quieres eliminar este reporte?",
-                    "Confirmar",
-                    JOptionPane.YES_NO_OPTION);
-
-            if(confirm == JOptionPane.YES_OPTION){
-
-                seco.fcdb.reportesDB.eliminarReporte(id);
-
-                panelReportes.actualizarTabla();
-
-                JOptionPane.showMessageDialog(this, "Reporte eliminado correctamente");
-
-                dispose();
-            }
+            JOptionPane.showMessageDialog(this,"Eliminado");
+            dispose();
         });
 
         JButton cancelar = new JButton("Cancelar");

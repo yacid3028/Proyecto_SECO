@@ -6,6 +6,7 @@ import javax.swing.table.DefaultTableModel;
 
 import seco.ventanas.Eliminar_Reportes;
 import seco.ventanas.Editar_Reportes;
+import seco.ventanas.Nuevo_Reporte;
 
 public class reportes extends JPanel {
 
@@ -81,34 +82,35 @@ public class reportes extends JPanel {
         JPanel content = new JPanel(new BorderLayout());
         add(content, BorderLayout.CENTER);
 
-        
         JPanel panelSuperior = new JPanel(new BorderLayout());
 
         JLabel titulo = new JLabel("Reportes");
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         panelSuperior.add(titulo, BorderLayout.WEST);
 
+        
         JPanel botones = new JPanel();
 
+        JButton nuevo = new JButton("Nuevo Reporte");
         JButton editar = new JButton("Editar Reporte");
         JButton eliminar = new JButton("Eliminar Reporte");
 
         
+        nuevo.addActionListener(e -> {
+            new Nuevo_Reporte(this).setVisible(true);
+        });
+
+        
         editar.addActionListener(e -> {
-
-            Editar_Reportes ventana = new Editar_Reportes();
-            ventana.setVisible(true);
-
+            new Editar_Reportes().setVisible(true);
         });
 
         
         eliminar.addActionListener(e -> {
-
-            Eliminar_Reportes ventana = new Eliminar_Reportes(this);
-            ventana.setVisible(true);
-
+            new Eliminar_Reportes(this).setVisible(true);
         });
 
+        botones.add(nuevo);
         botones.add(editar);
         botones.add(eliminar);
 
@@ -116,7 +118,7 @@ public class reportes extends JPanel {
 
         content.add(panelSuperior, BorderLayout.NORTH);
 
-        // 🔹 TABLA
+        
         String columnas[] = { "ID", "Categoria", "Descripción", "Usuario", "Fecha" };
 
         modelo = new DefaultTableModel(null, columnas);
@@ -133,9 +135,7 @@ public class reportes extends JPanel {
 
     
     public void actualizarTabla() {
-
         modelo.setRowCount(0);
-
         seco.fcdb.reportesDB.reportes(modelo);
     }
 }
