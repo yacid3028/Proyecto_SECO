@@ -8,6 +8,7 @@ import seco.conexionbd;
 
 public class productosDB {
 
+    
     public static void productos(DefaultTableModel model) {
 
         try {
@@ -36,11 +37,13 @@ public class productosDB {
         }
     }
 
-    public static void eliminarProducto(int id) {
+    
+    public static void eliminarProducto(String id) {
 
         try {
             Connection con = conexionbd.conectar();
-            String sql = "DELETE FROM Productos WHERE id_Producto = " + id;
+
+            String sql = "DELETE FROM Productos WHERE id_Productos = '" + id + "'";
 
             Statement st = con.createStatement();
             st.executeUpdate(sql);
@@ -56,13 +59,15 @@ public class productosDB {
         }
     }
 
-    public void agregarProducto(String id, String nombre, String categoria, double precioCompra, double precioVenta, int stock) {
+    
+    public void agregarProducto(String id, String nombre, String categoria,
+                               double precioCompra, double precioVenta, int stock) {
 
         try {
             Connection con = conexionbd.conectar();
 
-            String sql = "INSERT INTO Productos (Id,id_Productos, Nombre,Precio_de_compra, Precio_de_venta,Categoria ,Stock) VALUES (0,'"
-                    + id + "','" + nombre + "'," + precioCompra + ",'" + precioVenta + "','" + categoria + "'," + stock + ")";
+            String sql = "INSERT INTO Productos (Id, id_Productos, Nombre, Precio_de_compra, Precio_de_venta, Categoria, Stock) VALUES (0,'"
+                    + id + "','" + nombre + "'," + precioCompra + "," + precioVenta + ",'" + categoria + "'," + stock + ")";
 
             Statement st = con.createStatement();
             st.executeUpdate(sql);
@@ -78,6 +83,7 @@ public class productosDB {
         }
     }
 
+    
     public void buscarProducto(String idProducto, DefaultTableModel modelo) {
 
         Connection con = conexionbd.conectar();
@@ -106,13 +112,18 @@ public class productosDB {
                 }
             }
 
+            rs.close();
+            st.close();
+            con.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // 🔥 MÉTODO BIEN PUESTO
-    public static void actualizarProducto(String idProducto, String categoria, double precioVenta, double precioCompra, int stock) {
+    
+    public static void actualizarProducto(String idProducto, String categoria,
+                                          double precioVenta, double precioCompra, int stock) {
 
         try {
             Connection con = conexionbd.conectar();

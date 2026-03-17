@@ -157,17 +157,15 @@ eliminar.addActionListener(e -> {
             JOptionPane.QUESTION_MESSAGE
     );
 
-    if(id != null){
+  if(id != null && !id.isEmpty()){
 
-        int idProducto = Integer.parseInt(id);
+    productosDB.eliminarProducto(id);
 
-        productosDB.eliminarProducto(idProducto);
+    actualizarTabla();
 
-        actualizarTabla();
+    JOptionPane.showMessageDialog(null,"Producto eliminado");
 
-        JOptionPane.showMessageDialog(null,"Producto eliminado");
-
-    }
+}
 
 });
 
