@@ -132,13 +132,13 @@ public class productos extends JPanel {
         JOptionPane.showMessageDialog(null,"Seleccione un producto de la tabla");
 
         return;
-    }
+    }else{
 
-    int idProducto = (int) tabla.getValueAt(fila,0);
-
+    String idProducto = (String) tabla.getValueAt(fila,0);
+    
     prodcutodeditar ventana = new prodcutodeditar(idProducto);
-
     ventana.setVisible(true);
+    }
 
 });
 
