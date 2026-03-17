@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import seco.ventanas.Eliminar_Reportes;
+import seco.ventanas.Editar_Reportes;
 
 public class reportes extends JPanel {
 
@@ -58,7 +59,6 @@ public class reportes extends JPanel {
 
         JButton boton = new JButton(texto, icono);
 
-        
         if (texto.equals("Reportes")) {
             boton.setBackground(new Color(33, 150, 243));
         } else {
@@ -81,40 +81,42 @@ public class reportes extends JPanel {
         JPanel content = new JPanel(new BorderLayout());
         add(content, BorderLayout.CENTER);
 
-        // 🔹 SUPERIOR
+        
         JPanel panelSuperior = new JPanel(new BorderLayout());
 
         JLabel titulo = new JLabel("Reportes");
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         panelSuperior.add(titulo, BorderLayout.WEST);
 
-        JPanel botonesSuperiorDerecha = new JPanel();
-
-        JButton agregar = new JButton("Agregar Reporte");
-        agregar.setBackground(new Color(255, 140, 0));
-        agregar.setForeground(Color.WHITE);
+        JPanel botones = new JPanel();
 
         JButton editar = new JButton("Editar Reporte");
-
         JButton eliminar = new JButton("Eliminar Reporte");
 
         
-        eliminar.addActionListener(e -> {
+        editar.addActionListener(e -> {
 
-            Eliminar_Reportes ventana = new Eliminar_Reportes();
+            Editar_Reportes ventana = new Editar_Reportes();
             ventana.setVisible(true);
 
         });
 
-        botonesSuperiorDerecha.add(editar);
-        botonesSuperiorDerecha.add(eliminar);
-        botonesSuperiorDerecha.add(agregar);
+        
+        eliminar.addActionListener(e -> {
 
-        panelSuperior.add(botonesSuperiorDerecha, BorderLayout.EAST);
+            Eliminar_Reportes ventana = new Eliminar_Reportes(this);
+            ventana.setVisible(true);
+
+        });
+
+        botones.add(editar);
+        botones.add(eliminar);
+
+        panelSuperior.add(botones, BorderLayout.EAST);
 
         content.add(panelSuperior, BorderLayout.NORTH);
 
-        
+        // 🔹 TABLA
         String columnas[] = { "ID", "Categoria", "Descripción", "Usuario", "Fecha" };
 
         modelo = new DefaultTableModel(null, columnas);
@@ -127,21 +129,13 @@ public class reportes extends JPanel {
         scroll.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
         content.add(scroll, BorderLayout.CENTER);
+    }
 
-        
-        JPanel panelInferior = new JPanel(new BorderLayout());
+    
+    public void actualizarTabla() {
 
-        JPanel botonesDerecha = new JPanel();
+        modelo.setRowCount(0);
 
-        JButton exportar = new JButton("Exportar");
-        exportar.setPreferredSize(new Dimension(140, 40));
-        exportar.setBackground(new Color(255, 140, 0));
-        exportar.setForeground(Color.WHITE);
-
-        botonesDerecha.add(exportar);
-
-        panelInferior.add(botonesDerecha, BorderLayout.EAST);
-
-        content.add(panelInferior, BorderLayout.SOUTH);
+        seco.fcdb.reportesDB.reportes(modelo);
     }
 }

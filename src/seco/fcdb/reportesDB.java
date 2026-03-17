@@ -8,6 +8,7 @@ import seco.conexionbd;
 
 public class reportesDB {
 
+    
     public static void reportes(DefaultTableModel model) {
 
         try {
@@ -33,10 +34,52 @@ public class reportesDB {
             con.close();
 
         } catch (Exception e) {
-
             System.out.println("Error al cargar reportes");
             e.printStackTrace();
+        }
+    }
 
+    
+    public static ResultSet buscarReporte(String id) {
+
+        try {
+            Connection con = conexionbd.conectar();
+            Statement st = con.createStatement();
+
+            String sql = "SELECT * FROM Reportes WHERE id_Reportes = '" + id + "'";
+
+            return st.executeQuery(sql);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    
+    public static void actualizarReporte(String id, String categoria, String descripcion, String usuario, String fecha) {
+
+        try {
+
+            Connection con = conexionbd.conectar();
+
+            String sql = "UPDATE Reportes SET " +
+                    "Categoria = '" + categoria + "', " +
+                    "Descripcion = '" + descripcion + "', " +
+                    "Usuario = '" + usuario + "', " +
+                    "Fecha = '" + fecha + "' " +
+                    "WHERE id_Reportes = '" + id + "'";
+
+            Statement st = con.createStatement();
+            st.executeUpdate(sql);
+
+            st.close();
+            con.close();
+
+            System.out.println("Reporte actualizado correctamente");
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -61,7 +104,6 @@ public class reportesDB {
 
             System.out.println("Error al eliminar reporte");
             e.printStackTrace();
-
         }
     }
 }

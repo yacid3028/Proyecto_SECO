@@ -2,12 +2,16 @@ package seco.ventanas;
 
 import javax.swing.*;
 import java.awt.*;
+import seco.reportes;
 
 public class Eliminar_Reportes extends JFrame {
 
     JTextField campoIDReporte;
+    private reportes panelReportes;
 
-    public Eliminar_Reportes() {
+    public Eliminar_Reportes(reportes panelReportes) {
+
+        this.panelReportes = panelReportes;
 
         setTitle("Eliminar Reporte");
         setSize(350,200);
@@ -40,11 +44,22 @@ public class Eliminar_Reportes extends JFrame {
                 return;
             }
 
-            seco.fcdb.reportesDB.eliminarReporte(id);
+            // 🔥 CONFIRMACIÓN (PRO)
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "¿Seguro que quieres eliminar este reporte?",
+                    "Confirmar",
+                    JOptionPane.YES_NO_OPTION);
 
-            JOptionPane.showMessageDialog(this, "Reporte eliminado correctamente");
+            if(confirm == JOptionPane.YES_OPTION){
 
-            dispose();
+                seco.fcdb.reportesDB.eliminarReporte(id);
+
+                panelReportes.actualizarTabla();
+
+                JOptionPane.showMessageDialog(this, "Reporte eliminado correctamente");
+
+                dispose();
+            }
         });
 
         JButton cancelar = new JButton("Cancelar");
