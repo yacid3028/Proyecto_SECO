@@ -8,7 +8,7 @@ public class conexionbd {
         Connection conexion = null;
         try {
 
-            String ruta = "jdbc:ucanaccess://db/SECO.accdb";
+            String ruta = "jdbc:ucanaccess://db/SECO_db.accdb";
             conexion = DriverManager.getConnection(ruta);
 
         } catch (Exception e) {

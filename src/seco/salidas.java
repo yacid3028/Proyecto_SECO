@@ -119,7 +119,7 @@ public class salidas extends JPanel {
         contenedorTabla.setBackground(Color.WHITE);
         contenedorTabla.setBorder(BorderFactory.createLineBorder(COLOR_BORDE_GRIS));
 
-        String[] columnas = { "ID VENTA", "PRODUCTO", "CANTIDAD", "SUBTOTAL", "TOTAL", "FECHA" };
+        String[] columnas = { "ID VENTA", "PRODUCTO", "CANTIDAD", "TOTAL", "FECHA" };
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {

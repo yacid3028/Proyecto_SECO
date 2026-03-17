@@ -12,7 +12,7 @@ public class ventasDB {
     public void consultarVentas(DefaultTableModel modelo) {
 
         Connection con = conexionbd.conect();
-        String sql = "SELECT * FROM Ventas";
+        String sql = "SELECT * FROM Salidas";
 
         try {
             Statement st = con.createStatement();
@@ -20,18 +20,16 @@ public class ventasDB {
 
             while (rs.next()) {
 
-                String id = rs.getString("Id_Venta");
-                String fecha = rs.getString("Fecha");
+                String idVenta = rs.getString("id_Venta");
                 String producto = rs.getString("Producto");
-                int cantidad = rs.getInt("cantidades");
-                double subtotal = rs.getDouble("Subtotal");
-                double total = rs.getDouble("Total");
+                String cantidad = rs.getString("Cantidad");
+                int total = rs.getInt("Total");
+                String fecha = rs.getString("Fecha");
 
                 modelo.addRow(new Object[] {
-                        id,
+                        idVenta,
                         producto,
                         cantidad,
-                        "$" + subtotal,
                         "$" + total,
                         fecha
                 });

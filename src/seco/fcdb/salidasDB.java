@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -118,13 +117,12 @@ public class salidasDB {
         }
 
         Connection con = conexionbd.conect();
-        String sql = "INSERT INTO Ventas (id_venta, fecha, producto, cantidad, subtotal, total) VALUES ('"
-                + idVenta + "', '" + fecha + "', '" + producto + "', " + cantidad + ", " + subtotal + ", " + total
-                + ")";
+        String sql = "INSERT INTO Salidas (id_Venta, Producto, Cantidad, Total,Semana,Fecha) VALUES ('"
+                + idVenta + "', '" + producto + "', " + cantidad + ", " + total + ", 1 , '" + fecha
+                + "')";
         try {
             Statement st = con.createStatement();
             st.executeUpdate(sql);
-            JOptionPane.showMessageDialog(null, "Venta registrada exitosamente ");
         } catch (Exception e) {
             e.printStackTrace();
         }

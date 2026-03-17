@@ -8,8 +8,6 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -292,23 +290,21 @@ public class ventas extends JPanel {
 		cobrar.setFont(buttonFont);
 		cobrar.addActionListener(ActionListener -> {
 			salidasDB db = new salidasDB();
-			int i = 0;
 			String idVenta = "", producto = "";
 			int cantidad = 0;
 
 			while (modelo.getRowCount() > 0) {
-				idVenta += ((String) modelo.getValueAt(1, 0)).substring(2, 4);
-				producto += " " + (String) modelo.getValueAt(i, 1);
-				String cant = (String) modelo.getValueAt(i, 2);
+				idVenta = ((String) modelo.getValueAt(0, 0)).substring(2, 4);
+				producto = (String) modelo.getValueAt(0, 1);
+				String cant = (String) modelo.getValueAt(0, 2);
 				cantidad = Integer.parseInt(cant.replace("$", "").trim());
-				modelo.removeRow(i);
-				i++;
+				double subtotal = Double.parseDouble(subtotalValor.getText().replace("$ ", ""));
+				double total = Double.parseDouble(totalValor.getText().replace("$ ", ""));
+				modelo.removeRow(0);
+				db.registrarVenta(idVenta, fechaActual, producto, cantidad, subtotal, total);
+
 			}
 
-			double subtotal = Double.parseDouble(subtotalValor.getText().replace("$ ", ""));
-			double total = Double.parseDouble(totalValor.getText().replace("$ ", ""));
-			db.registrarVenta(idVenta, fechaActual, producto, cantidad, subtotal, total);
-			modelo.setRowCount(0);
 			subtotalValor.setText("$ ");
 			impuestoValor.setText("$ ");
 			totalValor.setText("$ ");
