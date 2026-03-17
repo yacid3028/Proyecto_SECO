@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
-import java.sql.ResultSetMetaData;
 import javax.swing.table.DefaultTableModel;
 
 import seco.conexionbd;
@@ -18,8 +17,6 @@ public class productosDB {
             Connection con = conexionbd.conectar();
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery("SELECT * FROM Productos");
-
-            ResultSetMetaData meta = rs.getMetaData();
 
             while (rs.next()) {
 
@@ -77,7 +74,7 @@ public class productosDB {
 
             Connection con = conexionbd.conectar();
 
-            String sql = "INSERT INTO Productos (Id,id_producto, Nombre, Categoria, [Precio de venta], Stock) VALUES (0,'"
+            String sql = "INSERT INTO Productos (Id,id_Productos, Nombre, Categoria, Precio_de_venta, Stock) VALUES (0,'"
                     + id + "','" + nombre + "','" + categoria + "'," + precio + "," + stock + ")";
 
             Statement st = con.createStatement();
