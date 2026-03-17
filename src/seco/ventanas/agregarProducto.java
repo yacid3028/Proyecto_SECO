@@ -35,8 +35,11 @@ public class agregarProducto extends JFrame {
         JLabel lblNombre = new JLabel("Nombre:");
         txtNombre = new JTextField();
 
-        JLabel lblDescripcion = new JLabel("Descripción:");
-        txtDescripcion = new JTextField();
+        JLabel lblPrecioCompra = new JLabel("Precio de compra:");
+        JTextField txtPrecioCompra = new JTextField();
+
+        JLabel lblCategoria = new JLabel("Categoría:");
+        JTextField txtCategoria = new JTextField();
 
         JLabel lblPrecio = new JLabel("Precio de venta:");
         txtPrecio = new JTextField();
@@ -50,8 +53,13 @@ public class agregarProducto extends JFrame {
         panel.add(lblNombre);
         panel.add(txtNombre);
 
-        panel.add(lblDescripcion);
-        panel.add(txtDescripcion);
+        panel.add(lblPrecioCompra);
+        panel.add(txtPrecioCompra);
+
+        panel.add(lblCategoria);
+        panel.add(txtCategoria);
+
+        
 
         panel.add(lblPrecio);
         panel.add(txtPrecio);

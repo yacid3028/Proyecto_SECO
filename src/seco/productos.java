@@ -233,7 +233,7 @@ eliminar.addActionListener(e -> {
 
         JPanel panel = new JPanel(new BorderLayout());
 
-        String[] cols = {"ID","Nombre","Categoria","Precio venta","Stock"};
+        String[] cols = {"ID","id_Producto" ,"Nombre", "Precio de Compra", "Categoria", "Precio de Venta", "Stock"};
         modelo = new DefaultTableModel(cols,0){
             @Override
             public boolean isCellEditable(int row,int column){
@@ -241,7 +241,7 @@ eliminar.addActionListener(e -> {
             }
         };
 
-        // CARGAR DESDE ACCESS
+        
         productosDB.productos(modelo);
 
         tabla = new JTable(modelo);

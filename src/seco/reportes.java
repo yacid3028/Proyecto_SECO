@@ -21,7 +21,7 @@ public class reportes extends JPanel {
 		p.setLayout(new GridLayout(10, 1, 0, 1));
 		add(p, BorderLayout.WEST);
 
-		// Logo original
+		
 		ImageIcon lg = new ImageIcon("img/logo.png");
 		Icon in = new ImageIcon(lg.getImage().getScaledInstance(70, 60, Image.SCALE_SMOOTH));
 		JButton titulo = new JButton("Stock System", in);
@@ -34,7 +34,7 @@ public class reportes extends JPanel {
 		titulo.setFont(new Font("Arial", Font.ITALIC, 15));
 		p.add(titulo);
 
-		// Icono casa original
+		
 		ImageIcon dashi = new ImageIcon("img/casa_icono.jpg");
 		Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
 
@@ -49,7 +49,7 @@ public class reportes extends JPanel {
 	}
 
 	private JButton crearBoton(String texto, String vista, Icon icono) {
-		// AGREGA IMAGEN AL BOTON Y TEXTO
+		
 		JButton boton = new JButton(texto, icono);
 		if (texto == "Reportes") {
 			boton.setBackground(new Color(33, 150, 243));
@@ -67,19 +67,19 @@ public class reportes extends JPanel {
 		return boton;
 	}
 
-	// CONTENIDO PRINCIPAL DE REPORTES
+	
 	private void contenidoReportes() {
 		JPanel content = new JPanel(new BorderLayout());
 		add(content, BorderLayout.CENTER);
 
-		// PANEL SUPERIOR
+		
 		JPanel panelSuperior = new JPanel(new BorderLayout());
 
 		JLabel titulo = new JLabel("Reportes");
 		titulo.setFont(new Font("Arial", Font.BOLD, 22));
 		panelSuperior.add(titulo, BorderLayout.WEST);
 
-		// Botones en esquina superior derecha
+		
 		JPanel botonesSuperiorDerecha = new JPanel();
 		JButton agregar = new JButton("Agregar Reporte");
 		agregar.setBorder(BorderFactory.createCompoundBorder(
@@ -98,8 +98,8 @@ public class reportes extends JPanel {
 
 		JButton eliminar = new JButton("Eliminar Reporte");
 		eliminar.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(new Color(200, 200, 200)), // Borde exterior
-				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+				BorderFactory.createLineBorder(new Color(200, 200, 200)), 
+				BorderFactory.createEmptyBorder(8, 15, 8, 15) 
 		));
 		botonesSuperiorDerecha.add(editar);
 		botonesSuperiorDerecha.add(eliminar);
@@ -119,31 +119,28 @@ public class reportes extends JPanel {
 
 		content.add(tarjetas, BorderLayout.CENTER);
 
-		// PANEL INFERIOR (TABLA + BOTONES)
+		
 		JPanel panelInferior = new JPanel(new BorderLayout());
 
-		// TABLA
-		String columnas[] = { "Categoria", "Descripción", "Usuario", "Fecha" };
+		
+		String columnas[] = { " id_Reportes", "Categorias" ,"Descripción", "Usuario", "Fecha" };
 
 		DefaultTableModel modelo = new DefaultTableModel(null, columnas);
 
-		modelo.addRow(new Object[] { "S.A.C", "El quiente se quejo", "Yacid", "date" });
-		modelo.addRow(new Object[] { "Productos", "Salio producto dañado", "Esteban", "date" });
-		modelo.addRow(new Object[] { "Sucursal", "Inmobiliario dañado", "Caleb", "date" });
-		modelo.addRow(new Object[] { "S.R.S", "El sistema tuvo problemas", "Santi", "date" });
+		seco.fcdb.reportesDB.reportes(modelo);
 
 		JTable tabla = new JTable(modelo);
-
+		
 		JScrollPane scroll = new JScrollPane(tabla);
 		scroll.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
 		panelInferior.add(scroll, BorderLayout.CENTER);
 
-		// PANEL DE BOTONES
+		
 		JPanel panelBotones = new JPanel(new BorderLayout());
 		panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		// Botón derecha (Exportar)
+		
 		JPanel botonesDerecha = new JPanel();
 		JButton exportar = new JButton("Exportar");
 		exportar.setPreferredSize(new Dimension(140, 40));
@@ -159,7 +156,7 @@ public class reportes extends JPanel {
 		content.add(panelInferior, BorderLayout.SOUTH);
 	}
 
-	// Crear tarjetas
+	
 	private JPanel crearTarjeta(String titulo, String valor) {
 
 		JPanel panel = new JPanel(new GridLayout(2, 1));

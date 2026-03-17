@@ -7,6 +7,8 @@ import java.sql.Statement;
 import java.sql.ResultSetMetaData;
 import javax.swing.table.DefaultTableModel;
 
+import com.healthmarketscience.jackcess.complex.ComplexValue.Id;
+
 import seco.conexionbd;
 
 public class productosDB {
@@ -81,7 +83,7 @@ public class productosDB {
 
             Connection con = conexionbd.conectar();
 
-            String sql = "INSERT INTO Productos (id_producto, Nombre, Categoria, [Precio de venta], Stock) VALUES ("
+            String sql = "INSERT INTO Productos (Id,id_Producto, Nombre, Precio_de_compra, Categoria, Precio_de_venta, Stock) VALUES ("
                     + id + ",'" + nombre + "','" + descripcion + "'," + precio + "," + stock + ")";
 
             Statement st = con.createStatement();

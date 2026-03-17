@@ -116,7 +116,7 @@ class EliminarRegistro extends JFrame {
 }
 
 // Ventana Nueva Orden
-class NuevaOrden extends JFrame {
+public class NuevaOrden extends JFrame {
     public NuevaOrden() {
         setTitle("Nueva Orden");
         setSize(420, 320);
