@@ -16,6 +16,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import seco.fcdb.productosDB;
+import seco.fcdb.ordenesDB;
 
 public class dashboard extends JPanel {
 	private executable executable;
@@ -127,10 +128,18 @@ public class dashboard extends JPanel {
 		cards.setBackground(new Color(240, 240, 240));
 		cards.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
 
-		cards.add(card("Stock Total", "12,450", "Productos en inventario"));
-		cards.add(card("Bajo Stock", "28", "Productos bajos"));
-		cards.add(card("Órdenes Pendientes", "5", "Órdenes por recibir"));
-		cards.add(card("Valor Inventario", "$245,300", "Valor total"));
+		productosDB pdb = new productosDB();
+		ordenesDB odb = new ordenesDB();
+
+		int stockTotal = pdb.obtenerStockTotal();
+		int bajoStock = pdb.obtenerBajoStock();
+		int ordenesPendientes = odb.obtenerOrdenesPendientes();
+		double valorIngreso = pdb.obtenerValorIngreso();
+
+		cards.add(card("Stock Total", String.format("%,d", stockTotal), "Productos en inventario"));
+		cards.add(card("Bajo Stock", String.valueOf(bajoStock), "Productos ≤7 unidades"));
+		cards.add(card("Órdenes Pendientes", String.valueOf(ordenesPendientes), "Órdenes por recibir"));
+		cards.add(card("Valor Ingreso", String.format("$%,.0f", valorIngreso), "Ganancia total"));
 
 		cont.add(logoPanel, BorderLayout.NORTH);
 		cont.add(cards, BorderLayout.CENTER);
@@ -249,8 +258,11 @@ public class dashboard extends JPanel {
 				Graphics2D g2 = (Graphics2D) g;
 				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 						RenderingHints.VALUE_ANTIALIAS_ON);
-				// DECLARA LOS VALORES DE LA TABLA
-				int[] valores = { 90, 10, 60, 50, 30, 50, 60, 70, 80 };
+
+				// OBTIENE LOS VALORES REALES DE LA BASE DE DATOS
+				productosDB db = new productosDB();
+				int[] valores = db.consultarResumenStock();
+
 				// DECLARA LOS COLORES OPCIONAL
 				Color[] colores = {
 						new Color(52, 152, 219),
@@ -265,16 +277,18 @@ public class dashboard extends JPanel {
 				};
 
 				int x = 10;
-				// LLENA Y CREA LOS ESPACIOS DE LA TABLA CON LO VALORES
+				// LLENA Y CREA LOS ESPACIOS DE LA TABLA CON LOS VALORES REALES
 				for (int i = 0; i < valores.length; i++) {
+					g2.setColor(colores[i % colores.length]);
 
-					g2.setColor(colores[i]);
+					// ESCALA LOS VALORES PARA QUE SE VEAN BIEN EN LA GRAFICA
+					int altura = Math.max(10, valores[i] * 2); // Multiplica por 2 para mejor visualización
 
 					g2.fillRoundRect(
 							x, // DISTANCIA LATERAL
-							getHeight() - valores[i] - 10, // DISTANCIA VERTICAL
+							getHeight() - altura - 10, // DISTANCIA VERTICAL
 							30, // ANCHO
-							valores[i], // VALOR DE ALTO
+							altura, // VALOR DE ALTO ESCALADO
 							10, // ROUND BORDER
 							10);
 
@@ -294,10 +308,12 @@ public class dashboard extends JPanel {
 
 		String[] cols = { "Producto", "Stock", "Estado" };
 
-		Object[][] data = {
-		};
+		DefaultTableModel modelo = new DefaultTableModel(cols, 0);
 
-		JTable table = new JTable(data, cols);
+		productosDB db = new productosDB();
+		db.consultarBajoStock(modelo);
+
+		JTable table = new JTable(modelo);
 		table.setRowHeight(28);
 		table.setShowVerticalLines(false);
 		table.setGridColor(new Color(230, 230, 230));
@@ -311,8 +327,6 @@ public class dashboard extends JPanel {
 				BorderFactory.createLineBorder(new Color(230, 230, 230)),
 				BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
-		p.add(new JLabel("Productos Bajos de Stock"), BorderLayout.NORTH);
-		p.add(new JScrollPane(table), BorderLayout.CENTER);
 
 		return p;
 	}
