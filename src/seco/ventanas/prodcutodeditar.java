@@ -10,7 +10,11 @@ public class prodcutodeditar extends JFrame {
     private JTextField txtPrecioCompra;
     private JTextField txtStock;
 
+    private String idProducto; // 👈 guardamos el ID
+
     public prodcutodeditar(String idProducto) {
+
+        this.idProducto = idProducto;
 
         setTitle("Editar Producto");
         setSize(420, 320);
@@ -25,11 +29,10 @@ public class prodcutodeditar extends JFrame {
         add(titulo, BorderLayout.NORTH);
 
         // Panel principal
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new GridLayout(4, 2, 15, 15));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        panel.setLayout(new GridLayout(4, 2, 15, 15));
 
-        // Categorías (desplegable)
+        // Categorías
         JLabel lblCategoria = new JLabel("Categoría:");
 
         String[] categorias = {
@@ -60,7 +63,7 @@ public class prodcutodeditar extends JFrame {
         JLabel lblStock = new JLabel("Stock:");
         txtStock = new JTextField();
 
-        // Agregar en orden
+        // Agregar componentes
         panel.add(lblCategoria);
         panel.add(comboCategoria);
 
@@ -87,9 +90,9 @@ public class prodcutodeditar extends JFrame {
 
         cancelar.addActionListener(e -> dispose());
 
-        // Acción guardar (con validación)
         guardar.addActionListener(e -> {
 
+            // Validación
             if (comboCategoria.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(null, "Seleccione una categoría válida");
                 return;
@@ -101,10 +104,9 @@ public class prodcutodeditar extends JFrame {
                 double precioCompra = Double.parseDouble(txtPrecioCompra.getText());
                 int stock = Integer.parseInt(txtStock.getText());
 
-                // Aquí iría tu método de actualizar en BD 👇
-                // productosDB.actualizarProducto(idProducto, categoria, precioVenta, precioCompra, stock);
+                seco.fcdb.productosDB.actualizarProducto(idProducto, categoria, precioVenta, precioCompra, stock);
 
-                JOptionPane.showMessageDialog(null, "Producto actualizado correctamente");
+                JOptionPane.showMessageDialog(null, "Datos listos para actualizar");
                 dispose();
 
             } catch (NumberFormatException ex) {
