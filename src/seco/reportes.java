@@ -4,173 +4,144 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import seco.ventanas.Eliminar_Reportes;
+
 public class reportes extends JPanel {
-	private executable executable;
 
-	public reportes(executable frame) {
-		this.executable = frame;
-		setLayout(new BorderLayout());
-		Menu_lateral();
-		contenidoReportes();
-	}
+    private executable executable;
+    private JTable tabla;
+    private DefaultTableModel modelo;
 
-	private void Menu_lateral() {
-		JPanel p = new JPanel();
-		p.setPreferredSize(new Dimension(200, 0));
-		p.setBackground(new Color(10, 20, 100));
-		p.setLayout(new GridLayout(10, 1, 0, 1));
-		add(p, BorderLayout.WEST);
+    public reportes(executable frame) {
+        this.executable = frame;
+        setLayout(new BorderLayout());
+        Menu_lateral();
+        contenidoReportes();
+    }
 
-		
-		ImageIcon lg = new ImageIcon("img/logo.png");
-		Icon in = new ImageIcon(lg.getImage().getScaledInstance(70, 60, Image.SCALE_SMOOTH));
-		JButton titulo = new JButton("Stock System", in);
-		titulo.setHorizontalTextPosition(SwingConstants.RIGHT);
-		titulo.setVerticalTextPosition(SwingConstants.CENTER);
-		titulo.setBackground(new Color(0, 0, 0, 0));
-		titulo.setFocusPainted(false);
-		titulo.setBorder(null);
-		titulo.setForeground(Color.white);
-		titulo.setFont(new Font("Arial", Font.ITALIC, 15));
-		p.add(titulo);
+    private void Menu_lateral() {
 
-		
-		ImageIcon dashi = new ImageIcon("img/casa_icono.jpg");
-		Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+        JPanel p = new JPanel();
+        p.setPreferredSize(new Dimension(200, 0));
+        p.setBackground(new Color(10, 20, 100));
+        p.setLayout(new GridLayout(10, 1, 0, 1));
+        add(p, BorderLayout.WEST);
 
-		p.add(crearBoton("Dashboard", "dashboard", dsh));
-		p.add(crearBoton("Productos", "productos", dsh));
-		p.add(crearBoton("Entradas", "entradas", dsh));
-		p.add(crearBoton("Salidas", "salidas", dsh));
-		p.add(crearBoton("Provedores", "provedores", dsh));
-		p.add(crearBoton("Ordenes", "ordenes", dsh));
-		p.add(crearBoton("Reportes", "reportes", dsh)); // Este se pintará azul ahora
-		p.add(crearBoton("Servicio", "ventas", dsh));
-	}
+        ImageIcon lg = new ImageIcon("img/logo.png");
+        Icon in = new ImageIcon(lg.getImage().getScaledInstance(70, 60, Image.SCALE_SMOOTH));
 
-	private JButton crearBoton(String texto, String vista, Icon icono) {
-		
-		JButton boton = new JButton(texto, icono);
-		if (texto == "Reportes") {
-			boton.setBackground(new Color(33, 150, 243));
-		} else {
-			boton.setBackground(new Color(10, 20, 100));
-		}
-		boton.setForeground(Color.WHITE);
-		boton.setFocusPainted(false);
-		boton.setHorizontalAlignment(SwingConstants.LEFT);
-		boton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-		boton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
+        JButton titulo = new JButton("Stock System", in);
+        titulo.setHorizontalTextPosition(SwingConstants.RIGHT);
+        titulo.setVerticalTextPosition(SwingConstants.CENTER);
+        titulo.setBackground(new Color(0, 0, 0, 0));
+        titulo.setFocusPainted(false);
+        titulo.setBorder(null);
+        titulo.setForeground(Color.white);
+        titulo.setFont(new Font("Arial", Font.ITALIC, 15));
 
-		boton.addActionListener(e -> executable.mostrarVista(vista));
+        p.add(titulo);
 
-		return boton;
-	}
+        ImageIcon dashi = new ImageIcon("img/casa_icono.jpg");
+        Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
 
-	
-	private void contenidoReportes() {
-		JPanel content = new JPanel(new BorderLayout());
-		add(content, BorderLayout.CENTER);
+        p.add(crearBoton("Dashboard", "dashboard", dsh));
+        p.add(crearBoton("Productos", "productos", dsh));
+        p.add(crearBoton("Entradas", "entradas", dsh));
+        p.add(crearBoton("Salidas", "salidas", dsh));
+        p.add(crearBoton("Provedores", "provedores", dsh));
+        p.add(crearBoton("Ordenes", "ordenes", dsh));
+        p.add(crearBoton("Reportes", "reportes", dsh));
+        p.add(crearBoton("Servicio", "ventas", dsh));
+    }
 
-		
-		JPanel panelSuperior = new JPanel(new BorderLayout());
+    private JButton crearBoton(String texto, String vista, Icon icono) {
 
-		JLabel titulo = new JLabel("Reportes");
-		titulo.setFont(new Font("Arial", Font.BOLD, 22));
-		panelSuperior.add(titulo, BorderLayout.WEST);
+        JButton boton = new JButton(texto, icono);
 
-		
-		JPanel botonesSuperiorDerecha = new JPanel();
-		JButton agregar = new JButton("Agregar Reporte");
-		agregar.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
-                BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-        ));
-		agregar.setBackground(new Color(255, 140, 0));
-		agregar.setForeground(Color.WHITE);
+        
+        if (texto.equals("Reportes")) {
+            boton.setBackground(new Color(33, 150, 243));
+        } else {
+            boton.setBackground(new Color(10, 20, 100));
+        }
 
-		JButton editar = new JButton("Editar Reporte");
-		editar.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(new Color(200, 200, 200)), // Borde exterior
-				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-		));
-		
+        boton.setForeground(Color.WHITE);
+        boton.setFocusPainted(false);
+        boton.setHorizontalAlignment(SwingConstants.LEFT);
+        boton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        boton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
 
-		JButton eliminar = new JButton("Eliminar Reporte");
-		eliminar.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(new Color(200, 200, 200)), 
-				BorderFactory.createEmptyBorder(8, 15, 8, 15) 
-		));
-		botonesSuperiorDerecha.add(editar);
-		botonesSuperiorDerecha.add(eliminar);
-		botonesSuperiorDerecha.add(agregar);
+        boton.addActionListener(e -> executable.mostrarVista(vista));
 
-		panelSuperior.add(botonesSuperiorDerecha, BorderLayout.EAST);
-		content.add(panelSuperior, BorderLayout.NORTH);
+        return boton;
+    }
 
-		// TARJETAS
-		JPanel tarjetas = new JPanel(new GridLayout(1, 4, 10, 10));
-		tarjetas.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    private void contenidoReportes() {
 
-		tarjetas.add(crearTarjeta("Reportes Totales", "2"));
-		tarjetas.add(crearTarjeta("Reporte Servicio", "2"));
-		tarjetas.add(crearTarjeta("Reporte Ventas", "1"));
-		tarjetas.add(crearTarjeta("Reporte Sofware", "7"));
+        JPanel content = new JPanel(new BorderLayout());
+        add(content, BorderLayout.CENTER);
 
-		content.add(tarjetas, BorderLayout.CENTER);
+        // 🔹 SUPERIOR
+        JPanel panelSuperior = new JPanel(new BorderLayout());
 
-		
-		JPanel panelInferior = new JPanel(new BorderLayout());
+        JLabel titulo = new JLabel("Reportes");
+        titulo.setFont(new Font("Arial", Font.BOLD, 22));
+        panelSuperior.add(titulo, BorderLayout.WEST);
 
-		
-		String columnas[] = { " id_Reportes", "Categorias" ,"Descripción", "Usuario", "Fecha" };
+        JPanel botonesSuperiorDerecha = new JPanel();
 
-		DefaultTableModel modelo = new DefaultTableModel(null, columnas);
+        JButton agregar = new JButton("Agregar Reporte");
+        agregar.setBackground(new Color(255, 140, 0));
+        agregar.setForeground(Color.WHITE);
 
-		seco.fcdb.reportesDB.reportes(modelo);
+        JButton editar = new JButton("Editar Reporte");
 
-		JTable tabla = new JTable(modelo);
-		
-		JScrollPane scroll = new JScrollPane(tabla);
-		scroll.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        JButton eliminar = new JButton("Eliminar Reporte");
 
-		panelInferior.add(scroll, BorderLayout.CENTER);
+        
+        eliminar.addActionListener(e -> {
 
-		
-		JPanel panelBotones = new JPanel(new BorderLayout());
-		panelBotones.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            Eliminar_Reportes ventana = new Eliminar_Reportes();
+            ventana.setVisible(true);
 
-		
-		JPanel botonesDerecha = new JPanel();
-		JButton exportar = new JButton("Exportar");
-		exportar.setPreferredSize(new Dimension(140, 40));
-		exportar.setBackground(new Color(255, 140, 0));
-		exportar.setForeground(Color.WHITE);
+        });
 
-		botonesDerecha.add(exportar);
+        botonesSuperiorDerecha.add(editar);
+        botonesSuperiorDerecha.add(eliminar);
+        botonesSuperiorDerecha.add(agregar);
 
-		panelBotones.add(botonesDerecha, BorderLayout.EAST);
+        panelSuperior.add(botonesSuperiorDerecha, BorderLayout.EAST);
 
-		panelInferior.add(panelBotones, BorderLayout.SOUTH);
+        content.add(panelSuperior, BorderLayout.NORTH);
 
-		content.add(panelInferior, BorderLayout.SOUTH);
-	}
+        
+        String columnas[] = { "ID", "Categoria", "Descripción", "Usuario", "Fecha" };
 
-	
-	private JPanel crearTarjeta(String titulo, String valor) {
+        modelo = new DefaultTableModel(null, columnas);
 
-		JPanel panel = new JPanel(new GridLayout(2, 1));
-		panel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        seco.fcdb.reportesDB.reportes(modelo);
 
-		JLabel lblTitulo = new JLabel(titulo, SwingConstants.CENTER);
-		lblTitulo.setFont(new Font("Arial", Font.PLAIN, 14));
+        tabla = new JTable(modelo);
 
-		JLabel lblValor = new JLabel(valor, SwingConstants.CENTER);
-		lblValor.setFont(new Font("Arial", Font.BOLD, 20));
+        JScrollPane scroll = new JScrollPane(tabla);
+        scroll.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-		panel.add(lblTitulo);
-		panel.add(lblValor);
+        content.add(scroll, BorderLayout.CENTER);
 
-		return panel;
-	}
+        
+        JPanel panelInferior = new JPanel(new BorderLayout());
+
+        JPanel botonesDerecha = new JPanel();
+
+        JButton exportar = new JButton("Exportar");
+        exportar.setPreferredSize(new Dimension(140, 40));
+        exportar.setBackground(new Color(255, 140, 0));
+        exportar.setForeground(Color.WHITE);
+
+        botonesDerecha.add(exportar);
+
+        panelInferior.add(botonesDerecha, BorderLayout.EAST);
+
+        content.add(panelInferior, BorderLayout.SOUTH);
+    }
 }

@@ -13,14 +13,13 @@ public class reportesDB {
         try {
 
             Connection con = conexionbd.conectar();
-
             Statement st = con.createStatement();
-
             ResultSet rs = st.executeQuery("SELECT * FROM Reportes");
 
             while (rs.next()) {
 
                 model.addRow(new Object[] {
+                        rs.getString("id_Reportes"),
                         rs.getString("Categoria"),
                         rs.getString("Descripcion"),
                         rs.getString("Usuario"),
@@ -39,6 +38,30 @@ public class reportesDB {
             e.printStackTrace();
 
         }
+    }
 
+    
+    public static void eliminarReporte(String id) {
+
+        try {
+
+            Connection con = conexionbd.conectar();
+
+            String sql = "DELETE FROM Reportes WHERE id_Reportes = '" + id + "'";
+
+            Statement st = con.createStatement();
+            st.executeUpdate(sql);
+
+            st.close();
+            con.close();
+
+            System.out.println("Reporte eliminado correctamente");
+
+        } catch (Exception e) {
+
+            System.out.println("Error al eliminar reporte");
+            e.printStackTrace();
+
+        }
     }
 }
