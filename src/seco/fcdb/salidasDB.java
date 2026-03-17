@@ -12,18 +12,23 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 public class salidasDB {
+    ArrayList<String> datos = new ArrayList<>();
+    int contador;
+
     public String[] buscarProducto(String idProducto, JTextField producto) {
         Connection con = conexionbd.conect();
         String sql = "SELECT * FROM Productos ";
-        ArrayList<String> datos = new ArrayList<>();
+        datos.clear();
+        producto.setText("");
         try {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
 
             while (rs.next()) {
-                String id = rs.getString("id_producto");
+                String id = rs.getString("id_Productos");
                 if (id.contains(idProducto)) {
                     datos.add(id);
+                    contador++;
                 }
 
                 if (id.equals(idProducto)) {
@@ -37,12 +42,14 @@ public class salidasDB {
             e.printStackTrace();
         }
 
-        return datos.toArray(new String[0]);
+        return datos.toArray(new String[contador]);
     }
 
     public void agregarArticulo(String id, JTextField nombre, JTextField cantidad, String fecha,
             DefaultTableModel modelo, JLabel subtotal, JLabel impuesto, JLabel total) {
         double sub = Double.parseDouble(subtotal.getText().replace("$ ", ""));
+        double imp = Double.parseDouble(impuesto.getText().replace("$ ", ""));
+        double tot = Double.parseDouble(total.getText().replace("$ ", ""));
         Connection con = conexionbd.conect();
         String sql = "SELECT * FROM Productos ";
         try {
@@ -50,23 +57,25 @@ public class salidasDB {
             ResultSet rs = st.executeQuery(sql);
 
             while (rs.next()) {
-                String idProd = rs.getString("id_producto");
+                String idProd = rs.getString("id_Productos");
                 if (idProd.equals(id)) {
-                    double precio = rs.getDouble("Precio_venta");
+                    double precio = rs.getDouble("Precio_de_venta");
                     modelo.addRow(new Object[] {
                             id,
-                            nombre,
-                            cantidad,
+                            nombre.getText(),
+                            cantidad.getText(),
                             "$ " + precio,
                             "$ " + precio * Integer.parseInt(cantidad.getText()),
                             fecha
                     });
                     sub += precio * Integer.parseInt(cantidad.getText());
+                    imp += precio * Integer.parseInt(cantidad.getText()) * 0.15;
+                    tot += precio * Integer.parseInt(cantidad.getText())
+                            + precio * Integer.parseInt(cantidad.getText()) * 0.15;
                     subtotal.setText("$ " + String.valueOf(sub));
                     impuesto.setText(
-                            "$ " + String.valueOf(Integer.parseInt(subtotal.getText().replace("$ ", "")) * 0.15));
-                    total.setText("$ " + String.valueOf(Integer.parseInt(subtotal.getText().replace("$ ", ""))
-                            + Integer.parseInt(impuesto.getText().replace("$ ", ""))));
+                            "$ " + String.valueOf(imp));
+                    total.setText("$ " + String.valueOf(tot));
 
                     cantidad.setText("");
                     nombre.setText("");
@@ -86,11 +95,16 @@ public class salidasDB {
             modelo.removeRow(selectedRow);
             double sub = Double.parseDouble(subtotal.getText().replace("$ ", ""));
             sub -= precio;
-            subtotal.setText("$ " + String.valueOf(sub));
-            impuesto.setText(
-                    "$ " + String.valueOf(Integer.parseInt(subtotal.getText().replace("$ ", "")) * 0.15));
-            total.setText("$ " + String.valueOf(Integer.parseInt(subtotal.getText().replace("$ ", ""))
-                    + Integer.parseInt(impuesto.getText().replace("$ ", ""))));
+            if (sub == 0) {
+                subtotal.setText("$ 0.00");
+                impuesto.setText("$ 0.00");
+                total.setText("$ 0.00");
+            } else {
+                subtotal.setText("$ " + String.valueOf(sub));
+                impuesto.setText(
+                        "$ " + String.valueOf(sub * 0.15));
+                total.setText("$ " + String.valueOf(sub + (sub * 0.15)));
+            }
         }
     }
 

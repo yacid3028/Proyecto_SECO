@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -22,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import seco.fcdb.salidasDB;
@@ -123,15 +126,17 @@ public class ventas extends JPanel {
 		editor.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				String texto = editor.getText();
+				String texto = editor.getText().toUpperCase();
 				if (texto.isEmpty()) {
 					buscarField.removeAllItems();
 				} else {
 					salidasDB db = new salidasDB();
 					String[] resultados = db.buscarProducto(texto, nombre);
+					buscarField.removeAllItems();
 					for (String resultado : resultados) {
 						buscarField.addItem(resultado);
 					}
+					editor.setText(texto);
 					buscarField.showPopup();
 				}
 			}
@@ -189,8 +194,13 @@ public class ventas extends JPanel {
 			@Override
 			public void keyTyped(java.awt.event.KeyEvent e) {
 				char c = e.getKeyChar();
-				if (!Character.isDigit(c) && c != '\b') {
+				if (!Character.isDigit(c) && c != '\b' && c != '\n') {
 					e.consume();
+
+				}
+				if (c == '0' && cantidad.getText().isEmpty()) {
+					e.consume();
+					cantidad.setText("1");
 				}
 			}
 		});
@@ -222,6 +232,13 @@ public class ventas extends JPanel {
 		tabla.setRowHeight(40);
 		tabla.getTableHeader().setReorderingAllowed(false);
 
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+		for (int i = 0; i < tabla.getColumnCount(); i++) {
+			tabla.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
+
 		JScrollPane scroll = new JScrollPane(tabla);
 
 		panelCentral.add(scroll, BorderLayout.CENTER);
@@ -235,7 +252,7 @@ public class ventas extends JPanel {
 		subtotalLabel.setFont(labelFont);
 		totales.add(subtotalLabel);
 
-		subtotalValor = new JLabel("");
+		subtotalValor = new JLabel("$ 0.00");
 		subtotalValor.setFont(labelFont);
 		totales.add(subtotalValor);
 
@@ -243,7 +260,7 @@ public class ventas extends JPanel {
 		impuestoLabel.setFont(labelFont);
 		totales.add(impuestoLabel);
 
-		impuestoValor = new JLabel("$");
+		impuestoValor = new JLabel("$ 0.00");
 		impuestoValor.setFont(labelFont);
 		totales.add(impuestoValor);
 
@@ -251,7 +268,7 @@ public class ventas extends JPanel {
 		totalLabel.setFont(totalFont);
 		totales.add(totalLabel);
 
-		totalValor = new JLabel("$ ");
+		totalValor = new JLabel("$ 0.00");
 		totalValor.setFont(totalFont);
 		totales.add(totalValor);
 
