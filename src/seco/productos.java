@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import seco.fcdb.productosDB;
+import seco.fcdb.salidasDB;
 import seco.ventanas.agregarProducto;
 import seco.ventanas.prodcutodeditar;
 
@@ -187,12 +188,23 @@ eliminar.addActionListener(e -> {
 
         JPanel buscador = new JPanel(new BorderLayout(5,5));
 
-        JTextField buscar = new JTextField("Buscar producto...");
-        buscar.setPreferredSize(new Dimension(300,25));
+        JTextField buscar_producto = new JTextField();
+        buscar_producto.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+               String texto = buscar_producto.getText().toUpperCase();
+				if (!texto.isEmpty()) {
+                    productosDB salidasDB = new productosDB();
+                    salidasDB.buscarProducto(texto, modelo);
+					
+				} 
+            }
+        });
 
         JButton filtro = new JButton("Filtrar");
 
-        buscador.add(buscar,BorderLayout.CENTER);
+
+        buscador.add(buscar_producto,BorderLayout.CENTER);
         buscador.add(filtro,BorderLayout.EAST);
 
         busquedaPanel.add(buscador);
@@ -233,7 +245,7 @@ eliminar.addActionListener(e -> {
 
         JPanel panel = new JPanel(new BorderLayout());
 
-        String[] cols = {"ID","id_Producto" ,"Nombre", "Precio de Compra", "Categoria", "Precio de Venta", "Stock"};
+        String[] cols = {"id_Producto" ,"Nombre",  "Categoria", "Precio de Venta","Precio de Compra", "Stock"};
         modelo = new DefaultTableModel(cols,0){
             @Override
             public boolean isCellEditable(int row,int column){
