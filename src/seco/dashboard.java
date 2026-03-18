@@ -238,7 +238,7 @@ public class dashboard extends JPanel {
 				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 						RenderingHints.VALUE_ANTIALIAS_ON);
 				// DECLARA LOS VALORES DE LA TABLA
-				int[] valores = { 90, 10, 60, 50, 30, 50, 60, 70, 80 };
+				int[] valores = { 10, 20, 40, 10, 100, 20, 49, 95, 37 };
 				// DECLARA LOS COLORES OPCIONAL
 				Color[] colores = {
 						new Color(52, 152, 219),

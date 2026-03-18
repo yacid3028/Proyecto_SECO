@@ -24,6 +24,7 @@ public class ventasDB {
                 String producto = rs.getString("Producto");
                 String cantidad = rs.getString("Cantidad");
                 int total = rs.getInt("Total");
+                String factura = rs.getString("Factura");
                 String fecha = rs.getString("Fecha");
 
                 modelo.addRow(new Object[] {
@@ -31,6 +32,7 @@ public class ventasDB {
                         producto,
                         cantidad,
                         "$" + total,
+                        factura,
                         fecha
                 });
             }

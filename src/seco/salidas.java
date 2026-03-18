@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import seco.fcdb.ventasDB;
+import seco.ventanas.ventanaFactura;
 
 public class salidas extends JPanel {
     // VARIABLES Y CONSTANTES DE DISEÑO
@@ -112,14 +113,14 @@ public class salidas extends JPanel {
         tarjetas.setOpaque(false);
         tarjetas.add(crearTarjeta("Cantidad Vendida", "342 unid.", Color.BLACK));
         tarjetas.add(crearTarjeta("Ingreso Total", "$24,500.00", COLOR_DINERO_VERDE));
-        tarjetas.add(crearTarjeta("Productos Restantes", "1,120 unid.", COLOR_NARANJA)); // Stock que resta
+        tarjetas.add(crearTarjeta("Productos Restantes", "1,120 unid.", COLOR_NARANJA));
 
         // CUADRO DE LA TABLA
         JPanel contenedorTabla = new JPanel(new BorderLayout());
         contenedorTabla.setBackground(Color.WHITE);
         contenedorTabla.setBorder(BorderFactory.createLineBorder(COLOR_BORDE_GRIS));
 
-        String[] columnas = { "ID VENTA", "PRODUCTO", "CANTIDAD", "TOTAL", "FECHA" };
+        String[] columnas = { "ID VENTA", "PRODUCTO", "CANTIDAD", "TOTAL", "FACTURA", "FECHA" };
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -151,11 +152,25 @@ public class salidas extends JPanel {
         paginacion.setBackground(Color.WHITE);
         paginacion.add(new JLabel("Páginas: "));
         paginacion.add(new JButton("<"));
-        JButton b1 = new JButton("1");
+        JButton b1 = new JButton("Ver Factura");
         b1.setBackground(COLOR_NARANJA);
         b1.setForeground(Color.WHITE);
+        b1.addActionListener(e -> {
+
+            int fila = tabla.getSelectedRow();
+
+            if (fila == -1) {
+                JOptionPane.showMessageDialog(null, "Selecciona una venta");
+                return;
+            }
+
+            String factura = tabla.getValueAt(fila, 4).toString();
+
+            ventanaFactura vf = new ventanaFactura(factura);
+            vf.setVisible(true);
+
+        });
         paginacion.add(b1);
-        paginacion.add(new JButton(">"));
 
         contenedorTabla.add(scroll, BorderLayout.CENTER);
         contenedorTabla.add(paginacion, BorderLayout.SOUTH);
