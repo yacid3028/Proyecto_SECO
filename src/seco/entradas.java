@@ -217,8 +217,12 @@ public class entradas extends JPanel {
         // Para Valor Ingreso, por ahora fijo (no hay precios en entradas), pero se puede calcular si se agrega precio
         String valorIngreso = "$0"; // TODO: calcular basado en precio * cantidad si se agrega columna precio
 
-        actualizarTarjeta(tarjetaEntradasHoy, "Entradas Hoy", String.valueOf(entradasHoy), Color.BLACK);
-        actualizarTarjeta(tarjetaProductos, "Productos", String.valueOf(totalProductos), Color.BLACK);
+        // Pluraliza el texto de entradas
+        String textoEntradas = entradasHoy == 1 ? "1 entrada" : entradasHoy + " entradas";
+        String textoProductos = totalProductos == 1 ? "1 producto" : totalProductos + " productos";
+
+        actualizarTarjeta(tarjetaEntradasHoy, "Entradas Hoy", textoEntradas, Color.BLACK);
+        actualizarTarjeta(tarjetaProductos, "Productos", textoProductos, Color.BLACK);
         actualizarTarjeta(tarjetaValor, "Valor Ingreso", valorIngreso, COLOR_DINERO_VERDE);
     }
 

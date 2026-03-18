@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 
 import seco.fcdb.productosDB;
 import seco.fcdb.ordenesDB;
+import seco.fcdb.ventasDB;
 
 public class dashboard extends JPanel {
 	private executable executable;
@@ -183,6 +184,13 @@ public class dashboard extends JPanel {
 
 		reportes.add(ver, BorderLayout.WEST);
 
+		reportes.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				executable.mostrarVista("reportes");
+			}
+		});
+
 		JPanel alertas = new JPanel(new BorderLayout());
 		alertas.setBackground(Color.WHITE);
 		alertas.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -236,7 +244,7 @@ public class dashboard extends JPanel {
 		return card;
 	}
 
-	// CREA LA GRIFICA
+	// CREA LA GRIFICA DE LOS 9 MAS VENDIDOS
 	private JPanel panelGrafica() {
 
 		JPanel p = new JPanel(new BorderLayout());
@@ -245,7 +253,7 @@ public class dashboard extends JPanel {
 				BorderFactory.createLineBorder(new Color(230, 230, 230)),
 				BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
-		JLabel t = new JLabel("Resumen de Inventario");
+		JLabel t = new JLabel("Top 9 Productos Más Vendidos");
 		t.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		t.setForeground(fontColor);
 
@@ -259,9 +267,9 @@ public class dashboard extends JPanel {
 				g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 						RenderingHints.VALUE_ANTIALIAS_ON);
 
-				// OBTIENE LOS VALORES REALES DE LA BASE DE DATOS
-				productosDB db = new productosDB();
-				int[] valores = db.consultarResumenStock();
+				// OBTIENE LOS 9 PRODUCTOS MAS VENDIDOS DE LA BASE DE DATOS
+				ventasDB db = new ventasDB();
+				int[] valores = db.obtenerTop9ProductosVendidos();
 
 				// DECLARA LOS COLORES OPCIONAL
 				Color[] colores = {
@@ -270,10 +278,10 @@ public class dashboard extends JPanel {
 						new Color(241, 196, 15),
 						new Color(155, 89, 182),
 						new Color(52, 73, 94),
-						new Color(52, 73, 94),
-						new Color(52, 73, 94),
-						new Color(52, 73, 94),
-						new Color(52, 73, 94)
+						new Color(211, 84, 0),
+						new Color(192, 57, 43),
+						new Color(44, 62, 80),
+						new Color(149, 165, 166)
 				};
 
 				int x = 10;
@@ -282,7 +290,7 @@ public class dashboard extends JPanel {
 					g2.setColor(colores[i % colores.length]);
 
 					// ESCALA LOS VALORES PARA QUE SE VEAN BIEN EN LA GRAFICA
-					int altura = Math.max(10, valores[i] * 2); // Multiplica por 2 para mejor visualización
+					int altura = Math.max(10, valores[i] * 3); // Multiplica por 3 para mejor visualización
 
 					g2.fillRoundRect(
 							x, // DISTANCIA LATERAL
