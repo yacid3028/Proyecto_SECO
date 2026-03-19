@@ -17,7 +17,7 @@ public class executable extends JFrame {
 
 		setTitle("SECO Stock Control");
 		setSize(1200, 700);
-		setLocationRelativeTo(null);
+		setLocationRelativeTo(null); 
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		ImageIcon ico = new ImageIcon("img/logo_app.png");

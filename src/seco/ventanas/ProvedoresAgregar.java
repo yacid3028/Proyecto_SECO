@@ -7,17 +7,19 @@ import seco.fcdb.provedoresDB;
 public class ProvedoresAgregar extends JFrame {
 
     public JTextField campoID;
-    public JTextField campoNombre;
+    public JTextField campoID_Provedor;
+    public JTextField campoEmpresa;
     public JTextField campoTelefono;
     public JTextField campoEmail;
+    public JTextField campoProducto;
 
     public JButton guardar;
     public JButton cancelar;
 
     public ProvedoresAgregar() {
 
-        setTitle("Editar Proveedor");
-        setSize(420,300);
+        setTitle("Nuevo Proveedor");
+        setSize(420,330);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -29,34 +31,46 @@ public class ProvedoresAgregar extends JFrame {
         add(contenedor);
 
         // TITULO
-        JLabel titulo = new JLabel("Editar Proveedor");
+        JLabel titulo = new JLabel("Nuevo Proveedor");
         titulo.setFont(new Font("Arial", Font.BOLD, 20));
         contenedor.add(titulo, BorderLayout.NORTH);
 
         // PANEL CENTRAL
-        JPanel centro = new JPanel(new GridLayout(4,2,10,10));
+        JPanel centro = new JPanel(new GridLayout(6,2,10,10));
 
-        JLabel id = new JLabel("ID:");
-        JLabel nombre = new JLabel("Nombre:");
+        JLabel id_Provedor = new JLabel("ID Proveedor:");
+        JLabel empresa = new JLabel("Empresa:");
         JLabel telefono = new JLabel("Teléfono:");
         JLabel email = new JLabel("Email:");
+        JLabel producto = new JLabel("Producto:");
 
         campoID = new JTextField();
-        campoNombre = new JTextField();
+        campoID_Provedor = new JTextField();
+        campoEmpresa = new JTextField();
         campoTelefono = new JTextField();
         campoEmail = new JTextField();
+        campoProducto = new JTextField();
 
-        centro.add(id);
-        centro.add(campoID);
+        campoID.setText(generarID());
+        campoID_Provedor.setText(generarID());
 
-        centro.add(nombre);
-        centro.add(campoNombre);
+        campoID.setEditable(false);
+        campoID_Provedor.setEditable(false);
+
+        centro.add(id_Provedor);
+        centro.add(campoID_Provedor);
+
+        centro.add(empresa);
+        centro.add(campoEmpresa);
 
         centro.add(telefono);
         centro.add(campoTelefono);
 
         centro.add(email);
         centro.add(campoEmail);
+
+        centro.add(producto);
+        centro.add(campoProducto);
 
         contenedor.add(centro, BorderLayout.CENTER);
 
@@ -76,23 +90,47 @@ public class ProvedoresAgregar extends JFrame {
         contenedor.add(botones, BorderLayout.SOUTH);
 
         guardar.addActionListener(e -> {
-            String idProveedor = campoID.getText();
-            String nombreProveedor = campoNombre.getText();
-            String telefonoProveedor = campoTelefono.getText();
-            String emailProveedor = campoEmail.getText();
 
-            // Validar campos (puedes agregar más validaciones según tus necesidades)
-            if (idProveedor.isEmpty() || nombreProveedor.isEmpty() || telefonoProveedor.isEmpty() || emailProveedor.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Por favor, completa todos los campos.", "Error", JOptionPane.ERROR_MESSAGE);
+            String id_ProvTxt = campoID_Provedor.getText().trim();
+            String empresaTxt = campoEmpresa.getText().trim();
+            String telefonoTxt = campoTelefono.getText().trim();
+            String emailTxt = campoEmail.getText().trim();
+            String productoTxt = campoProducto.getText().trim();
+
+            if (id_ProvTxt.isEmpty() || empresaTxt.isEmpty()
+                    || telefonoTxt.isEmpty() || emailTxt.isEmpty() || productoTxt.isEmpty()) {
+
+                JOptionPane.showMessageDialog(this,
+                        "Por favor, completa todos los campos.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             provedoresDB db = new provedoresDB();
-            db.insertarProveedor(nombreProveedor, emailProveedor, telefonoProveedor, idProveedor);
+            db.insertarProveedor(
+                    id_ProvTxt,
+                    empresaTxt,
+                    telefonoTxt,
+                    emailTxt,
+                    productoTxt
+            );
+
             JOptionPane.showMessageDialog(this, "Proveedor guardado exitosamente.");
-            dispose(); // Cierra la ventana después de guardar
+            dispose();
         });
 
         cancelar.addActionListener(e -> dispose());
+    }
+
+    private String generarID() {
+         String valrey = "";
+        int contador = 6;
+        for (int i = 0; i < contador; i++) {
+            int random = (int) (Math.random() * 9);
+            valrey += random;
+        }
+
+        return valrey;
     }
 }

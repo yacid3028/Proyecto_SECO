@@ -10,10 +10,11 @@ import java.awt.Image;
 
 import javax.swing.*;
 
+
 public class productos extends JPanel {
 	private executable executable;
 	// color used for button borders
-	private final Color COLOR_BORDE_GRIS = new Color(225, 230, 235);
+	
 
 	public productos(executable frame) {
 		this.executable = frame;
@@ -90,29 +91,34 @@ public class productos extends JPanel {
 
 		// Botones a la derecha
 		JPanel botonesPanel = new JPanel();
-		JButton agregar = new JButton("Agregar Producto");
-		agregar.setBackground(new Color(255, 140, 0));
-		agregar.setForeground(Color.WHITE);
-		// apply uniform compound border for padding and outline
-		agregar.setBorder(BorderFactory.createCompoundBorder(
-			BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
-			BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-		));
+		JButton agregarProducto = new JButton("Agregar Producto");
+		agregarProducto.setBackground(new Color(255, 140, 0));
+		agregarProducto.setForeground(Color.WHITE);
+		agregarProducto.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(new Color(241, 241, 241)),
+				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
-		JButton editar = new JButton("Editar");
-		editar.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
-                BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-        ));
+		JButton Editar_Producto = new JButton("Editar");
+		Editar_Producto.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(new Color(241, 241, 241)),
+				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
-		JButton eliminar = new JButton("Eliminar");		// ensure same border treatment as agregar producto
-		eliminar.setBorder(BorderFactory.createCompoundBorder(
-			BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
-			BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-		));
-		botonesPanel.add(editar);
-		botonesPanel.add(eliminar);
-		botonesPanel.add(agregar);
+		
+
+		JButton Eliminar = new JButton("Eliminar");
+		Eliminar.setBackground(new Color(255, 140, 0));
+		Eliminar.setForeground(Color.WHITE);
+		Eliminar.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(new Color(241, 241, 241)),
+				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
+
+	
+
+
+
+		botonesPanel.add(Editar_Producto);
+		botonesPanel.add(Eliminar);
+		botonesPanel.add(agregarProducto);
 		superior.add(botonesPanel, BorderLayout.EAST);
 
 		// Panel central que contiene superior, búsqueda, tabla

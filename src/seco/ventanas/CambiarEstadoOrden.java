@@ -5,6 +5,7 @@ import java.awt.*;
 
 public class CambiarEstadoOrden extends JFrame {
 
+    
     private JTextField campoID;
     private JComboBox<String> estado;
     private JButton guardar;

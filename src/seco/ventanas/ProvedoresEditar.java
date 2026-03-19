@@ -1,10 +1,13 @@
 package seco.ventanas;
 
 import javax.swing.*;
+
+import seco.provedores;
+
 import java.awt.*;
 //import seco.fcdb.provedoresDB;
 
-public class ProvedoresEditrar extends JFrame {
+public class ProvedoresEditar extends JFrame {
 
     public JTextField campoID;
     public JTextField campoNombre;
@@ -15,7 +18,7 @@ public class ProvedoresEditrar extends JFrame {
     public JButton guardar;
     public JButton cancelar;
 
-    public ProvedoresEditrar(){
+    public ProvedoresEditar(){
 
         setTitle("Editar Proveedor");
         setSize(420,300);
@@ -87,5 +90,9 @@ public class ProvedoresEditrar extends JFrame {
         });
 
         cancelar.addActionListener(e -> dispose());
+    }
+
+    public ProvedoresEditar(provedores provedores, String id) {
+        //TODO Auto-generated constructor stub
     }
 }

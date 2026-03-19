@@ -69,7 +69,7 @@ public class NuevaOrden extends JFrame {
             String estadoSeleccionado = (String) estado.getSelectedItem();
 
             // Aquí puedes agregar la lógica para guardar la orden en tu sistema
-            JOptionPane.showMessageDialog(this, "Orden guardada:\nProveedor: " + proveedor + "\nProductos: " + productosString + "\nTotal: " + totalString + "\nEstado: " + estadoSeleccionado);
+            JOptionPane.showMessageDialog(this, "Orden guardada:\nProveedor: " + proveedorString + "\nProductos: " + productosString + "\nTotal: " + totalString + "\nEstado: " + estadoSeleccionado);
         });
 
         JButton cancelar = new JButton("Cancelar");
