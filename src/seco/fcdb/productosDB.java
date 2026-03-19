@@ -86,41 +86,36 @@ public class productosDB {
     
     public void buscarProducto(String idProducto, DefaultTableModel modelo) {
 
-        Connection con = conexionbd.conectar();
-        String sql = "SELECT * FROM Productos";
+    Connection con = conexionbd.conectar();
 
-        modelo.setRowCount(0);
+    String sql = "SELECT * FROM Productos WHERE id_Productos LIKE '%" + idProducto + "%'";
 
-        try {
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery(sql);
+    modelo.setRowCount(0);
 
-            while (rs.next()) {
+    try {
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery(sql);
 
-                String id = rs.getString("id_Productos");
+        while (rs.next()) {
 
-                if (id.contains(idProducto)) {
-
-                    modelo.addRow(new Object[]{
-                        id,
-                        rs.getString("Nombre"),
-                        rs.getString("Categoria"),
-                        rs.getDouble("Precio_de_venta"),
-                        rs.getDouble("Precio_de_compra"),
-                        rs.getInt("Stock")
-                    });
-                }
-            }
-
-            rs.close();
-            st.close();
-            con.close();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            modelo.addRow(new Object[]{
+                rs.getString("id_Productos"),
+                rs.getString("Nombre"),
+                rs.getString("Categoria"),
+                rs.getDouble("Precio_de_venta"),
+                rs.getDouble("Precio_de_compra"),
+                rs.getInt("Stock")
+            });
         }
-    }
 
+        rs.close();
+        st.close();
+        con.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
     
     public static void actualizarProducto(String idProducto, String categoria,
                                           double precioVenta, double precioCompra, int stock) {
