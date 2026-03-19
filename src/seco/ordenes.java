@@ -8,6 +8,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import seco.ventanas.NuevaOrden;
 import seco.ventanas.EliminarOrden;
+import seco.fcdb.ordenesDB;
+import seco.fcdb.provedoresDB;
 import seco.ventanas.CambiarEstadoOrden;
 
 import javax.swing.BorderFactory;
@@ -22,7 +24,11 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 public class ordenes extends JPanel {
+	private JTable tabla;
 	private executable executable;
+private DefaultTableModel modelo; // ya lo tienes
+private ordenesDB db = new ordenesDB();
+	
 
 	public ordenes(executable frame) {
 		this.executable = frame;
@@ -106,13 +112,8 @@ public class ordenes extends JPanel {
 				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
 			nuevaOrden.addActionListener(e -> {
-
-				NuevaOrden nuevaOrdenVentana = new NuevaOrden();
-				nuevaOrdenVentana.setVisible(true);
-
-			}
-
-		);
+        new NuevaOrden(this).setVisible(true);
+    });
 
 		JButton cambiarEstado = new JButton("Cambiar estado");
 		cambiarEstado.setBackground(new Color(255, 140, 0));
@@ -137,11 +138,10 @@ public class ordenes extends JPanel {
 				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
 			eliminar.addActionListener(e -> {
+    EliminarOrden eliminarOrdenVentana = new EliminarOrden(this); // pasar panel principal
+    eliminarOrdenVentana.setVisible(true);
 
-				EliminarOrden eliminarOrdenVentana = new EliminarOrden();
-				eliminarOrdenVentana.setVisible(true);
-
-	});
+			});
 
 
 
@@ -166,21 +166,20 @@ public class ordenes extends JPanel {
 		// PANEL INFERIOR (TABLA + BOTÓN EXPORTAR)
 		JPanel panelInferior = new JPanel(new BorderLayout());
 
-		// TABLA
-		String columnas[] = { "Orden", "Proveedor", "Fecha", "Productos", "Total", "Estado" };
 
-		DefaultTableModel modelo = new DefaultTableModel(null, columnas);
 
-		modelo.addRow(new Object[] { "#1021", "TecnoCom", "20/04/2024", "3", "$3200", "Pendiente" });
-		modelo.addRow(new Object[] { "#1022", "Moda Express", "19/04/2024", "5", "$1750", "En camino" });
-		modelo.addRow(new Object[] { "#1023", "Distribuidor Alfa", "18/04/2024", "2", "$800", "Recibida" });
+DefaultTableModel modelo;
 
-		JTable tablaOrdenes = new JTable(modelo);
+String[] columnas = { "ID Orden", "Proveedor", "Producto", "Costo", "Cantidad", "Fecha", "Estado" };
 
-		JScrollPane scroll = new JScrollPane(tablaOrdenes);
-		scroll.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+modelo = new DefaultTableModel(columnas, 0);
+tabla = new JTable(modelo);
 
-		panelInferior.add(scroll, BorderLayout.CENTER);
+JScrollPane scroll = new JScrollPane(tabla);
+panelInferior.add(scroll, BorderLayout.CENTER);
+
+	
+		
 
 		// BOTÓN EXPORTAR EN ESQUINA INFERIOR DERECHA
 		JPanel panelBotonExportar = new JPanel(new BorderLayout());
@@ -218,4 +217,12 @@ public class ordenes extends JPanel {
 
 		return tarjeta;
 	}
+
+	
+	public void actualizarTabla() {
+		if(modelo != null) {
+        modelo.setRowCount(0); // limpiar la tabla
+        db.consultarOrdenes(modelo); // recargar los datos desde la DB
+    }
+}
 }

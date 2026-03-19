@@ -122,7 +122,6 @@ public class provedores extends JPanel {
     contenedor.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     add(contenedor, BorderLayout.CENTER);
 
-    // ================= CABECERA =================
     JTextField buscar = new JTextField("Buscar proveedor...");
     buscar.setPreferredSize(new Dimension(360, 30));
 
