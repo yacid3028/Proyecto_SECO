@@ -3,6 +3,7 @@ package seco.ventanas;
 import java.awt.*;
 import javax.swing.*;
 
+import seco.productos;
 import seco.fcdb.productosDB;
 
 public class agregarProducto extends JFrame {
@@ -32,8 +33,8 @@ public class agregarProducto extends JFrame {
 
         JLabel lblID = new JLabel("Ingrese ID:");
         txtID = new JTextField();
-        txtID.setText(crearRandom()); // 
-        txtID.setEditable(false); // 
+        txtID.setText(crearRandom()); //
+        txtID.setEditable(false); //
 
         JLabel lblNombre = new JLabel("Nombre:");
         txtNombre = new JTextField();
@@ -42,7 +43,7 @@ public class agregarProducto extends JFrame {
         txtPrecioCompra = new JTextField();
 
         JLabel lblCategoria = new JLabel("Categoría:");
-        txtCategoria = new JComboBox<>(new String[]{
+        txtCategoria = new JComboBox<>(new String[] {
                 "V&L", "Higiene", "Abarrotes", "Bebidas",
                 "Limpieza", "Papelería", "Ferretería",
                 "Accesorios", "Juguetes", "Refrigerados"
@@ -50,7 +51,7 @@ public class agregarProducto extends JFrame {
 
         JLabel lblPrecio = new JLabel("Precio de venta:");
         txtPrecio = new JTextField();
-        txtPrecio.setEditable(false); 
+        txtPrecio.setEditable(false);
 
         JLabel lblStock = new JLabel("Stock:");
         txtStock = new JTextField();
@@ -75,7 +76,6 @@ public class agregarProducto extends JFrame {
 
         add(panel, BorderLayout.CENTER);
 
-        
         txtPrecioCompra.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 try {
@@ -111,7 +111,10 @@ public class agregarProducto extends JFrame {
                 db.agregarProducto(id, nombre, categoria, precioCompra, precioVenta, stock);
 
                 JOptionPane.showMessageDialog(null, "Producto agregado correctamente");
+
                 dispose();
+                productos dr = new productos(null);
+                dr.actualizarTabla();
 
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null, "Por favor, ingrese valores numéricos válidos.");
@@ -130,9 +133,8 @@ public class agregarProducto extends JFrame {
         add(botones, BorderLayout.SOUTH);
     }
 
-    
     public String crearRandom() {
-        return "P" + (int)(Math.random() * 900000 + 100000);
+        return "P" + (int) (Math.random() * 900000 + 100000);
     }
 
     public static void main(String[] args) {

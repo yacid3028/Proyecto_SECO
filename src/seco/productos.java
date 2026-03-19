@@ -12,7 +12,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import seco.fcdb.productosDB;
-import seco.fcdb.salidasDB;
 import seco.ventanas.agregarProducto;
 import seco.ventanas.prodcutodeditar;
 
@@ -22,6 +21,12 @@ public class productos extends JPanel {
     private final Color COLOR_BORDE_GRIS = new Color(225, 230, 235);
     private JTable tabla;
     private DefaultTableModel modelo;
+    productosDB dr = new productosDB();
+
+    public void actualizarTabla() {
+        modelo.setRowCount(0);
+        productosDB.productos(modelo);
+    }
 
     public productos(executable frame) {
         this.executable = frame;
@@ -44,7 +49,7 @@ public class productos extends JPanel {
         JButton titulo = new JButton("Stock System", in);
         titulo.setHorizontalTextPosition(SwingConstants.RIGHT);
         titulo.setVerticalTextPosition(SwingConstants.CENTER);
-        titulo.setBackground(new Color(0,0,0,0));
+        titulo.setBackground(new Color(0, 0, 0, 0));
         titulo.setFocusPainted(false);
         titulo.setBorder(null);
         titulo.setForeground(Color.white);
@@ -53,52 +58,52 @@ public class productos extends JPanel {
         p.add(titulo);
 
         ImageIcon dashi = new ImageIcon("img/casa_icono.jpg");
-        Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30,25,Image.SCALE_SMOOTH));
+        Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
 
-        p.add(crearBoton("Dashboard","dashboard",dsh));
-        p.add(crearBoton("Productos","productos",dsh));
-        p.add(crearBoton("Entradas","entradas",dsh));
-        p.add(crearBoton("Salidas","salidas",dsh));
-        p.add(crearBoton("Provedores","provedores",dsh));
-        p.add(crearBoton("Ordenes","ordenes",dsh));
-        p.add(crearBoton("Reportes","reportes",dsh));
-        p.add(crearBoton("Servicio","ventas",dsh));
+        p.add(crearBoton("Dashboard", "dashboard", dsh));
+        p.add(crearBoton("Productos", "productos", dsh));
+        p.add(crearBoton("Entradas", "entradas", dsh));
+        p.add(crearBoton("Salidas", "salidas", dsh));
+        p.add(crearBoton("Provedores", "provedores", dsh));
+        p.add(crearBoton("Ordenes", "ordenes", dsh));
+        p.add(crearBoton("Reportes", "reportes", dsh));
+        p.add(crearBoton("Servicio", "ventas", dsh));
     }
 
     private JButton crearBoton(String texto, String vista, Icon icono) {
 
         JButton boton = new JButton(texto, icono);
 
-        if(texto.equals("Productos")){
-            boton.setBackground(new Color(33,150,243));
-        }else{
-            boton.setBackground(new Color(10,20,100));
+        if (texto.equals("Productos")) {
+            boton.setBackground(new Color(33, 150, 243));
+        } else {
+            boton.setBackground(new Color(10, 20, 100));
         }
 
         boton.setForeground(Color.WHITE);
         boton.setFocusPainted(false);
         boton.setHorizontalAlignment(SwingConstants.LEFT);
-        boton.setMaximumSize(new Dimension(Integer.MAX_VALUE,40));
-        boton.setBorder(BorderFactory.createEmptyBorder(8,16,8,16));
+        boton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        boton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
 
         boton.addActionListener(e -> executable.mostrarVista(vista));
 
         return boton;
     }
 
-    private void C_central(){
+    private void C_central() {
 
         JPanel pam = new JPanel(new BorderLayout());
         add(pam, BorderLayout.CENTER);
 
         JPanel superior = new JPanel(new BorderLayout());
-        superior.setPreferredSize(new Dimension(Integer.MAX_VALUE,80));
+        superior.setPreferredSize(new Dimension(Integer.MAX_VALUE, 80));
 
         JLabel titulo = new JLabel("Inventario de Productos");
-        titulo.setFont(new Font("Arial",Font.BOLD,24));
-        titulo.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
+        titulo.setFont(new Font("Arial", Font.BOLD, 24));
+        titulo.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
-        superior.add(titulo,BorderLayout.WEST);
+        superior.add(titulo, BorderLayout.WEST);
 
         JPanel botonesPanel = new JPanel();
 
@@ -108,38 +113,36 @@ public class productos extends JPanel {
             ventana.setVisible(true);
         });
 
-        agregar.setBackground(new Color(255,140,0));
+        agregar.setBackground(new Color(255, 140, 0));
         agregar.setForeground(Color.WHITE);
         agregar.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(COLOR_BORDE_GRIS),
-                BorderFactory.createEmptyBorder(8,15,8,15)
-        ));
+                BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
         JButton editar = new JButton("Editar");
         editar.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(COLOR_BORDE_GRIS),
-                BorderFactory.createEmptyBorder(8,15,8,15)
-        ));
+                BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
         editar.addActionListener(e -> {
 
             int fila = tabla.getSelectedRow();
 
-            if(fila == -1){
-                JOptionPane.showMessageDialog(null,"Seleccione un producto de la tabla");
+            if (fila == -1) {
+                JOptionPane.showMessageDialog(null, "Seleccione un producto de la tabla");
                 return;
             }
 
-            String idProducto = (String) tabla.getValueAt(fila,0);
+            String idProducto = (String) tabla.getValueAt(fila, 0);
             prodcutodeditar ventana = new prodcutodeditar(idProducto);
             ventana.setVisible(true);
+
         });
 
         JButton eliminar = new JButton("Eliminar");
         eliminar.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(COLOR_BORDE_GRIS),
-                BorderFactory.createEmptyBorder(8,15,8,15)
-        ));
+                BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
         eliminar.addActionListener(e -> {
 
@@ -147,13 +150,12 @@ public class productos extends JPanel {
                     null,
                     "Coloque el ID del producto que desea eliminar",
                     "Eliminar Producto",
-                    JOptionPane.QUESTION_MESSAGE
-            );
+                    JOptionPane.QUESTION_MESSAGE);
 
-            if(id != null && !id.isEmpty()){
+            if (id != null && !id.isEmpty()) {
                 productosDB.eliminarProducto(id);
                 actualizarTabla();
-                JOptionPane.showMessageDialog(null,"Producto eliminado");
+                JOptionPane.showMessageDialog(null, "Producto eliminado");
             }
         });
 
@@ -161,18 +163,18 @@ public class productos extends JPanel {
         botonesPanel.add(eliminar);
         botonesPanel.add(agregar);
 
-        superior.add(botonesPanel,BorderLayout.EAST);
+        superior.add(botonesPanel, BorderLayout.EAST);
 
         JPanel central = new JPanel();
-        central.setLayout(new BoxLayout(central,BoxLayout.Y_AXIS));
+        central.setLayout(new BoxLayout(central, BoxLayout.Y_AXIS));
 
         central.add(superior);
 
         // BUSCADOR
         JPanel busquedaPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        busquedaPanel.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+        busquedaPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
-        JPanel buscador = new JPanel(new BorderLayout(5,5));
+        JPanel buscador = new JPanel(new BorderLayout(5, 5));
 
         JTextField buscar_producto = new JTextField();
 
@@ -195,46 +197,46 @@ public class productos extends JPanel {
 
         JButton filtro = new JButton("Filtrar");
 
-        buscador.add(buscar_producto,BorderLayout.CENTER);
-        buscador.add(filtro,BorderLayout.EAST);
+        buscador.add(buscar_producto, BorderLayout.CENTER);
+        buscador.add(filtro, BorderLayout.EAST);
 
         busquedaPanel.add(buscador);
         central.add(busquedaPanel);
 
         central.add(panelTabla());
-        pam.add(central,BorderLayout.CENTER);
+        pam.add(central, BorderLayout.CENTER);
 
         JPanel inferior = new JPanel(new BorderLayout());
-        inferior.setPreferredSize(new Dimension(Integer.MAX_VALUE,50));
-        inferior.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        inferior.setPreferredSize(new Dimension(Integer.MAX_VALUE, 50));
+        inferior.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel info = new JLabel("Mostrando productos");
-        inferior.add(info,BorderLayout.WEST);
+        inferior.add(info, BorderLayout.WEST);
 
-        JPanel paginas = new JPanel(new FlowLayout(FlowLayout.CENTER,5,0));
+        JPanel paginas = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
         paginas.add(new JButton("<"));
         paginas.add(new JButton("1"));
         paginas.add(new JButton("2"));
         paginas.add(new JButton("3"));
         paginas.add(new JButton(">"));
 
-        inferior.add(paginas,BorderLayout.CENTER);
+        inferior.add(paginas, BorderLayout.CENTER);
 
         JButton exportar = new JButton("Exportar");
-        inferior.add(exportar,BorderLayout.EAST);
+        inferior.add(exportar, BorderLayout.EAST);
 
-        pam.add(inferior,BorderLayout.SOUTH);
+        pam.add(inferior, BorderLayout.SOUTH);
     }
 
-    private JPanel panelTabla(){
+    private JPanel panelTabla() {
 
         JPanel panel = new JPanel(new BorderLayout());
 
-        String[] cols = {"id_Producto" ,"Nombre",  "Categoria", "Precio de Venta","Precio de Compra", "Stock"};
+        String[] cols = { "id_Producto", "Nombre", "Categoria", "Precio de Venta", "Precio de Compra", "Stock" };
 
-        modelo = new DefaultTableModel(cols,0){
+        modelo = new DefaultTableModel(cols, 0) {
             @Override
-            public boolean isCellEditable(int row,int column){
+            public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
@@ -245,19 +247,15 @@ public class productos extends JPanel {
 
         tabla.setRowHeight(30);
         tabla.setShowGrid(false);
-        tabla.setSelectionBackground(new Color(184,207,229));
+        tabla.setSelectionBackground(new Color(184, 207, 229));
         tabla.setFillsViewportHeight(true);
 
         JScrollPane scroll = new JScrollPane(tabla);
-        scroll.setBorder(BorderFactory.createEmptyBorder(10,20,10,20));
+        scroll.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        panel.add(scroll,BorderLayout.CENTER);
+        panel.add(scroll, BorderLayout.CENTER);
 
         return panel;
     }
 
-    private void actualizarTabla(){
-        modelo.setRowCount(0);
-        productosDB.productos(modelo);
-    }
 }
