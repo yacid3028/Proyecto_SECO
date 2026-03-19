@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -13,23 +15,35 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import seco.fcdb.salidasDB;
+import seco.fcdb.ventasDB;
 
 public class ventas extends JPanel {
 	private executable executable;
+	private salidas panelSalidas;
 
-	public ventas(executable frame) {
+	public ventas(executable frame, salidas panelSalidas) {
 		this.executable = frame;
+		this.panelSalidas = panelSalidas;
 		setLayout(new BorderLayout());
 		Menu_lateral();
 		Cont_central();
 	}
+
+	JTextField nombre, cantidad;
+	String fechaActual;
+	JLabel subtotalValor, impuestoValor, totalValor;
+	DefaultTableModel modelo;
 
 	// MENU LATERAL ELEMENTOS, BOTONES, ACCIONES
 	private void Menu_lateral() {
@@ -106,14 +120,43 @@ public class ventas extends JPanel {
 		JLabel buscarLabel = new JLabel("Buscar producto por ID:");
 		buscarLabel.setFont(labelFont);
 
-		JTextField buscarField = new JTextField("#");
+		JComboBox<String> buscarField = new JComboBox<>();
+		buscarField.setEditable(true);
 		buscarField.setFont(inputFont);
+		JTextField editor = (JTextField) buscarField.getEditor().getEditorComponent();
+		editor.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				String texto = editor.getText().toUpperCase();
+				if (texto.isEmpty()) {
+					buscarField.removeAllItems();
+				} else {
+					salidasDB db = new salidasDB();
+					String[] resultados = db.buscarProducto(texto, nombre);
+					buscarField.removeAllItems();
+					for (String resultado : resultados) {
+						buscarField.addItem(resultado);
+					}
+					editor.setText(texto);
+					buscarField.showPopup();
+				}
+			}
+		});
 
 		JButton agregarBtn = new JButton("Agregar");
 		agregarBtn.setBackground(new Color(255, 140, 0));
 		agregarBtn.setForeground(Color.WHITE);
 		agregarBtn.setFocusPainted(false);
 		agregarBtn.setFont(buttonFont);
+		agregarBtn.addActionListener(e -> {
+			String id = (String) buscarField.getSelectedItem();
+			String cant = cantidad.getText();
+			if (id != null && !cant.isEmpty()) {
+				salidasDB db = new salidasDB();
+				db.agregarArticulo(id, nombre, cantidad, fechaActual, modelo, subtotalValor,
+						impuestoValor, totalValor);
+			}
+		});
 
 		buscarPanel.add(buscarLabel, BorderLayout.WEST);
 		buscarPanel.add(buscarField, BorderLayout.CENTER);
@@ -136,7 +179,7 @@ public class ventas extends JPanel {
 		nombreLabel.setFont(labelFont);
 		productoPanel.add(nombreLabel);
 
-		JTextField nombre = new JTextField("Mouse inalámbrico");
+		nombre = new JTextField();
 		nombre.setFont(inputFont);
 		nombre.setEditable(false);
 		productoPanel.add(nombre);
@@ -145,16 +188,29 @@ public class ventas extends JPanel {
 		prodLabel.setFont(labelFont);
 		productoPanel.add(prodLabel);
 
-		JTextField cantidad = new JTextField("1");
+		cantidad = new JTextField();
 		cantidad.setFont(inputFont);
 		productoPanel.add(cantidad);
+		cantidad.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(java.awt.event.KeyEvent e) {
+				char c = e.getKeyChar();
+				if (!Character.isDigit(c) && c != '\b' && c != '\n') {
+					e.consume();
+
+				}
+				if (c == '0' && cantidad.getText().isEmpty()) {
+					e.consume();
+					cantidad.setText("1");
+				}
+			}
+		});
 
 		JLabel fechaLabel = new JLabel("Fecha:");
 		fechaLabel.setFont(labelFont);
 		productoPanel.add(fechaLabel);
-
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		String fechaActual = sdf.format(new Date());
+		fechaActual = sdf.format(new Date());
 		JTextField fecha = new JTextField(fechaActual);
 		fecha.setFont(inputFont);
 		fecha.setEditable(false);
@@ -165,15 +221,23 @@ public class ventas extends JPanel {
 		// TABLA
 		String columnas[] = { "ID", "Producto", "Cantidad", "Precio", "Subtotal" };
 
-		DefaultTableModel modelo = new DefaultTableModel(columnas, 0);
-
-		modelo.addRow(new Object[] { "101", "Mouse inalámbrico", "15", "12", "30" });
-		modelo.addRow(new Object[] { "105", "Teclado", "25", "31", "25" });
+		modelo = new DefaultTableModel(columnas, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
 
 		JTable tabla = new JTable(modelo);
-		tabla.setFont(new Font("Arial", Font.BOLD, 14));
-		tabla.setRowHeight(28);
-		tabla.getTableHeader().setFont(new Font("Arial", Font.BOLD, 15));
+		tabla.setRowHeight(40);
+		tabla.getTableHeader().setReorderingAllowed(false);
+
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+
+		for (int i = 0; i < tabla.getColumnCount(); i++) {
+			tabla.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+		}
 
 		JScrollPane scroll = new JScrollPane(tabla);
 
@@ -188,7 +252,7 @@ public class ventas extends JPanel {
 		subtotalLabel.setFont(labelFont);
 		totales.add(subtotalLabel);
 
-		JLabel subtotalValor = new JLabel("$55");
+		subtotalValor = new JLabel("$ 0.00");
 		subtotalValor.setFont(labelFont);
 		totales.add(subtotalValor);
 
@@ -196,7 +260,7 @@ public class ventas extends JPanel {
 		impuestoLabel.setFont(labelFont);
 		totales.add(impuestoLabel);
 
-		JLabel impuestoValor = new JLabel("38");
+		impuestoValor = new JLabel("$ 0.00");
 		impuestoValor.setFont(labelFont);
 		totales.add(impuestoValor);
 
@@ -204,9 +268,9 @@ public class ventas extends JPanel {
 		totalLabel.setFont(totalFont);
 		totales.add(totalLabel);
 
-		JLabel total = new JLabel("$63");
-		total.setFont(totalFont);
-		totales.add(total);
+		totalValor = new JLabel("$ 0.00");
+		totalValor.setFont(totalFont);
+		totales.add(totalValor);
 
 		panelCentral.add(totales, BorderLayout.SOUTH);
 
@@ -217,15 +281,43 @@ public class ventas extends JPanel {
 		JButton cancelar = new JButton("Cancelar Venta");
 		cancelar.setBackground(Color.WHITE);
 		cancelar.setFont(buttonFont);
+		cancelar.addActionListener(ActionListener -> {
+			salidasDB db = new salidasDB();
+			db.eliminarArticulo(modelo, subtotalValor, impuestoValor, totalValor);
+		});
 
 		JButton cobrar = new JButton("Cobrar");
 		cobrar.setBackground(new Color(255, 140, 0));
 		cobrar.setForeground(Color.WHITE);
 		cobrar.setFont(buttonFont);
+		cobrar.addActionListener(ActionListener -> {
+			salidasDB db = new salidasDB();
+			String idVenta = "V" + db.crearRandom();
+			String fact = db.facturacount();
+			String producto = "";
+			int cantidad = 0;
+
+			while (modelo.getRowCount() > 0) {
+				producto = (String) modelo.getValueAt(0, 1);
+				String cant = (String) modelo.getValueAt(0, 2);
+				cantidad = Integer.parseInt(cant.replace("$", "").trim());
+				double subtotal = Double.parseDouble(((String) modelo.getValueAt(0, 4)).replace("$ ", ""));
+				double total = Double.parseDouble(totalValor.getText().replace("$ ", ""));
+				modelo.removeRow(0);
+				db.registrarVenta(idVenta, fechaActual, producto, cantidad, subtotal, total, fact);
+
+			}
+
+			subtotalValor.setText("$ ");
+			impuestoValor.setText("$ ");
+			totalValor.setText("$ ");
+			panelSalidas.refrescarTabla();
+		});
 
 		botones.add(cancelar);
 		botones.add(cobrar);
 
 		contenedor.add(botones, BorderLayout.SOUTH);
 	}
+
 }

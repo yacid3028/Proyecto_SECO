@@ -95,20 +95,20 @@ public class productos extends JPanel {
 		agregar.setForeground(Color.WHITE);
 		// apply uniform compound border for padding and outline
 		agregar.setBorder(BorderFactory.createCompoundBorder(
-			BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
-			BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+				BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
+				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
 		));
 
 		JButton editar = new JButton("Editar");
 		editar.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
-                BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-        ));
+				BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
+				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+		));
 
-		JButton eliminar = new JButton("Eliminar");		// ensure same border treatment as agregar producto
+		JButton eliminar = new JButton("Eliminar"); // ensure same border treatment as agregar producto
 		eliminar.setBorder(BorderFactory.createCompoundBorder(
-			BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
-			BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
+				BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
+				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
 		));
 		botonesPanel.add(editar);
 		botonesPanel.add(eliminar);
