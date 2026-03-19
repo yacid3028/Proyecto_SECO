@@ -13,10 +13,10 @@ public class dashboardDB {
 
             if (conexion != null) {
                 // Consulta que obtiene los 9 productos más vendidos
-                String consulta = "SELECT TOP 9 p.ID_PRODUCTO, SUM(v.CANTIDAD) AS TOTAL_VENDIDO " +
+                String consulta = "SELECT TOP 9 p.Producto, SUM(v.CANTIDAD) AS TOTAL_VENDIDO " +
                         "FROM Salidas v " +
-                        "INNER JOIN PRODUCTOS p ON v.ID_PRODUCTO = p.ID_PRODUCTO " +
-                        "GROUP BY p.ID_PRODUCTO " +
+                        "INNER JOIN Productos p ON v.Producto = p.id_Producto " +
+                        "GROUP BY p.id_Producto " +
                         "ORDER BY TOTAL_VENDIDO DESC";
 
                 Statement stmt = conexion.createStatement();
