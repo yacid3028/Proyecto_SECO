@@ -19,9 +19,11 @@ public class Nuevo_Reporte extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new GridLayout(6,2,10,10));
 
-    
+        
         add(new JLabel("ID:"));
         campoID = new JTextField();
+        campoID.setText(crearRandom()); // GENERA ID AUTOMÁTICO
+        campoID.setEditable(false); // OPCIONAL (no editable)
         add(campoID);
 
         
@@ -69,7 +71,6 @@ public class Nuevo_Reporte extends JFrame {
             else if(seleccion.equals("S.R.S")){
                 campoDescripcion.setText("Inmobiliario dañado");
             }
-
         });
 
         
@@ -97,5 +98,18 @@ public class Nuevo_Reporte extends JFrame {
 
         
         cancelar.addActionListener(e -> dispose());
+    }
+
+    
+    public String crearRandom() {
+        String valrey = "R";
+        int contador = 6;
+
+        for (int i = 0; i < contador; i++) {
+            int random = (int) (Math.random() * 10); // 0-9
+            valrey += random;
+        }
+
+        return valrey;
     }
 }

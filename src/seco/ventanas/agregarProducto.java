@@ -32,6 +32,8 @@ public class agregarProducto extends JFrame {
 
         JLabel lblID = new JLabel("Ingrese ID:");
         txtID = new JTextField();
+        txtID.setText(crearRandom()); // 
+        txtID.setEditable(false); // 
 
         JLabel lblNombre = new JLabel("Nombre:");
         txtNombre = new JTextField();
@@ -101,7 +103,6 @@ public class agregarProducto extends JFrame {
 
                 double precioCompra = Double.parseDouble(txtPrecioCompra.getText());
 
-                
                 double precioVenta = precioCompra * 1.40;
 
                 int stock = Integer.parseInt(txtStock.getText());
@@ -127,6 +128,11 @@ public class agregarProducto extends JFrame {
         botones.add(guardar);
 
         add(botones, BorderLayout.SOUTH);
+    }
+
+    
+    public String crearRandom() {
+        return "P" + (int)(Math.random() * 900000 + 100000);
     }
 
     public static void main(String[] args) {
