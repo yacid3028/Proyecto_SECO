@@ -50,7 +50,7 @@ public class prodcutodeditar extends JFrame {
 
         JLabel lblPrecioVenta = new JLabel("Precio Venta:");
         txtPrecioVenta = new JTextField();
-        txtPrecioVenta.setEditable(false); // 🔥 BLOQUEADO
+        txtPrecioVenta.setEditable(false); 
 
         JLabel lblPrecioCompra = new JLabel("Precio Compra:");
         txtPrecioCompra = new JTextField();
