@@ -8,7 +8,7 @@ import seco.conexionbd;
 
 public class reportesDB {
 
-    // 🔹 MOSTRAR
+    
     public static void reportes(DefaultTableModel model) {
 
         try {
@@ -35,7 +35,7 @@ public class reportesDB {
         }
     }
 
-    // 🔍 BUSCAR
+    
     public static ResultSet buscarReporte(String id) {
 
         try {
@@ -52,7 +52,7 @@ public class reportesDB {
         }
     }
 
-    // ➕ AGREGAR
+    
     public static void agregarReporte(String id, String categoria, String descripcion, String usuario, String fecha) {
 
         try {
@@ -72,7 +72,7 @@ public class reportesDB {
         }
     }
 
-    // ✏️ ACTUALIZAR
+    
     public static void actualizarReporte(String id, String categoria, String descripcion, String usuario, String fecha) {
 
         try {
@@ -96,7 +96,7 @@ public class reportesDB {
         }
     }
 
-    // 🗑️ ELIMINAR
+    
     public static void eliminarReporte(String id) {
 
         try {

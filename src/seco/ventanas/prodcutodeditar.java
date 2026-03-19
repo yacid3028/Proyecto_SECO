@@ -10,7 +10,7 @@ public class prodcutodeditar extends JFrame {
     private JTextField txtPrecioCompra;
     private JTextField txtStock;
 
-    private String idProducto; // 👈 guardamos el ID
+    private String idProducto; 
 
     public prodcutodeditar(String idProducto) {
 
@@ -22,17 +22,14 @@ public class prodcutodeditar extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        // Título
         JLabel titulo = new JLabel("Editar Producto");
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         titulo.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 10));
         add(titulo, BorderLayout.NORTH);
 
-        // Panel principal
         JPanel panel = new JPanel(new GridLayout(4, 2, 15, 15));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Categorías
         JLabel lblCategoria = new JLabel("Categoría:");
 
         String[] categorias = {
@@ -51,19 +48,16 @@ public class prodcutodeditar extends JFrame {
 
         comboCategoria = new JComboBox<>(categorias);
 
-        // Precio venta
         JLabel lblPrecioVenta = new JLabel("Precio Venta:");
         txtPrecioVenta = new JTextField();
+        txtPrecioVenta.setEditable(false); // 🔥 BLOQUEADO
 
-        // Precio compra
         JLabel lblPrecioCompra = new JLabel("Precio Compra:");
         txtPrecioCompra = new JTextField();
 
-        // Stock
         JLabel lblStock = new JLabel("Stock:");
         txtStock = new JTextField();
 
-        // Agregar componentes
         panel.add(lblCategoria);
         panel.add(comboCategoria);
 
@@ -78,7 +72,21 @@ public class prodcutodeditar extends JFrame {
 
         add(panel, BorderLayout.CENTER);
 
-        // Botones
+        
+        txtPrecioCompra.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                try {
+                    double precioCompra = Double.parseDouble(txtPrecioCompra.getText());
+                    double precioVenta = precioCompra * 1.40;
+
+                    txtPrecioVenta.setText(String.format("%.2f", precioVenta));
+
+                } catch (Exception e) {
+                    txtPrecioVenta.setText("");
+                }
+            }
+        });
+
         JPanel botones = new JPanel();
 
         JButton cancelar = new JButton("Cancelar");
@@ -92,7 +100,6 @@ public class prodcutodeditar extends JFrame {
 
         guardar.addActionListener(e -> {
 
-            // Validación
             if (comboCategoria.getSelectedIndex() == 0) {
                 JOptionPane.showMessageDialog(null, "Seleccione una categoría válida");
                 return;
@@ -100,13 +107,23 @@ public class prodcutodeditar extends JFrame {
 
             try {
                 String categoria = (String) comboCategoria.getSelectedItem();
-                double precioVenta = Double.parseDouble(txtPrecioVenta.getText());
+
                 double precioCompra = Double.parseDouble(txtPrecioCompra.getText());
+
+                
+                double precioVenta = precioCompra * 1.40;
+
                 int stock = Integer.parseInt(txtStock.getText());
 
-                seco.fcdb.productosDB.actualizarProducto(idProducto, categoria, precioVenta, precioCompra, stock);
+                seco.fcdb.productosDB.actualizarProducto(
+                        idProducto,
+                        categoria,
+                        precioVenta,
+                        precioCompra,
+                        stock
+                );
 
-                JOptionPane.showMessageDialog(null, "Datos listos para actualizar");
+                JOptionPane.showMessageDialog(null, "Producto actualizado correctamente");
                 dispose();
 
             } catch (NumberFormatException ex) {

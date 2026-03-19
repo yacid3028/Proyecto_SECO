@@ -9,7 +9,6 @@ public class agregarProducto extends JFrame {
 
     private JTextField txtID;
     private JTextField txtNombre;
-    private JTextField txtDescripcion;
     private JTextField txtPrecioCompra;
     private JComboBox<String> txtCategoria;
     private JTextField txtPrecio;
@@ -28,11 +27,9 @@ public class agregarProducto extends JFrame {
         titulo.setBorder(BorderFactory.createEmptyBorder(15, 20, 10, 10));
         add(titulo, BorderLayout.NORTH);
 
-        // Panel principal con GridLayout de filas
         JPanel panel = new JPanel(new GridLayout(7, 2, 10, 10));
         panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Campos y etiquetas
         JLabel lblID = new JLabel("Ingrese ID:");
         txtID = new JTextField();
 
@@ -43,22 +40,25 @@ public class agregarProducto extends JFrame {
         txtPrecioCompra = new JTextField();
 
         JLabel lblCategoria = new JLabel("Categoría:");
-        txtCategoria = new JComboBox<>(new String[]{"V&L", "Higiene", "Abarrotes", "Bebidas", "Limpieza", "Papelería", "Ferretería", "Accesorios", "Juguetes", "Refrigerados"});
+        txtCategoria = new JComboBox<>(new String[]{
+                "V&L", "Higiene", "Abarrotes", "Bebidas",
+                "Limpieza", "Papelería", "Ferretería",
+                "Accesorios", "Juguetes", "Refrigerados"
+        });
 
         JLabel lblPrecio = new JLabel("Precio de venta:");
         txtPrecio = new JTextField();
+        txtPrecio.setEditable(false); 
 
         JLabel lblStock = new JLabel("Stock:");
         txtStock = new JTextField();
 
-        // Agregar todo al panel
         panel.add(lblID);
         panel.add(txtID);
 
         panel.add(lblNombre);
         panel.add(txtNombre);
 
-        
         panel.add(lblPrecioCompra);
         panel.add(txtPrecioCompra);
 
@@ -73,7 +73,21 @@ public class agregarProducto extends JFrame {
 
         add(panel, BorderLayout.CENTER);
 
-        // Panel de botones
+        
+        txtPrecioCompra.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                try {
+                    double precioCompra = Double.parseDouble(txtPrecioCompra.getText());
+                    double precioVenta = precioCompra * 1.40;
+
+                    txtPrecio.setText(String.format("%.2f", precioVenta));
+
+                } catch (Exception e) {
+                    txtPrecio.setText("");
+                }
+            }
+        });
+
         JPanel botones = new JPanel();
 
         JButton cancelar = new JButton("Cancelar");
@@ -83,10 +97,13 @@ public class agregarProducto extends JFrame {
             try {
                 String id = txtID.getText();
                 String nombre = txtNombre.getText();
-               
                 String categoria = txtCategoria.getSelectedItem().toString();
+
                 double precioCompra = Double.parseDouble(txtPrecioCompra.getText());
-                double precioVenta = Double.parseDouble(txtPrecio.getText());
+
+                
+                double precioVenta = precioCompra * 1.40;
+
                 int stock = Integer.parseInt(txtStock.getText());
 
                 productosDB db = new productosDB();
@@ -94,8 +111,9 @@ public class agregarProducto extends JFrame {
 
                 JOptionPane.showMessageDialog(null, "Producto agregado correctamente");
                 dispose();
+
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Por favor, ingrese valores numéricos válidos para precios y stock.");
+                JOptionPane.showMessageDialog(null, "Por favor, ingrese valores numéricos válidos.");
             }
         });
 
@@ -111,7 +129,6 @@ public class agregarProducto extends JFrame {
         add(botones, BorderLayout.SOUTH);
     }
 
-    // Método para probar la ventana
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new agregarProducto().setVisible(true);

@@ -19,12 +19,12 @@ public class Nuevo_Reporte extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new GridLayout(6,2,10,10));
 
-        // ID
+    
         add(new JLabel("ID:"));
         campoID = new JTextField();
         add(campoID);
 
-        // CATEGORIA (DESPLEGABLE)
+        
         add(new JLabel("Categoría:"));
         campoCategoria = new JComboBox<>(new String[] {
                 "S.A.C",
@@ -33,29 +33,29 @@ public class Nuevo_Reporte extends JFrame {
         });
         add(campoCategoria);
 
-        // DESCRIPCION
+        
         add(new JLabel("Descripción:"));
         campoDescripcion = new JTextField();
         add(campoDescripcion);
 
-        // USUARIO
+        
         add(new JLabel("Usuario:"));
         campoUsuario = new JTextField();
         add(campoUsuario);
 
-        // FECHA
+        
         add(new JLabel("Fecha:"));
         campoFecha = new JTextField();
         add(campoFecha);
 
-        // BOTONES
+        
         JButton guardar = new JButton("Guardar");
         JButton cancelar = new JButton("Cancelar");
 
         add(cancelar);
         add(guardar);
 
-        // 🔥 AUTOLLENADO DE DESCRIPCIÓN
+        
         campoCategoria.addActionListener(e -> {
 
             String seleccion = campoCategoria.getSelectedItem().toString();
@@ -72,7 +72,7 @@ public class Nuevo_Reporte extends JFrame {
 
         });
 
-        // 💾 GUARDAR
+        
         guardar.addActionListener(e -> {
 
             if(campoID.getText().isEmpty()){
@@ -95,7 +95,7 @@ public class Nuevo_Reporte extends JFrame {
             dispose();
         });
 
-        // CANCELAR
+        
         cancelar.addActionListener(e -> dispose());
     }
 }
