@@ -9,12 +9,7 @@ import java.awt.Image;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import seco.fcdb.dashboardDB;
-
 import javax.swing.*;
-
-import seco.fcdb.dashboardDB;
 
 public class dashboard extends JPanel {
 	private executable executable;
@@ -107,10 +102,6 @@ public class dashboard extends JPanel {
 		btNuevo.setForeground(Color.WHITE);
 		btNuevo.setFont(new Font("Arial", Font.BOLD, 12));
 		btNuevo.setFocusPainted(false);
-		btNuevo.addActionListener(ActionEvent -> {
-			dashboardDB iniciar = new dashboardDB();
-			iniciar.iniciarDia();
-		});
 
 		JButton btCerrar = new JButton("Cerrar Dia");
 		btCerrar.setBackground(new Color(250, 250, 249));
@@ -118,10 +109,6 @@ public class dashboard extends JPanel {
 		btCerrar.setFont(new Font("Arial", Font.BOLD, 12));
 		btCerrar.setForeground(fontColor);
 		btCerrar.setFocusPainted(false);
-		btCerrar.addActionListener(ActionEvent -> {
-			dashboardDB cerrar = new dashboardDB();
-			cerrar.cerrarDia();
-		});
 
 		btPanel.add(btNuevo);
 		btPanel.add(btCerrar);

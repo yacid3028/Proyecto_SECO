@@ -1,14 +1,20 @@
 package seco;
 
 import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import seco.fcdb.productosDB;
 import seco.fcdb.ventasDB;
 import seco.ventanas.ventanaFactura;
 
 public class salidas extends JPanel {
-    // VARIABLES Y CONSTANTES DE DISEÑO
+
+    private DefaultTableModel modeloTabla;
     private executable executable;
     private final Color COLOR_FONDO = new Color(240, 242, 245); // Fondo gris
     private final Color COLOR_AZUL_LATERAL = new Color(10, 20, 100); // Azul menú
@@ -88,17 +94,35 @@ public class salidas extends JPanel {
         pAcciones.setOpaque(false);
 
         // Selector de periodo (Día, Semana, Mes, Año)
-        String[] periodos = { "Hoy", "Semana", "Mes", "Año" };
+        String[] periodos = { "Hoy", "Semana Pasada", "Precio D", "Precio A" };
         JComboBox<String> cbPeriodo = new JComboBox<>(periodos);
         cbPeriodo.setPreferredSize(new Dimension(130, 35));
         cbPeriodo.setBackground(Color.WHITE);
+        cbPeriodo.addActionListener(e -> {
+            String seleccion = (String) cbPeriodo.getSelectedItem();
+            filtrarVentas(seleccion);
+        });
 
         // Barra de búsqueda por producto/fecha
-        JTextField txtFiltro = new JTextField("Buscar...");
+        JTextField txtFiltro = new JTextField("");
         txtFiltro.setPreferredSize(new Dimension(200, 35));
         txtFiltro.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(COLOR_BORDE_GRIS),
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+        txtFiltro.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                String texto = txtFiltro.getText();
+
+                if (texto.isEmpty()) {
+                    refrescarTabla();
+                } else {
+                    modeloTabla.setRowCount(0); // limpiar tabla
+                    ventasDB db = new ventasDB();
+                    db.buscarVentas(texto.toUpperCase(), modeloTabla);
+                }
+            }
+        });
 
         pAcciones.add(new JLabel("Categoria:"));
         pAcciones.add(cbPeriodo);
@@ -121,7 +145,7 @@ public class salidas extends JPanel {
         contenedorTabla.setBorder(BorderFactory.createLineBorder(COLOR_BORDE_GRIS));
 
         String[] columnas = { "ID VENTA", "PRODUCTO", "CANTIDAD", "TOTAL", "FACTURA", "FECHA" };
-        DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
+        modeloTabla = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -129,17 +153,9 @@ public class salidas extends JPanel {
         };
 
         ventasDB vdb = new ventasDB();
-        vdb.consultarVentas(modelo);
+        vdb.consultarVentas(modeloTabla);
 
-        /*
-         * Datos de ejemplo para visualizar el registro
-         * modelo.addRow(new Object[]{"#V-102", "09/03/2026", "Teclado Mecánico", "2",
-         * "$120.00", "$120.00"});
-         * modelo.addRow(new Object[]{"#V-103", "09/03/2026", "Mouse Gaming", "1",
-         * "$45.00", "$45.00"});
-         */
-
-        JTable tabla = new JTable(modelo);
+        JTable tabla = new JTable(modeloTabla);
         tabla.setRowHeight(40);
         tabla.getTableHeader().setReorderingAllowed(false);
 
@@ -150,8 +166,7 @@ public class salidas extends JPanel {
         // PAGINACIÓN
         JPanel paginacion = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 10));
         paginacion.setBackground(Color.WHITE);
-        paginacion.add(new JLabel("Páginas: "));
-        paginacion.add(new JButton("<"));
+
         JButton b1 = new JButton("Ver Factura");
         b1.setBackground(COLOR_NARANJA);
         b1.setForeground(Color.WHITE);
@@ -165,8 +180,10 @@ public class salidas extends JPanel {
             }
 
             String factura = tabla.getValueAt(fila, 4).toString();
+            String fecha = tabla.getValueAt(fila, 5).toString();
+            String pedido = tabla.getValueAt(fila, 0).toString();
 
-            ventanaFactura vf = new ventanaFactura(factura);
+            ventanaFactura vf = new ventanaFactura(factura, fecha, pedido);
             vf.setVisible(true);
 
         });
@@ -202,5 +219,32 @@ public class salidas extends JPanel {
         p.add(t, BorderLayout.NORTH);
         p.add(v, BorderLayout.CENTER);
         return p;
+    }
+
+    public void refrescarTabla() {
+        modeloTabla.setRowCount(0);
+        ventasDB vdb = new ventasDB();
+        vdb.consultarVentas(modeloTabla);
+    }
+
+    private void filtrarVentas(String filtro) {
+        modeloTabla.setRowCount(0); // limpia la tabla
+        ventasDB vdb = new ventasDB();
+
+        switch (filtro) {
+            case "Hoy":
+                String hoy = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+                vdb.consultarVentasPorFecha(modeloTabla, hoy);
+                break;
+            case "Semana Pasada":
+                vdb.consultarVentasPorSemana(modeloTabla);
+                break;
+            case "Precio D":
+                vdb.consultarVentasOrdenPrecio(modeloTabla, "DESC");
+                break;
+            case "Precio A":
+                vdb.consultarVentasOrdenPrecio(modeloTabla, "ASC");
+                break;
+        }
     }
 }

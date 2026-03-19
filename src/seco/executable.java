@@ -26,16 +26,18 @@ public class executable extends JFrame {
 		// CREA EL CARDLAYOUT
 		cardlayout = new CardLayout();
 		container = new JPanel(cardlayout);
+		salidas panelSalidas = new salidas(this);
+		ventas panelVentas = new ventas(this, panelSalidas);
 
 		// AGREGA LAS CLASES PANELES
 		container.add(new dashboard(this), "dashboard");
 		container.add(new productos(this), "productos");
 		container.add(new entradas(this), "entradas");
-		container.add(new salidas(this), "salidas");
+		container.add(panelSalidas, "salidas");
 		container.add(new provedores(this), "provedores");
 		container.add(new ordenes(this), "ordenes");
 		container.add(new reportes(this), "reportes");
-		container.add(new ventas(this), "ventas");
+		container.add(panelVentas, "ventas");
 
 		add(container);
 

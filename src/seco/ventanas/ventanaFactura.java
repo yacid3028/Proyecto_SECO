@@ -1,10 +1,23 @@
 package seco.ventanas;
 
 import javax.swing.*;
+import org.apache.pdfbox.pdmodel.*;
+import org.apache.pdfbox.pdmodel.graphics.image.*;
 
+import seco.conexionbd;
+
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.awt.*;
+import seco.conexionbd;
 
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 public class ventanaFactura extends JFrame {
@@ -30,46 +43,42 @@ public class ventanaFactura extends JFrame {
     JLabel lblIVA;
     JLabel lblTotal;
 
-    public ventanaFactura(String factura) {
+    public ventanaFactura(String factura, String fecha, String pedido) {
 
         setTitle("Factura - " + factura);
         setSize(800, 750);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Panel principal con imagen de fondo
+        String rfc = JOptionPane.showInputDialog(null, "RFC del cliente:", "Datos del cliente",
+                JOptionPane.PLAIN_MESSAGE);
+        String nombre = JOptionPane.showInputDialog(null, "Nombre / Razón social:", "Datos del cliente",
+                JOptionPane.PLAIN_MESSAGE);
+        String direccion = JOptionPane.showInputDialog(null, "Dirección fiscal:", "Datos del cliente",
+                JOptionPane.PLAIN_MESSAGE);
+
+        ImageIcon iconFondo = new ImageIcon("img/fondo.png");
+        Image imagenFondo = iconFondo.getImageLoadStatus() == MediaTracker.COMPLETE
+                ? iconFondo.getImage()
+                : null;
+
         JPanel panelPrincipal = new JPanel(new BorderLayout(0, 15)) {
-            private Image imagenFondo;
-
-            {
-                // Descomenta y ajusta la ruta cuando tengas la imagen:
-                // imagenFondo = new ImageIcon("ruta/a/fondo.png").getImage();
-            }
-
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 if (imagenFondo != null) {
                     g.drawImage(imagenFondo, 0, 0, getWidth(), getHeight(), this);
-                } else {
-                    // Fondo por defecto mientras no hay imagen
-                    g.setColor(new Color(245, 247, 250));
-                    g.fillRect(0, 0, getWidth(), getHeight());
                 }
             }
         };
-
-        // Margen general alrededor de todo el contenido
+        panelPrincipal.setOpaque(false);
         panelPrincipal.setBorder(new EmptyBorder(20, 30, 20, 30));
         setContentPane(panelPrincipal);
 
-        // ================ HEADER ================
-
         JPanel panelHeader = new JPanel(new BorderLayout(10, 5));
         panelHeader.setOpaque(false);
-        panelHeader.setBorder(new EmptyBorder(0, 0, 15, 0)); // espacio debajo del header
+        panelHeader.setBorder(new EmptyBorder(0, 0, 15, 0));
 
-        // Lado izquierdo: título + datos empresa
         JPanel panelHeaderIzq = new JPanel(new GridLayout(2, 1, 0, 8));
         panelHeaderIzq.setOpaque(false);
 
@@ -88,32 +97,10 @@ public class ventanaFactura extends JFrame {
         panelHeader.add(panelHeaderIzq, BorderLayout.WEST);
 
         // Esquina superior derecha: logo de la empresa
-        JLabel lblLogo = new JLabel() {
-            private Image logo;
 
-            {
-                // Descomenta y ajusta la ruta cuando tengas el logo:
-                // ImageIcon icon = new ImageIcon("ruta/a/logo.png");
-                // logo = icon.getImage().getScaledInstance(120, 80, Image.SCALE_SMOOTH);
-            }
-
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                if (logo != null) {
-                    g.drawImage(logo, 0, 0, getWidth(), getHeight(), this);
-                } else {
-                    // Placeholder gris mientras no hay logo
-                    g.setColor(new Color(200, 200, 210));
-                    g.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 10, 10);
-                    g.setColor(new Color(130, 130, 150));
-                    g.setFont(new Font("Arial", Font.PLAIN, 11));
-                    FontMetrics fm = g.getFontMetrics();
-                    String txt = "LOGO";
-                    g.drawString(txt, (getWidth() - fm.stringWidth(txt)) / 2, getHeight() / 2 + 4);
-                }
-            }
-        };
+        ImageIcon iconLogo = new ImageIcon("ruta/a/logo.png");
+        JLabel lblLogo = new JLabel(iconLogo);
+        lblLogo.setPreferredSize(new Dimension(120, 80));
         lblLogo.setPreferredSize(new Dimension(120, 80));
         panelHeader.add(lblLogo, BorderLayout.EAST);
 
@@ -126,7 +113,7 @@ public class ventanaFactura extends JFrame {
         panelDatos.setBorder(new EmptyBorder(0, 0, 15, 0)); // espacio debajo
 
         // FACTURAR A
-        JPanel facturar = new JPanel(new GridLayout(3, 1, 0, 5));
+        JPanel facturar = new JPanel(new GridLayout(4, 1, 0, 5));
         facturar.setOpaque(false);
         facturar.setBorder(new EmptyBorder(5, 8, 5, 8));
 
@@ -135,8 +122,12 @@ public class ventanaFactura extends JFrame {
         tituloFacturar.setForeground(new Color(40, 70, 120));
         facturar.add(tituloFacturar);
 
-        lblCliente = new JLabel("Nombre cliente");
-        lblDireccionCliente = new JLabel("Dirección cliente");
+        lblCliente = new JLabel(nombre != null ? nombre : "Sin nombre");
+
+        lblDireccionCliente = new JLabel(direccion != null ? direccion : "Sin dirección");
+
+        JLabel lblRFC = new JLabel(rfc != null ? rfc : "Sin RFC");
+        facturar.add(lblRFC);
         facturar.add(lblCliente);
         facturar.add(lblDireccionCliente);
 
@@ -145,13 +136,13 @@ public class ventanaFactura extends JFrame {
         enviar.setOpaque(false);
         enviar.setBorder(new EmptyBorder(5, 8, 5, 8));
 
-        JLabel tituloEnviar = new JLabel("ENVIAR A");
+        JLabel tituloEnviar = new JLabel("ESTABLECIMIENTO");
         tituloEnviar.setFont(new Font("Arial", Font.BOLD, 11));
         tituloEnviar.setForeground(new Color(40, 70, 120));
         enviar.add(tituloEnviar);
 
-        lblEnviarA = new JLabel("Nombre envio");
-        lblDireccionEnvio = new JLabel("Dirección envio");
+        lblEnviarA = new JLabel("Tienda Don Julion ");
+        lblDireccionEnvio = new JLabel("Calle de las Crudas 54832");
         enviar.add(lblEnviarA);
         enviar.add(lblDireccionEnvio);
 
@@ -160,29 +151,32 @@ public class ventanaFactura extends JFrame {
         datosFactura.setOpaque(false);
         datosFactura.setBorder(new EmptyBorder(5, 8, 5, 8));
 
-        JLabel[] encabezados = {
-                new JLabel("N° FACTURA"), new JLabel("FECHA"),
-                new JLabel("N° PEDIDO"), new JLabel("VENCIMIENTO")
-        };
-        for (JLabel lbl : encabezados) {
-            lbl.setFont(new Font("Arial", Font.BOLD, 11));
-            lbl.setForeground(new Color(40, 70, 120));
-        }
+        JLabel lblTituloNumFactura = new JLabel("N° FACTURA");
+        lblTituloNumFactura.setFont(new Font("Arial", Font.BOLD, 11));
+        lblTituloNumFactura.setForeground(new Color(40, 70, 120));
 
-        datosFactura.add(encabezados[0]);
+        JLabel lblTituloFecha = new JLabel("FECHA");
+        lblTituloFecha.setFont(new Font("Arial", Font.BOLD, 11));
+        lblTituloFecha.setForeground(new Color(40, 70, 120));
+
+        JLabel lblTituloPedido = new JLabel("N° PEDIDO");
+        lblTituloPedido.setFont(new Font("Arial", Font.BOLD, 11));
+        lblTituloPedido.setForeground(new Color(40, 70, 120));
+
+        JLabel lblTituloVencimiento = new JLabel("VENCIMIENTO");
+        lblTituloVencimiento.setFont(new Font("Arial", Font.BOLD, 11));
+        lblTituloVencimiento.setForeground(new Color(40, 70, 120));
+
         lblNumFactura = new JLabel(factura);
         datosFactura.add(lblNumFactura);
-
-        datosFactura.add(encabezados[1]);
-        lblFecha = new JLabel("fecha");
+        lblFecha = new JLabel(fecha);
         datosFactura.add(lblFecha);
-
-        datosFactura.add(encabezados[2]);
-        lblPedido = new JLabel("pedido");
+        lblPedido = new JLabel(pedido);
         datosFactura.add(lblPedido);
-
-        datosFactura.add(encabezados[3]);
-        lblVencimiento = new JLabel("vencimiento");
+        String venc = fecha.substring(3, 5);
+        String tt = "" + (Integer.parseInt(venc) + 1);
+        String rep = fecha.replace(venc, tt);
+        lblVencimiento = new JLabel(rep);
         datosFactura.add(lblVencimiento);
 
         panelDatos.add(facturar);
@@ -191,16 +185,52 @@ public class ventanaFactura extends JFrame {
 
         panelPrincipal.add(panelDatos, BorderLayout.CENTER);
 
-        // ================ CENTRO (TABLA + TOTALES) ================
-
         JPanel panelCentro = new JPanel(new BorderLayout(0, 10));
         panelCentro.setOpaque(false);
 
         // TABLA
         String[] columnas = { "Cant", "Descripción", "Precio Unitario", "Importe" };
-        Object[][] datos = {};
 
-        tablaProductos = new JTable(datos, columnas);
+        DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        double sub = 0;
+        Connection con = conexionbd.conect();
+        String sql = "SELECT  id_Venta,Producto, Cantidad,Total FROM Salidas";
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            while (rs.next()) {
+                if (rs.getString("id_Venta").equals(pedido)) {
+                    String producto = rs.getString("Producto");
+                    int cantidad = rs.getInt("Cantidad");
+                    double total = rs.getDouble("Total");
+                    Statement stt = con.createStatement();
+                    ResultSet rss = stt
+                            .executeQuery(
+                                    "SELECT Nombre , Precio_de_venta FROM Productos WHERE Nombre='" + producto + "'");
+                    while (rss.next()) {
+
+                        modelo.addRow(new Object[] {
+                                cantidad,
+                                producto,
+                                "$ " + Math.round((rss.getInt("Precio_de_venta") / 1.16) * 100) / 100,
+                                (Math.round((rss.getInt("Precio_de_venta") / 1.16) * 100) / 100) * cantidad
+                        });
+                        sub += total;
+                    }
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.print("erorr de tabla");
+        }
+
+        tablaProductos = new JTable(modelo);
         tablaProductos.setRowHeight(28);
         tablaProductos.setFont(new Font("Arial", Font.PLAIN, 12));
         tablaProductos.setGridColor(new Color(220, 220, 230));
@@ -225,25 +255,74 @@ public class ventanaFactura extends JFrame {
         gridTotales.setOpaque(false);
 
         gridTotales.add(new JLabel("Subtotal"));
-        lblSubtotal = new JLabel("$0.00");
+        lblSubtotal = new JLabel("$ " + sub);
         gridTotales.add(lblSubtotal);
 
         gridTotales.add(new JLabel("IVA (16%)"));
-        lblIVA = new JLabel("$0.00");
+        lblIVA = new JLabel("$ " + Math.round((sub * 0.16) * 100.0) / 100.0);
         gridTotales.add(lblIVA);
 
         JLabel lblTituloTotal = new JLabel("TOTAL");
         lblTituloTotal.setFont(new Font("Arial", Font.BOLD, 14));
         gridTotales.add(lblTituloTotal);
 
-        lblTotal = new JLabel("$0.00");
+        lblTotal = new JLabel("$ " + (sub + (Math.round((sub * 0.16) * 100.0) / 100.0)));
         lblTotal.setFont(new Font("Arial", Font.BOLD, 16));
         lblTotal.setForeground(new Color(40, 70, 120));
         gridTotales.add(lblTotal);
 
         JButton btnExportar = new JButton("Exportar PDF");
         btnExportar.setPreferredSize(new Dimension(150, 35));
-        btnExportar.setBackground(new Color(23,184,23));
+        btnExportar.setBackground(new Color(121, 203, 241));
+        btnExportar.addActionListener(e -> {
+            try {
+                // 1. Capturar el panel como imagen
+                BufferedImage imagen = new BufferedImage(
+                        panelPrincipal.getWidth(),
+                        panelPrincipal.getHeight(),
+                        BufferedImage.TYPE_INT_RGB);
+                Graphics2D g2d = imagen.createGraphics();
+                panelPrincipal.printAll(g2d);
+                g2d.dispose();
+
+                // 2. Crear el PDF con PDFBox
+                PDDocument documento = new PDDocument();
+                PDPage pagina = new PDPage(new PDRectangle(
+                        panelPrincipal.getWidth(),
+                        panelPrincipal.getHeight()));
+                documento.addPage(pagina);
+
+                // 3. Insertar la imagen en la página
+                PDImageXObject pdImage = LosslessFactory.createFromImage(documento, imagen);
+                PDPageContentStream contenido = new PDPageContentStream(documento, pagina);
+                contenido.drawImage(pdImage, 0, 0, pagina.getMediaBox().getWidth(), pagina.getMediaBox().getHeight());
+                contenido.close();
+
+                // 4. Guardar con JFileChooser para que el usuario elija dónde
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Guardar Factura PDF");
+                fileChooser.setSelectedFile(new File("Factura_" + factura + ".pdf"));
+                int opcion = fileChooser.showSaveDialog(null);
+
+                if (opcion == JFileChooser.APPROVE_OPTION) {
+                    File archivo = fileChooser.getSelectedFile();
+                    // Asegura que tenga extensión .pdf
+                    if (!archivo.getName().endsWith(".pdf")) {
+                        archivo = new File(archivo.getAbsolutePath() + ".pdf");
+                    }
+                    documento.save(archivo);
+                    documento.close();
+                    JOptionPane.showMessageDialog(null, "✅ PDF guardado correctamente.");
+                    dispose();
+                } else {
+                    documento.close();
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(null, "❌ Error al exportar: " + ex.getMessage());
+            }
+        });
 
         panelTotales.add(btnExportar, BorderLayout.WEST);
         panelTotales.add(gridTotales, BorderLayout.EAST);

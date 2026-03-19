@@ -26,12 +26,15 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import seco.fcdb.salidasDB;
+import seco.fcdb.ventasDB;
 
 public class ventas extends JPanel {
 	private executable executable;
+	private salidas panelSalidas;
 
-	public ventas(executable frame) {
+	public ventas(executable frame, salidas panelSalidas) {
 		this.executable = frame;
+		this.panelSalidas = panelSalidas;
 		setLayout(new BorderLayout());
 		Menu_lateral();
 		Cont_central();
@@ -206,7 +209,6 @@ public class ventas extends JPanel {
 		JLabel fechaLabel = new JLabel("Fecha:");
 		fechaLabel.setFont(labelFont);
 		productoPanel.add(fechaLabel);
-
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		fechaActual = sdf.format(new Date());
 		JTextField fecha = new JTextField(fechaActual);
@@ -290,24 +292,26 @@ public class ventas extends JPanel {
 		cobrar.setFont(buttonFont);
 		cobrar.addActionListener(ActionListener -> {
 			salidasDB db = new salidasDB();
-			String idVenta = "", producto = "";
+			String idVenta = "V" + db.crearRandom();
+			String fact = db.facturacount();
+			String producto = "";
 			int cantidad = 0;
 
 			while (modelo.getRowCount() > 0) {
-				idVenta = ((String) modelo.getValueAt(0, 0)).substring(2, 4);
 				producto = (String) modelo.getValueAt(0, 1);
 				String cant = (String) modelo.getValueAt(0, 2);
 				cantidad = Integer.parseInt(cant.replace("$", "").trim());
-				double subtotal = Double.parseDouble(subtotalValor.getText().replace("$ ", ""));
+				double subtotal = Double.parseDouble(((String) modelo.getValueAt(0, 4)).replace("$ ", ""));
 				double total = Double.parseDouble(totalValor.getText().replace("$ ", ""));
 				modelo.removeRow(0);
-				db.registrarVenta(idVenta, fechaActual, producto, cantidad, subtotal, total);
+				db.registrarVenta(idVenta, fechaActual, producto, cantidad, subtotal, total, fact);
 
 			}
 
 			subtotalValor.setText("$ ");
 			impuestoValor.setText("$ ");
 			totalValor.setText("$ ");
+			panelSalidas.refrescarTabla();
 		});
 
 		botones.add(cancelar);
