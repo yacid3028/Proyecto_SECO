@@ -6,8 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
-import seco.ventanas.ProvedoresAgregar;
-import seco.ventanas.ProvedoresEditrar;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -134,32 +132,15 @@ public class provedores extends JPanel {
 				BorderFactory.createLineBorder(new Color(241, 241, 241)),
 				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
-		nuevoProveedor.addActionListener(e -> {
-
-			ProvedoresAgregar agregarProveedor = new ProvedoresAgregar();
-			agregarProveedor.setVisible(true);
-
-	});
-				
 		JButton editar = new JButton("Editar");
 		editar.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(new Color(241, 241, 241)),
 				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
-			editar.addActionListener(e -> {
-
-				ProvedoresEditrar editarProveedor = new ProvedoresEditrar();
-				editarProveedor.setVisible(true);
-
-			}
-
-		);
-
 		JButton eliminar = new JButton("Eliminar");
 		eliminar.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(new Color(241, 241, 241)), // Borde exterior
 				BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-
 
 		));
 
@@ -201,14 +182,12 @@ public class provedores extends JPanel {
 		// TABLA
 		String[] columnas = { "ID", "Nombre", "Teléfono", "Email" };
 
-		DefaultTableModel modelo = new DefaultTableModel(columnas, 0){
+		DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false; // Hace que todas las celdas no sean editables
 			}
 		};
-
-		 db.consultarProvedores(modelo);
 
 		JTable tabla = new JTable(modelo);
 		JScrollPane scroll = new JScrollPane(tabla);
