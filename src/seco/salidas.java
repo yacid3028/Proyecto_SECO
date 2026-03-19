@@ -94,7 +94,9 @@ public class salidas extends JPanel {
         pAcciones.setOpaque(false);
 
         // Selector de periodo (Día, Semana, Mes, Año)
+
         String[] periodos = { "Hoy", "Semana Pasada", "Precio D", "Precio A" };
+
         JComboBox<String> cbPeriodo = new JComboBox<>(periodos);
         cbPeriodo.setPreferredSize(new Dimension(130, 35));
         cbPeriodo.setBackground(Color.WHITE);
@@ -104,11 +106,14 @@ public class salidas extends JPanel {
         });
 
         // Barra de búsqueda por producto/fecha
+
         JTextField txtFiltro = new JTextField("");
+
         txtFiltro.setPreferredSize(new Dimension(200, 35));
         txtFiltro.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(COLOR_BORDE_GRIS),
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)));
+
         txtFiltro.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -156,6 +161,7 @@ public class salidas extends JPanel {
         vdb.consultarVentas(modeloTabla);
 
         JTable tabla = new JTable(modeloTabla);
+
         tabla.setRowHeight(40);
         tabla.getTableHeader().setReorderingAllowed(false);
 
@@ -187,6 +193,7 @@ public class salidas extends JPanel {
             vf.setVisible(true);
 
         });
+
         paginacion.add(b1);
 
         contenedorTabla.add(scroll, BorderLayout.CENTER);

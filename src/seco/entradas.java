@@ -119,9 +119,12 @@ public class entradas extends JPanel {
         contenedorTabla.setBorder(BorderFactory.createLineBorder(COLOR_BORDE_GRIS)); // Dibuja el contorno del cuadro
 
         String[] columnas = { "ID", "FECHA", "PRODUCTO", "PROVEEDOR", "CANTIDAD", "ESTADO" };
-        DefaultTableModel modelo = new DefaultTableModel(columnas, 0); // Estructura de datos de la tabla
-        for (int i = 1; i <= 10; i++)
-            modelo.addRow(new Object[] { "#00" + i, "09/03/26", "Producto " + i, "Proveedor", "50", "OK" });
+        DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         JTable tabla = new JTable(modelo);
         tabla.setRowHeight(40); // Espaciado cómodo para las filas
