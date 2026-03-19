@@ -16,8 +16,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import seco.fcdb.productosDB;
+import seco.fcdb.dashboardDB;
 import seco.fcdb.ordenesDB;
-import seco.fcdb.ventasDB;
 
 public class dashboard extends JPanel {
 	private executable executable;
@@ -268,7 +268,7 @@ public class dashboard extends JPanel {
 						RenderingHints.VALUE_ANTIALIAS_ON);
 
 				// OBTIENE LOS 9 PRODUCTOS MAS VENDIDOS DE LA BASE DE DATOS
-				ventasDB db = new ventasDB();
+				dashboardDB db = new dashboardDB();
 				int[] valores = db.obtenerTop9ProductosVendidos();
 
 				// DECLARA LOS COLORES OPCIONAL
@@ -334,7 +334,6 @@ public class dashboard extends JPanel {
 		p.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(new Color(230, 230, 230)),
 				BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-
 
 		return p;
 	}
