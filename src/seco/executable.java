@@ -43,6 +43,10 @@ public class executable extends JFrame {
 
 	public void mostrarVista(String nombre) {
 		cardlayout.show(container, nombre);
+		if (nombre.equals("provedores")) {
+			provedores p = (provedores) container.getComponent(4); // índice de la vista "provedores"
+			p.actualizarTabla(); // actualiza la tabla cada vez que se muestra la vista
+		}
 	}
 
 	public static void main(String[] args) {

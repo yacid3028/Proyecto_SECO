@@ -18,7 +18,7 @@ public class provedoresDB {
 
             while (rs.next()) {
 
-                String id_Provedor = rs.getString("id_Prov3-edor");
+                String id_Provedor = rs.getString("id_Provedor");
                 String empresa = rs.getString("empresa");
                 String telefono = rs.getString("telefono");
                 String email = rs.getString("email");
@@ -105,4 +105,34 @@ public class provedoresDB {
         }
         return false;
     }
+
+    public ResultSet buscarProveedor(String id) {
+    Connection con = conexionbd.conect();
+    String sql = "SELECT * FROM Provedores WHERE id_Provedor = ?";
+
+    try {
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, id);
+        return ps.executeQuery();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return null;
+}
+
+public void actualizarProveedor(String id, String empresa, String telefono, String email, String producto) {
+    Connection con = conexionbd.conect();
+    String sql = "UPDATE Provedores SET empresa=?, telefono=?, email=?, producto=? WHERE id_Provedor=?";
+    try {
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, empresa);
+        ps.setString(2, telefono);
+        ps.setString(3, email);
+        ps.setString(4, producto);
+        ps.setString(5, id);
+        ps.executeUpdate();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 }

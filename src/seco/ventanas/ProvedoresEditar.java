@@ -1,98 +1,167 @@
 package seco.ventanas;
 
 import javax.swing.*;
+import java.awt.*;
+import java.sql.ResultSet;
 
 import seco.provedores;
-
-import java.awt.*;
-//import seco.fcdb.provedoresDB;
+import seco.fcdb.provedoresDB;
 
 public class ProvedoresEditar extends JFrame {
 
     public JTextField campoID;
-    public JTextField campoNombre;
+    public JTextField campoEmpresa;
     public JTextField campoTelefono;
     public JTextField campoEmail;
+    public JTextField campoProducto;
 
     public JButton buscar;
     public JButton guardar;
     public JButton cancelar;
+    private provedores panel;
 
-    public ProvedoresEditar(){
+    public ProvedoresEditar(provedores panel) {
+
+        this.panel = panel;
 
         setTitle("Editar Proveedor");
-        setSize(420,300);
+        setSize(450, 350);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // PANEL PRINCIPAL
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-        add(panel);
+        JPanel cont = new JPanel(new BorderLayout(10, 10));
+        cont.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        add(cont);
 
-        // TITULO
         JLabel titulo = new JLabel("Editar Proveedor");
-        titulo.setFont(new Font("Arial",Font.BOLD,20));
-        panel.add(titulo, BorderLayout.NORTH);
+        titulo.setFont(new Font("Arial", Font.BOLD, 20));
+        titulo.setHorizontalAlignment(SwingConstants.CENTER);
+        cont.add(titulo, BorderLayout.NORTH);
 
-        // PANEL CAMPOS
-        JPanel campos = new JPanel(new GridLayout(4,3,10,10));
+        // PANEL DE CAMPOS
+        JPanel campos = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5); // espacio entre componentes
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        campoID = new JTextField();
-        campoNombre = new JTextField();
-        campoTelefono = new JTextField();
-        campoEmail = new JTextField();
-
+        // ID + BOTON BUSCAR
+        campoID = new JTextField(15);
         buscar = new JButton("Buscar");
 
-        campos.add(new JLabel("ID"));
-        campos.add(campoID);
-        campos.add(buscar);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        campos.add(new JLabel("ID Proveedor:"), gbc);
 
-        campos.add(new JLabel("Nombre"));
-        campos.add(campoNombre);
-        campos.add(new JLabel(""));
+        gbc.gridx = 1;
+        campos.add(campoID, gbc);
 
-        campos.add(new JLabel("Teléfono"));
-        campos.add(campoTelefono);
-        campos.add(new JLabel(""));
+        gbc.gridx = 2;
+        campos.add(buscar, gbc);
 
-        campos.add(new JLabel("Email"));
-        campos.add(campoEmail);
-        campos.add(new JLabel(""));
+        // Empresa
+        campoEmpresa = new JTextField(20);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        campos.add(new JLabel("Empresa:"), gbc);
 
-        panel.add(campos, BorderLayout.CENTER);
+        gbc.gridx = 1;
+        gbc.gridwidth = 2; // ocupa dos columnas
+        campos.add(campoEmpresa, gbc);
+        gbc.gridwidth = 1; // reset
+
+        // Teléfono
+        campoTelefono = new JTextField(20);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        campos.add(new JLabel("Teléfono:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.gridwidth = 2;
+        campos.add(campoTelefono, gbc);
+        gbc.gridwidth = 1;
+
+        // Email
+        campoEmail = new JTextField(20);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        campos.add(new JLabel("Email:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.gridwidth = 2;
+        campos.add(campoEmail, gbc);
+        gbc.gridwidth = 1;
+
+        // Producto
+        campoProducto = new JTextField(20);
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        campos.add(new JLabel("Producto:"), gbc);
+
+        gbc.gridx = 1;
+        gbc.gridwidth = 2;
+        campos.add(campoProducto, gbc);
+        gbc.gridwidth = 1;
+
+        cont.add(campos, BorderLayout.CENTER);
 
         // BOTONES
-        JPanel botones = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
+        JPanel botones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         guardar = new JButton("Guardar");
         cancelar = new JButton("Cancelar");
 
         botones.add(cancelar);
         botones.add(guardar);
 
-        panel.add(botones, BorderLayout.SOUTH);
+        cont.add(botones, BorderLayout.SOUTH);
 
-        // BLOQUEAR CAMPOS AL INICIO
-        campoNombre.setEnabled(false);
+        // DESACTIVAR CAMPOS AL INICIO
+        campoEmpresa.setEnabled(false);
         campoTelefono.setEnabled(false);
         campoEmail.setEnabled(false);
+        campoProducto.setEnabled(false);
 
-        // ACCION BOTON BUSCAR
+        provedoresDB db = new provedoresDB();
+
+        // BOTON BUSCAR
         buscar.addActionListener(e -> {
+            try {
+                ResultSet rs = db.buscarProveedor(campoID.getText());
 
-            campoNombre.setEnabled(true);
-            campoTelefono.setEnabled(true);
-            campoEmail.setEnabled(true);
+                if (rs != null && rs.next()) {
+                    campoEmpresa.setText(rs.getString("empresa"));
+                    campoTelefono.setText(rs.getString("telefono"));
+                    campoEmail.setText(rs.getString("email"));
+                    campoProducto.setText(rs.getString("producto"));
 
+                    campoEmpresa.setEnabled(true);
+                    campoTelefono.setEnabled(true);
+                    campoEmail.setEnabled(true);
+                    campoProducto.setEnabled(true);
+
+                } else {
+                    JOptionPane.showMessageDialog(this, "Proveedor no encontrado");
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        // BOTON GUARDAR
+        guardar.addActionListener(e -> {
+            db.actualizarProveedor(
+                    campoID.getText(),
+                    campoEmpresa.getText(),
+                    campoTelefono.getText(),
+                    campoEmail.getText(),
+                    campoProducto.getText()
+            );
+
+            JOptionPane.showMessageDialog(this, "Proveedor actualizado");
+            panel.actualizarTabla();
+            dispose();
         });
 
         cancelar.addActionListener(e -> dispose());
-    }
-
-    public ProvedoresEditar(provedores provedores, String id) {
-        //TODO Auto-generated constructor stub
     }
 }

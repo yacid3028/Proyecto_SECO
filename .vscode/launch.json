@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "executable",
+            "request": "launch",
+            "mainClass": "seco.executable",
+            "projectName": "Proyecto_SECO_3d5c276f"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"

@@ -109,7 +109,12 @@ public class provedores extends JPanel {
 	DefaultTableModel modelo;
 	JTable tabla;
 	provedoresDB db = new provedoresDB();
-	String[] columnas = { "ID", "Nombre", "Empresa", "Teléfono", "Email" };
+	String[] columnas = { "ID Proveedor", "Empresa", "Teléfono", "Email", "Producto" };
+
+	public void actualizarTabla() {
+    modelo.setRowCount(0);
+    db.consultarProvedores(modelo);
+}
 
 	private void Cont_central() {
 
@@ -125,26 +130,28 @@ public class provedores extends JPanel {
     nuevoProveedor.setBackground(new Color(255, 140, 0));
     nuevoProveedor.setForeground(Color.WHITE);
 
+
     JButton editar = new JButton("Editar");
-    JButton eliminar = new JButton("Eliminar");
+
 
     nuevoProveedor.addActionListener(e -> {
-        new ProvedoresAgregar().setVisible(true);
+        new ProvedoresAgregar(this).setVisible(true);
     });
 
     editar.addActionListener(e -> {
         int fila = tabla.getSelectedRow();
         if (fila >= 0) {
-            new ProvedoresEditar().setVisible(true);
+             new ProvedoresEditar(this).setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Selecciona un proveedor.");
         }
     });
 
+	JButton eliminar = new JButton("Eliminar");
     eliminar.addActionListener(e -> {
         int fila = tabla.getSelectedRow();
         if (fila >= 0) {
-            new ProvedoresEliminar().setVisible(true);
+            new ProvedoresEliminar(this).setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "Selecciona un proveedor.");
         }
@@ -167,7 +174,6 @@ public class provedores extends JPanel {
 
     contenedor.add(cabecera, BorderLayout.NORTH);
 
-    // ================= CONTENIDO =================
     JPanel contenido = new JPanel(new BorderLayout());
     contenedor.add(contenido, BorderLayout.CENTER);
 
@@ -178,7 +184,6 @@ public class provedores extends JPanel {
     tarjetas.add(crearTarjeta("Órdenes", "5"));
     contenido.add(tarjetas, BorderLayout.NORTH);
 
-    // ================= TABLA =================
     modelo = new DefaultTableModel(columnas, 0) {
         public boolean isCellEditable(int r, int c) {
             return false;

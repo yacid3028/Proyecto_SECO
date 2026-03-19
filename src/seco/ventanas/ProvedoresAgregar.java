@@ -2,11 +2,14 @@ package seco.ventanas;
 
 import javax.swing.*;
 import java.awt.*;
+
+import seco.provedores;
 import seco.fcdb.provedoresDB;
 
 public class ProvedoresAgregar extends JFrame {
 
-    public JTextField campoID;
+    private provedores panel; // referencia al panel principal
+
     public JTextField campoID_Provedor;
     public JTextField campoEmpresa;
     public JTextField campoTelefono;
@@ -16,7 +19,9 @@ public class ProvedoresAgregar extends JFrame {
     public JButton guardar;
     public JButton cancelar;
 
-    public ProvedoresAgregar() {
+    public ProvedoresAgregar(provedores panel) {
+
+        this.panel = panel; // guardamos la referencia
 
         setTitle("Nuevo Proveedor");
         setSize(420,330);
@@ -36,7 +41,7 @@ public class ProvedoresAgregar extends JFrame {
         contenedor.add(titulo, BorderLayout.NORTH);
 
         // PANEL CENTRAL
-        JPanel centro = new JPanel(new GridLayout(6,2,10,10));
+        JPanel centro = new JPanel(new GridLayout(5,2,10,10));
 
         JLabel id_Provedor = new JLabel("ID Proveedor:");
         JLabel empresa = new JLabel("Empresa:");
@@ -44,17 +49,13 @@ public class ProvedoresAgregar extends JFrame {
         JLabel email = new JLabel("Email:");
         JLabel producto = new JLabel("Producto:");
 
-        campoID = new JTextField();
         campoID_Provedor = new JTextField();
         campoEmpresa = new JTextField();
         campoTelefono = new JTextField();
         campoEmail = new JTextField();
         campoProducto = new JTextField();
 
-        campoID.setText(generarID());
         campoID_Provedor.setText(generarID());
-
-        campoID.setEditable(false);
         campoID_Provedor.setEditable(false);
 
         centro.add(id_Provedor);
@@ -97,8 +98,8 @@ public class ProvedoresAgregar extends JFrame {
             String emailTxt = campoEmail.getText().trim();
             String productoTxt = campoProducto.getText().trim();
 
-            if (id_ProvTxt.isEmpty() || empresaTxt.isEmpty()
-                    || telefonoTxt.isEmpty() || emailTxt.isEmpty() || productoTxt.isEmpty()) {
+            if (empresaTxt.isEmpty() || telefonoTxt.isEmpty()
+                    || emailTxt.isEmpty() || productoTxt.isEmpty()) {
 
                 JOptionPane.showMessageDialog(this,
                         "Por favor, completa todos los campos.",
@@ -117,6 +118,9 @@ public class ProvedoresAgregar extends JFrame {
             );
 
             JOptionPane.showMessageDialog(this, "Proveedor guardado exitosamente.");
+
+            panel.actualizarTabla(); // refresca la tabla
+
             dispose();
         });
 
@@ -124,13 +128,11 @@ public class ProvedoresAgregar extends JFrame {
     }
 
     private String generarID() {
-         String valrey = "";
-        int contador = 6;
-        for (int i = 0; i < contador; i++) {
-            int random = (int) (Math.random() * 9);
+        String valrey = "Q";
+        for (int i = 0; i < 6; i++) {
+            int random = (int) (Math.random() * 10);
             valrey += random;
         }
-
         return valrey;
     }
 }
