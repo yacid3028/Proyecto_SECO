@@ -1,7 +1,6 @@
 package seco;
 
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -25,19 +24,14 @@ public class entradas extends JPanel {
     private JPanel tarjetaProductos;
     private JPanel tarjetaValor;
 
-    public entradas(executable frame) {
+    public entradas(executable frame) throws Exception {
         this.executable = frame;
         this.setLayout(new BorderLayout());
         this.setBackground(COLOR_FONDO);
 
         Menu_lateral();
         crearPanelCentral();
-        
-        try {
-            cargarEntradas();
-        } catch (Exception e) {
-            System.err.println("Error al cargar datos: " + e.getMessage());
-        }
+        cargarEntradas();
     }
 
     private void Menu_lateral() {
@@ -169,35 +163,20 @@ public class entradas extends JPanel {
         add(main, BorderLayout.CENTER);
     }
 
-    private void cargarEntradas() {
-        if (modelo == null) return;
-        try {
-            modelo.setRowCount(0);
-            db.consultarEntradas(modelo);
-            refrescarTarjetas();
-        } catch (Exception e) { e.printStackTrace(); }
+    private void cargarEntradas() throws Exception {
+        db.consultarEntradas(modelo);
+        refrescarTarjetas();
     }
 
-    private void refrescarTarjetas() {
-        try {
-            int entradasHoy = db.contarEntradasHoy();
-            int totalProductos = db.sumarCantidadesTotales();
-            
-            String textoEntradas = entradasHoy == 1 ? "1 entrada" : entradasHoy + " entradas";
-            String textoProductos = totalProductos == 1 ? "1 producto" : totalProductos + " productos";
-
-            actualizarTarjeta(tarjetaEntradasHoy, "Entradas Hoy", textoEntradas, Color.BLACK);
-            actualizarTarjeta(tarjetaProductos, "Productos", textoProductos, Color.BLACK);
-            actualizarTarjeta(tarjetaValor, "Valor Ingreso", "$0", COLOR_DINERO_VERDE);
-        } catch (Exception e) { e.printStackTrace(); }
+    private void refrescarTarjetas() throws Exception {
+        int entradasHoy = db.contarEntradasHoy();
+        int totalProductos = db.sumarCantidadesTotales();
+        actualizarTarjeta(tarjetaEntradasHoy, "Entradas Hoy", String.valueOf(entradasHoy), Color.BLACK);
+        actualizarTarjeta(tarjetaProductos, "Productos", String.valueOf(totalProductos), Color.BLACK);
     }
 
     private void actualizarTarjeta(JPanel tarjeta, String titulo, String valor, Color colorValor) {
         tarjeta.removeAll();
-        tarjeta.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(COLOR_BORDE_GRIS),
-                new EmptyBorder(15, 15, 15, 15)
-        ));
         JLabel t = new JLabel(titulo);
         t.setForeground(COLOR_TEXTO_SEC);
         JLabel v = new JLabel(valor);
@@ -209,63 +188,103 @@ public class entradas extends JPanel {
         tarjeta.repaint();
     }
 
+    // ==========================================
+    //            AQUÍ EDITAR
+    // ==========================================
     private void mostrarDialogoEntrada(boolean esEdicion) {
         String titulo = esEdicion ? "Editar Entrada" : "Nueva Entrada";
         String botonTexto = esEdicion ? "Guardar" : "Agregar";
-        final int[] idSeleccionado = new int[] { -1 };
+        final String[] idSeleccionado = new String[] { "" };
         String producto = "", proveedor = "";
         int cantidad = 1;
 
         if (esEdicion) {
             int fila = tabla.getSelectedRow();
+            
+            // Verificamos que se haya seleccionado una fila (Evita el error de índice -1)
             if (fila < 0) {
-                JOptionPane.showMessageDialog(this, "Seleccione una fila.");
+                JOptionPane.showMessageDialog(this, "Seleccione una fila para editar.");
                 return;
             }
-            idSeleccionado[0] = (int) tabla.getValueAt(fila, 0);
+
+            // Verificamos que la celda no sea nula antes de usar toString()
+            Object objId = tabla.getValueAt(fila, 0);
+            if (objId == null) {
+                JOptionPane.showMessageDialog(this, "La fila seleccionada no contiene un ID válido.");
+                return;
+            }
+
+            idSeleccionado[0] = objId.toString();
             producto = String.valueOf(tabla.getValueAt(fila, 2));
             proveedor = String.valueOf(tabla.getValueAt(fila, 3));
-            cantidad = Integer.parseInt(String.valueOf(tabla.getValueAt(fila, 4)));
+            
+            Object objCant = tabla.getValueAt(fila, 4);
+            cantidad = (objCant != null) ? Integer.parseInt(objCant.toString()) : 1;
         }
 
         JDialog dialog = new JDialog(SwingUtilities.getWindowAncestor(this), titulo, Dialog.ModalityType.APPLICATION_MODAL);
-        dialog.setSize(400, 260);
+        dialog.setSize(350, 250);
         dialog.setLocationRelativeTo(this);
         JPanel form = new JPanel(new GridLayout(0, 2, 10, 10));
         form.setBorder(new EmptyBorder(15, 15, 15, 15));
 
         JTextField tfProducto = new JTextField(producto);
         JTextField tfProveedor = new JTextField(proveedor);
-        JSpinner spCantidad = new JSpinner(new SpinnerNumberModel(cantidad, 1, Integer.MAX_VALUE, 1));
+        JSpinner spCantidad = new JSpinner(new SpinnerNumberModel(cantidad, 1, 9999, 1));
 
         form.add(new JLabel("Producto:")); form.add(tfProducto);
         form.add(new JLabel("Proveedor:")); form.add(tfProveedor);
         form.add(new JLabel("Cantidad:")); form.add(spCantidad);
 
-        JButton btnGuardar = new JButton(botonTexto);
-        btnGuardar.addActionListener(e -> {
+        JButton btnAccion = new JButton(botonTexto);
+        btnAccion.addActionListener(e -> {
             try {
-                boolean ok;
-                if (esEdicion) ok = db.actualizarEntrada(idSeleccionado[0], tfProducto.getText(), tfProveedor.getText(), (int) spCantidad.getValue());
-                else ok = db.agregarEntrada(tfProducto.getText(), tfProveedor.getText(), (int) spCantidad.getValue());
-                
-                if (ok) { cargarEntradas(); dialog.dispose(); }
+                if (esEdicion) {
+                    db.actualizarEntrada(idSeleccionado[0], tfProducto.getText(), tfProveedor.getText(), (int) spCantidad.getValue());
+                } else {
+                    db.agregarEntrada(tfProducto.getText(), tfProveedor.getText(), (int) spCantidad.getValue());
+                }
+                cargarEntradas();
+                dialog.dispose();
             } catch (Exception ex) { ex.printStackTrace(); }
         });
 
         dialog.add(form, BorderLayout.CENTER);
-        dialog.add(btnGuardar, BorderLayout.SOUTH);
+        dialog.add(btnAccion, BorderLayout.SOUTH);
         dialog.setVisible(true);
+        
     }
 
+    // ==========================================
+    //            AQUÍ ELIMINAR
+    // ==========================================
     private void eliminarEntradaSeleccionada() {
         int fila = tabla.getSelectedRow();
-        if (fila < 0) return;
-        int id = (int) tabla.getValueAt(fila, 0);
-        if (JOptionPane.showConfirmDialog(this, "¿Eliminar?") == JOptionPane.YES_OPTION) {
+        
+        // Validación para evitar error si no hay fila seleccionada
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione una fila para eliminar.");
+            return;
+        }
+        
+        // Validación para evitar NullPointerException al invocar toString()
+        Object objId = tabla.getValueAt(fila, 0);
+        if (objId == null) {
+            JOptionPane.showMessageDialog(this, "No se puede obtener el ID de la fila seleccionada.");
+            return;
+        }
+
+        String id = objId.toString();
+        
+        if (JOptionPane.showConfirmDialog(this, "¿Eliminar entrada con ID: " + id + "?") == JOptionPane.YES_OPTION) {
             try {
-                if (db.eliminarEntrada(id)) cargarEntradas();
-            } catch (Exception e) { e.printStackTrace(); }
+                db.eliminarEntrada(id);
+                cargarEntradas();
+                JOptionPane.showMessageDialog(this, "Entrada eliminada con éxito.");
+            } catch (Exception e) { 
+                e.printStackTrace(); 
+                JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage());
+            }
         }
     }
 

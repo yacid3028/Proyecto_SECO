@@ -11,25 +11,23 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
-import seco.fcdb.dasboardDB;
+import seco.fcdb.dashboardDB;
 
 public class dashboard extends JPanel {
-    public  executable executable;
+    public executable executable;
     Color fontColor = new Color(9, 8, 48);
-    // Variable para guardar los datos de la gráfica y que paintComponent los use
+    // Variable para guardar los datos de la gráfica
     private int[] valoresGrafica;
 
     public dashboard(executable frame) throws Exception {
         this.executable = frame;
-        setLayout(new BorderLayout());
-        setBackground(new Color(245, 247, 250));
+        this.setLayout(new BorderLayout());
+        this.setBackground(new Color(245, 247, 250));
 
         // Cargamos los datos de la base de datos al iniciar
-        dasboardDB db = new dasboardDB();
+        dashboardDB db = new dashboardDB();
         this.valoresGrafica = db.obtenerTop9ProductosVendidos();
 
         Cont_central();
@@ -51,13 +49,13 @@ public class dashboard extends JPanel {
         titulo.setBackground(new Color(0, 0, 0, 0));
         titulo.setFocusPainted(false);
         titulo.setBorder(null);
-        titulo.setPreferredSize(new Dimension(100, 0));
         titulo.setForeground(Color.white);
         titulo.setFont(new Font("Arial", Font.ITALIC, 15));
         p.add(titulo);
 
         ImageIcon dashi = new ImageIcon("img/casa_icono.jpg");
         Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+        
         p.add(crearBoton("Dashboard", "dashboard", dsh));
         p.add(crearBoton("Productos", "productos", dsh));
         p.add(crearBoton("Entradas", "entradas", dsh));
@@ -70,15 +68,10 @@ public class dashboard extends JPanel {
 
     private JButton crearBoton(String texto, String vista, Icon icono) {
         JButton boton = new JButton(texto, icono);
-        if (texto.equals("Dashboard")) {
-            boton.setBackground(new Color(33, 150, 243));
-        } else {
-            boton.setBackground(new Color(10, 20, 100));
-        }
+        boton.setBackground(texto.equals("Dashboard") ? new Color(33, 150, 243) : new Color(10, 20, 100));
         boton.setForeground(Color.WHITE);
         boton.setFocusPainted(false);
         boton.setHorizontalAlignment(SwingConstants.LEFT);
-        boton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
         boton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
         boton.addActionListener(e -> executable.mostrarVista(vista));
         return boton;
@@ -124,9 +117,8 @@ public class dashboard extends JPanel {
         cards.setBackground(new Color(240, 240, 240));
         cards.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
 
-        // Se mantienen comentados como en tu original
-        //productosDB pdb = new productosDB();
-        //ordenesDB odb = new ordenesDB();
+        // Aquí podrías agregar las cards si lo necesitas más adelante
+        // cards.add(card("Ventas", "$0.00", "+0% vs ayer"));
 
         cont.add(logoPanel, BorderLayout.NORTH);
         cont.add(cards, BorderLayout.CENTER);
@@ -178,7 +170,7 @@ public class dashboard extends JPanel {
 
         JLabel alerta = new JLabel("⚠ Alertas de Inventario");
         alerta.setFont(new Font("Arial", Font.BOLD, 14));
-        JLabel info = new JLabel("4 productos en bajo stock");
+        JLabel info = new JLabel("Revisar productos en bajo stock");
 
         alertas.add(alerta, BorderLayout.NORTH);
         alertas.add(info, BorderLayout.CENTER);
@@ -233,25 +225,26 @@ public class dashboard extends JPanel {
         p.add(t, BorderLayout.NORTH);
 
         JPanel graf = new JPanel() {
+            @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
                 Color[] colores = {
-                        new Color(52, 152, 219), new Color(46, 204, 113), new Color(241, 196, 15),
-                        new Color(155, 89, 182), new Color(52, 73, 94), new Color(211, 84, 0),
-                        new Color(192, 57, 43), new Color(44, 62, 80), new Color(149, 165, 166)
+                    new Color(52, 152, 219), new Color(46, 204, 113), new Color(241, 196, 15),
+                    new Color(155, 89, 182), new Color(52, 73, 94), new Color(211, 84, 0),
+                    new Color(192, 57, 43), new Color(44, 62, 80), new Color(149, 165, 166)
                 };
 
-                int x = 10;
-                // Usamos la variable valoresGrafica que se llenó en el constructor
+                int x = 20;
                 if (valoresGrafica != null) {
                     for (int i = 0; i < valoresGrafica.length; i++) {
                         g2.setColor(colores[i % colores.length]);
-                        int altura = Math.max(10, valoresGrafica[i] * 3);
+                        // Ajustamos la altura para que no se salga del panel
+                        int altura = Math.min(getHeight() - 40, valoresGrafica[i] * 5);
                         g2.fillRoundRect(x, getHeight() - altura - 10, 30, altura, 10, 10);
-                        x += 50;
+                        x += 45;
                     }
                 }
             }
@@ -264,13 +257,8 @@ public class dashboard extends JPanel {
     private JPanel tablaBajoStock() throws Exception {
         String[] cols = { "Producto", "Stock", "Estado" };
         DefaultTableModel modelo = new DefaultTableModel(cols, 0);
-
         JTable table = new JTable(modelo);
-        table.setRowHeight(28);
-        table.setShowVerticalLines(false);
-        table.setGridColor(new Color(230, 230, 230));
-        table.getTableHeader().setBackground(new Color(245, 245, 245));
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+        configurarTabla(table);
 
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(Color.WHITE);
@@ -278,22 +266,19 @@ public class dashboard extends JPanel {
                 BorderFactory.createLineBorder(new Color(230, 230, 230)),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
         
-        p.add(new JLabel("Bajo Stock"), BorderLayout.NORTH);
+        JLabel t = new JLabel("Bajo Stock");
+        t.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        p.add(t, BorderLayout.NORTH);
         p.add(new JScrollPane(table), BorderLayout.CENTER);
 
         return p;
     }
 
     private JPanel tablaMovimientos() {
-        String[] cols = { "Fecha", "Tipo", "Producto", "Cantidad" };
-        Object[][] data = {};
-
-        JTable table = new JTable(data, cols);
-        table.setRowHeight(28);
-        table.setShowVerticalLines(false);
-        table.setGridColor(new Color(230, 230, 230));
-        table.getTableHeader().setBackground(new Color(245, 245, 245));
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+        String[] cols = { "Fecha", "Tipo", "Producto", "Cant." };
+        DefaultTableModel modelo = new DefaultTableModel(cols, 0);
+        JTable table = new JTable(modelo);
+        configurarTabla(table);
 
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(Color.WHITE);
@@ -301,7 +286,9 @@ public class dashboard extends JPanel {
                 BorderFactory.createLineBorder(new Color(230, 230, 230)),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
-        p.add(new JLabel("Últimos Movimientos"), BorderLayout.NORTH);
+        JLabel t = new JLabel("Últimos Movimientos");
+        t.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        p.add(t, BorderLayout.NORTH);
         p.add(new JScrollPane(table), BorderLayout.CENTER);
 
         return p;
@@ -309,44 +296,43 @@ public class dashboard extends JPanel {
 
     private JPanel tablaOrdenes() {
         String[] cols = { "Orden", "Proveedor", "Estado" };
-        Object[][] data = {};
-
-        JTable table = new JTable(data, cols);
-        table.setRowHeight(28);
-        table.setShowVerticalLines(false);
-        table.setGridColor(new Color(230, 230, 230));
-        table.getTableHeader().setBackground(new Color(245, 245, 245));
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+        DefaultTableModel modelo = new DefaultTableModel(cols, 0);
+        JTable table = new JTable(modelo);
+        configurarTabla(table);
 
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(Color.WHITE);
         p.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(230, 230, 230)),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-        p.add(new JLabel("Órdenes Pendientes"), BorderLayout.NORTH);
+        
+        JLabel t = new JLabel("Órdenes Pendientes");
+        t.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        p.add(t, BorderLayout.NORTH);
         p.add(new JScrollPane(table), BorderLayout.CENTER);
 
         return p;
     }
 
-    private void mostrarAlertas() {
-        JFrame frame = new JFrame("Alertas de Inventario");
-        frame.setSize(500, 400);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-
-        String[] cols = { "Producto", "Stock", "Estado" };
-        DefaultTableModel modelo = new DefaultTableModel(cols, 0);
-
-        JTable table = new JTable(modelo);
+    private void configurarTabla(JTable table) {
         table.setRowHeight(28);
         table.setShowVerticalLines(false);
         table.setGridColor(new Color(230, 230, 230));
         table.getTableHeader().setBackground(new Color(245, 245, 245));
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+    }
 
-        JScrollPane scroll = new JScrollPane(table);
-        frame.add(scroll);
+    private void mostrarAlertas() {
+        JFrame frame = new JFrame("Alertas de Inventario");
+        frame.setSize(500, 400);
+        frame.setLocationRelativeTo(null);
+
+        String[] cols = { "Producto", "Stock", "Estado" };
+        DefaultTableModel modelo = new DefaultTableModel(cols, 0);
+        JTable table = new JTable(modelo);
+        configurarTabla(table);
+
+        frame.add(new JScrollPane(table));
         frame.setVisible(true);
     }
 }
