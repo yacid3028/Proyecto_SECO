@@ -14,18 +14,18 @@ public class ordenesDB {
         modelo.setRowCount(0);
 
         try (Connection con = conexionbd.conect();
-             Statement st = con.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
-                modelo.addRow(new Object[]{
-                    rs.getString("id_Odenes"),
-                    rs.getString("Provedor"),
-                    rs.getString("Producto"),
-                    rs.getDouble("Costo"),
-                    rs.getInt("Cantidad"),
-                    rs.getString("Fecha"),
-                    rs.getString("Estado")
+                modelo.addRow(new Object[] {
+                        rs.getString("id_Odenes"),
+                        rs.getString("Provedor"),
+                        rs.getString("Producto"),
+                        rs.getDouble("Costo"),
+                        rs.getInt("Cantidad"),
+                        rs.getString("Fecha"),
+                        rs.getString("Estado")
                 });
             }
 
@@ -35,12 +35,12 @@ public class ordenesDB {
     }
 
     public void insertarOrden(String id_Odenes, String proveedor, String producto,
-                              double costo, int cantidad, String fecha, String estado) {
+            double costo, int cantidad, String fecha, String estado) {
 
         String sql = "INSERT INTO Ordenes (id_Odenes, Provedor, Producto, Costo, Cantidad, Fecha, Estado) VALUES (?,?,?,?,?,?,?)";
 
         try (Connection con = conexionbd.conect();
-             PreparedStatement pst = con.prepareStatement(sql)) {
+                PreparedStatement pst = con.prepareStatement(sql)) {
 
             pst.setString(1, id_Odenes);
             pst.setString(2, proveedor);
@@ -63,7 +63,7 @@ public class ordenesDB {
         String sql = "DELETE FROM Ordenes WHERE id_Odenes=?";
 
         try (Connection con = conexionbd.conect();
-             PreparedStatement pst = con.prepareStatement(sql)) {
+                PreparedStatement pst = con.prepareStatement(sql)) {
 
             pst.setString(1, id_Odenes);
 
@@ -81,7 +81,7 @@ public class ordenesDB {
         String sql = "UPDATE Ordenes SET Estado=? WHERE id_Odenes=?";
 
         try (Connection con = conexionbd.conect();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+                PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, estado);
             ps.setString(2, id_Odenes);
@@ -113,12 +113,12 @@ public class ordenesDB {
         String sql = "SELECT id_Odenes FROM Ordenes WHERE id_Odenes=?";
 
         try (Connection con = conexionbd.conect();
-             PreparedStatement pst = con.prepareStatement(sql)) {
+                PreparedStatement pst = con.prepareStatement(sql)) {
 
             pst.setString(1, id_Odenes);
             ResultSet rs = pst.executeQuery();
 
-            return rs.next(); // true si existe
+            return rs.next();
 
         } catch (Exception e) {
             e.printStackTrace();
