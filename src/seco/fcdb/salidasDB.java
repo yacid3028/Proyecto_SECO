@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -120,28 +121,32 @@ public class salidasDB {
 
         Connection con = conexionbd.conect();
         String sw = "SELECT Semana_act FROM Config";
-        descontarStock(producto, cantidad);
 
         int semana = 0;
 
-        try {
-            Statement st = con.createStatement();
-            ResultSet sr = st.executeQuery(sw);
-            if (sr.next()) {
-                semana = sr.getInt("Semana_act");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        if (!descontarStock(producto, cantidad)) {
+            JOptionPane.showMessageDialog(null, "⚠️ La venta se registró pero no se pudo descontar el stock.");
+        } else {
 
-        String sql = "INSERT INTO Salidas (id_Venta, Producto, Cantidad, Total,Semana,Fecha,Factura) VALUES ('"
-                + idVenta + "', '" + producto + "', " + cantidad + ", " + subtotal + ", " + semana + ", '" + fecha
-                + "','" + factura + "')";
-        try {
-            Statement st = con.createStatement();
-            st.executeUpdate(sql);
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                Statement st = con.createStatement();
+                ResultSet sr = st.executeQuery(sw);
+                if (sr.next()) {
+                    semana = sr.getInt("Semana_act");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            String sql = "INSERT INTO Salidas (id_Venta, Producto, Cantidad, Total,Semana,Fecha,Factura) VALUES ('"
+                    + idVenta + "', '" + producto + "', " + cantidad + ", " + subtotal + ", " + semana + ", '" + fecha
+                    + "','" + factura + "')";
+            try {
+                Statement st = con.createStatement();
+                st.executeUpdate(sql);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -179,15 +184,42 @@ public class salidasDB {
         return factura;
     }
 
-    public void descontarStock(String nombreProducto, int cantidad) {
+    public boolean descontarStock(String nombreProducto, int cantidad) {
         Connection con = conexionbd.conect();
+
+        String sqlCheck = "SELECT Stock FROM Productos WHERE Nombre = ?";
+        try (PreparedStatement psCheck = con.prepareStatement(sqlCheck)) {
+            psCheck.setString(1, nombreProducto);
+            ResultSet rs = psCheck.executeQuery();
+
+            if (rs.next()) {
+                int stockActual = rs.getInt("Stock");
+
+                if (stockActual < cantidad) {
+                    System.out.println("Stock insuficiente para: " + nombreProducto);
+                    return false;
+                }
+            } else {
+                System.out.println("Producto no encontrado: " + nombreProducto);
+                return false;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
         String sql = "UPDATE Productos SET Stock = Stock - ? WHERE Nombre = ?";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, cantidad);
             ps.setString(2, nombreProducto);
             ps.executeUpdate();
+            return true;
+
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
+
 }

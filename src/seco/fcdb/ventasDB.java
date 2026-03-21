@@ -14,6 +14,7 @@ public class ventasDB {
 
         Connection con = conexionbd.conect();
         String sql = "SELECT * FROM Salidas";
+        int cantV = 0;
 
         try {
             Statement st = con.createStatement();
@@ -27,6 +28,7 @@ public class ventasDB {
                 int total = rs.getInt("Total");
                 String factura = rs.getString("Factura");
                 String fecha = rs.getString("Fecha");
+                cantV += 1;
 
                 modelo.addRow(new Object[] {
                         idVenta,
@@ -41,6 +43,70 @@ public class ventasDB {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String CaulcularUV() {
+
+        Connection con = conexionbd.conect();
+        String sql = "SELECT Cantidad FROM Salidas";
+        int cantV = 0;
+
+        try {
+            Statement st = con.createStatement();
+            rs = st.executeQuery(sql);
+
+            while (rs.next()) {
+                int a = rs.getInt("Cantidad");
+                cantV += a;
+
+            }
+        } catch (Exception e) {
+
+        }
+        String Canti = "" + cantV + " unidades";
+        return Canti;
+    }
+
+    public String CalcularTotalVentas() {
+        Connection con = conexionbd.conect();
+        // Multiplica precio por cantidad en cada salida
+        String sql = "SELECT SUM(Total * Cantidad) AS TotalVentas FROM Salidas";
+        String total = "$0.00";
+
+        try {
+            Statement st = con.createStatement();
+            rs = st.executeQuery(sql);
+
+            if (rs.next()) {
+                double t = rs.getDouble("TotalVentas");
+                total = String.format("$%.2f", t); // formato con dos decimales
+            }
+        } catch (Exception e) {
+            System.out.println("Error CalcularTotalVentas: " + e.getMessage());
+        }
+
+        return total;
+    }
+
+    public String CalcularProductosSobra() {
+        Connection con = conexionbd.conect();
+        String sql = "SELECT Stock FROM Productos";
+        String cantS = "Unidades";
+        int a = 0;
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                a += rs.getInt("Stock");
+            }
+
+        } catch (Exception e) {
+            System.out.println("error de consuta en estp");
+        }
+        cantS = a + "Unidades";
+
+        return cantS;
     }
 
     public void consultarVentasPorFecha(DefaultTableModel modelo, String fecha) {

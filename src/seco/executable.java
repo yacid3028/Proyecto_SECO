@@ -26,8 +26,6 @@ public class executable extends JFrame {
 
 		cardlayout = new CardLayout();
 		container = new JPanel(cardlayout);
-		salidas panelSalidas = new salidas(this);
-		ventas panelVentas = new ventas(this, panelSalidas);
 
 		JPanel dash = new dashboard(this);
 		dash.setName("dashboard");
@@ -62,7 +60,7 @@ public class executable extends JFrame {
 		else if (nombre.equals("reportes"))
 			nuevaVista = new reportes(this);
 		else if (nombre.equals("ventas"))
-			nuevaVista = new salidas(this);
+			nuevaVista = new ventas(this);
 
 		if (nuevaVista != null) {
 			nuevaVista.setName(nombre);

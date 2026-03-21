@@ -30,11 +30,9 @@ import seco.fcdb.ventasDB;
 
 public class ventas extends JPanel {
 	private executable executable;
-	private salidas panelSalidas;
 
-	public ventas(executable frame, salidas panelSalidas) {
+	public ventas(executable frame) {
 		this.executable = frame;
-		this.panelSalidas = panelSalidas;
 		setLayout(new BorderLayout());
 		Menu_lateral();
 		Cont_central();
@@ -311,7 +309,6 @@ public class ventas extends JPanel {
 			subtotalValor.setText("$ ");
 			impuestoValor.setText("$ ");
 			totalValor.setText("$ ");
-			panelSalidas.refrescarTabla();
 		});
 
 		botones.add(cancelar);

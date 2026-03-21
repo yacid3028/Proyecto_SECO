@@ -140,9 +140,10 @@ public class salidas extends JPanel {
         // TARJETAS DINÁMICAS
         JPanel tarjetas = new JPanel(new GridLayout(1, 3, 20, 0));
         tarjetas.setOpaque(false);
-        tarjetas.add(crearTarjeta("Cantidad Vendida", "342 unid.", Color.BLACK));
-        tarjetas.add(crearTarjeta("Ingreso Total", "$24,500.00", COLOR_DINERO_VERDE));
-        tarjetas.add(crearTarjeta("Productos Restantes", "1,120 unid.", COLOR_NARANJA));
+        ventasDB br = new ventasDB();
+        tarjetas.add(crearTarjeta("Cantidad Vendida", br.CaulcularUV(), Color.BLACK));
+        tarjetas.add(crearTarjeta("Ingreso Total", br.CalcularTotalVentas(), COLOR_DINERO_VERDE));
+        tarjetas.add(crearTarjeta("Productos Restantes", br.CalcularProductosSobra(), COLOR_NARANJA));
 
         // CUADRO DE LA TABLA
         JPanel contenedorTabla = new JPanel(new BorderLayout());
