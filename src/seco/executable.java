@@ -13,7 +13,7 @@ public class executable extends JFrame {
 	private CardLayout cardlayout;
 	private JPanel container;
 
-	public executable() {
+	public executable() throws Exception {
 
 		setTitle("SECO Stock Control");
 		setSize(1200, 700);
@@ -55,7 +55,12 @@ public class executable extends JFrame {
 		}
 
 		SwingUtilities.invokeLater(() -> {
-			new executable().setVisible(true);
+			try {
+				new executable().setVisible(true);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		});
 	}
