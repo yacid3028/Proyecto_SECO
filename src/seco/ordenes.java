@@ -6,6 +6,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+<<<<<<< HEAD
+=======
+import seco.ventanas.NuevaOrden;
+import seco.ventanas.EliminarOrden;
+import seco.fcdb.ordenesDB;
+import seco.fcdb.provedoresDB;
+import seco.ventanas.CambiarEstadoOrden;
+>>>>>>> funt/provedores
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -21,6 +29,13 @@ import javax.swing.table.DefaultTableModel;
 import seco.fcdb.ordenesDB;
 
 public class ordenes extends JPanel {
+<<<<<<< HEAD
+=======
+	private JTable tabla;
+	private executable executable;
+	private DefaultTableModel modelo;
+	private ordenesDB db = new ordenesDB();
+>>>>>>> funt/provedores
 
     private executable executable;
 
@@ -44,6 +59,7 @@ public class ordenes extends JPanel {
         ImageIcon lg = new ImageIcon("img/logo.png");
         Icon in = new ImageIcon(lg.getImage().getScaledInstance(70, 60, Image.SCALE_SMOOTH));
 
+<<<<<<< HEAD
         JButton titulo = new JButton("Stock System", in);
         titulo.setHorizontalTextPosition(SwingConstants.RIGHT);
         titulo.setVerticalTextPosition(SwingConstants.CENTER);
@@ -54,6 +70,10 @@ public class ordenes extends JPanel {
         titulo.setFont(new Font("Arial", Font.ITALIC, 15));
 
         p.add(titulo);
+=======
+		return boton;
+	}
+>>>>>>> funt/provedores
 
         ImageIcon dashi = new ImageIcon("img/casa_icono.jpg");
         Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
@@ -73,6 +93,7 @@ public class ordenes extends JPanel {
 
         JButton boton = new JButton(texto, icono);
 
+<<<<<<< HEAD
         if (texto.equals("Ordenes")) {
             boton.setBackground(new Color(33, 150, 243));
         } else {
@@ -89,19 +110,34 @@ public class ordenes extends JPanel {
 
         return boton;
     }
+=======
+		nuevaOrden.addActionListener(e -> {
+			new NuevaOrden(this).setVisible(true);
+		});
+>>>>>>> funt/provedores
 
     // CONTENIDO PRINCIPAL
     private void contenidoOrdenes() {
 
+<<<<<<< HEAD
         JPanel content = new JPanel(new BorderLayout());
         add(content, BorderLayout.CENTER);
 
         // PANEL SUPERIOR
         JPanel panelTop = new JPanel(new BorderLayout());
+=======
+		cambiarEstado.addActionListener(e -> {
+
+			CambiarEstadoOrden cambiarEstadoOrdenVentana = new CambiarEstadoOrden(this);
+			cambiarEstadoOrdenVentana.setVisible(true);
+
+		});
+>>>>>>> funt/provedores
 
         JLabel titulo = new JLabel("Órdenes");
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
 
+<<<<<<< HEAD
         panelTop.add(titulo, BorderLayout.WEST);
 
         JPanel botonesTop = new JPanel();
@@ -116,6 +152,13 @@ public class ordenes extends JPanel {
         botonesTop.add(cambiarEstado);
         botonesTop.add(eliminar);
         botonesTop.add(nuevaOrden);
+=======
+		eliminar.addActionListener(e -> {
+			EliminarOrden eliminarOrdenVentana = new EliminarOrden(this); // pasar panel principal
+			eliminarOrdenVentana.setVisible(true);
+
+		});
+>>>>>>> funt/provedores
 
         panelTop.add(botonesTop, BorderLayout.EAST);
 
@@ -134,6 +177,7 @@ public class ordenes extends JPanel {
         // TABLA
         JPanel panelInferior = new JPanel(new BorderLayout());
 
+<<<<<<< HEAD
         String columnas[] = { "Orden", "Proveedor", "Producto", "Cantidad", "Fecha" };
 
         DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
@@ -154,6 +198,22 @@ public class ordenes extends JPanel {
 
         // BOTON EXPORTAR
         JPanel panelExportar = new JPanel(new BorderLayout());
+=======
+		// PANEL INFERIOR (TABLA + BOTÓN EXPORTAR)
+
+		JPanel panelInferior = new JPanel(new BorderLayout());
+		String[] columnas = { "ID Orden", "Proveedor", "Producto", "Costo", "Cantidad", "Fecha", "Estado" };
+
+		modelo = new DefaultTableModel(columnas, 0);
+		tabla = new JTable(modelo);
+		db.consultarOrdenes(modelo);
+
+		JScrollPane scroll = new JScrollPane(tabla);
+		panelInferior.add(scroll, BorderLayout.CENTER);
+		// BOTÓN EXPORTAR EN ESQUINA INFERIOR DERECHA
+		JPanel panelBotonExportar = new JPanel(new BorderLayout());
+		panelBotonExportar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+>>>>>>> funt/provedores
 
         JPanel derecha = new JPanel();
 
@@ -181,6 +241,7 @@ public class ordenes extends JPanel {
         JLabel lblTitulo = new JLabel(titulo, SwingConstants.CENTER);
         lblTitulo.setFont(new Font("Arial", Font.PLAIN, 14));
 
+<<<<<<< HEAD
         JLabel lblValor = new JLabel(valor, SwingConstants.CENTER);
         lblValor.setFont(new Font("Arial", Font.BOLD, 22));
 
@@ -190,3 +251,15 @@ public class ordenes extends JPanel {
         return tarjeta;
     }
 }
+=======
+		return tarjeta;
+	}
+
+	public void actualizarTabla() {
+		if (modelo != null) {
+			modelo.setRowCount(0);
+			db.consultarOrdenes(modelo);
+		}
+	}
+}
+>>>>>>> funt/provedores

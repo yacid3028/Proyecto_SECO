@@ -1,11 +1,16 @@
 package seco;
 
+import javax.swing.JOptionPane;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+
+import seco.ventanas.ProvedoresAgregar;
+import seco.ventanas.ProvedoresEditar;
+import seco.ventanas.ProvedoresEliminar;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -106,17 +111,14 @@ public class provedores extends JPanel {
 	DefaultTableModel modelo;
 	JTable tabla;
 	provedoresDB db = new provedoresDB();
-	String[] columnas = { "ID", "Nombre", "Teléfono", "Email" };
+	String[] columnas = { "ID Proveedor", "Empresa", "Teléfono", "Email", "Producto" };
+
+	public void actualizarTabla() {
+		modelo.setRowCount(0);
+		db.consultarProvedores(modelo);
+	}
 
 	private void Cont_central() {
-		JPanel p = new JPanel();
-		modelo = new DefaultTableModel(columnas, 0);
-		tabla = new JTable(modelo);
-		p.setBackground(new Color(240, 240, 240));
-		add(p, BorderLayout.CENTER);
-
-		JLabel jl = new JLabel("");
-		p.add(jl);
 
 		JPanel contenedor = new JPanel(new BorderLayout());
 		contenedor.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -124,13 +126,6 @@ public class provedores extends JPanel {
 
 		JTextField buscar = new JTextField("Buscar proveedor...");
 		buscar.setPreferredSize(new Dimension(360, 30));
-
-		JButton nuevoProveedor = new JButton("Nuevo Proveedor");
-		nuevoProveedor.setBackground(new Color(255, 140, 0));
-		nuevoProveedor.setForeground(Color.WHITE);
-		nuevoProveedor.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(new Color(241, 241, 241)),
-				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
 		JButton editar = new JButton("Editar");
 		editar.setBorder(BorderFactory.createCompoundBorder(
@@ -144,18 +139,42 @@ public class provedores extends JPanel {
 
 		));
 
-		JPanel cabecera = new JPanel(new BorderLayout());
-		cabecera.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+		JButton nuevoProveedor = new JButton("Nuevo Proveedor");
+		nuevoProveedor.setBackground(new Color(255, 140, 0));
+		nuevoProveedor.setForeground(Color.WHITE);
 
+		nuevoProveedor.addActionListener(e -> {
+			new ProvedoresAgregar(this).setVisible(true);
+		});
+
+		editar.addActionListener(e -> {
+			int fila = tabla.getSelectedRow();
+			if (fila >= 0) {
+				new ProvedoresEditar(this).setVisible(true);
+			} else {
+				JOptionPane.showMessageDialog(this, "Selecciona un proveedor.");
+			}
+		});
+
+		eliminar.addActionListener(e -> {
+			int fila = tabla.getSelectedRow();
+			if (fila >= 0) {
+				new ProvedoresEliminar(this).setVisible(true);
+			} else {
+				JOptionPane.showMessageDialog(this, "Selecciona un proveedor.");
+			}
+		});
+
+		JPanel cabecera = new JPanel(new BorderLayout());
 		JLabel titulo = new JLabel("Proveedores", SwingConstants.CENTER);
 		titulo.setFont(new Font("Arial", Font.BOLD, 20));
 		cabecera.add(titulo, BorderLayout.WEST);
 
-		JPanel buscaCentro = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+		JPanel buscaCentro = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		buscaCentro.add(buscar);
 		cabecera.add(buscaCentro, BorderLayout.CENTER);
 
-		JPanel nuevoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+		JPanel nuevoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		nuevoPanel.add(editar);
 		nuevoPanel.add(eliminar);
 		nuevoPanel.add(nuevoProveedor);
@@ -163,24 +182,21 @@ public class provedores extends JPanel {
 
 		contenedor.add(cabecera, BorderLayout.NORTH);
 
-		JPanel contenido = new JPanel();
-		contenido.setLayout(new BorderLayout());
-		contenido.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
-
+		JPanel contenido = new JPanel(new BorderLayout());
 		contenedor.add(contenido, BorderLayout.CENTER);
 
 		JPanel tarjetas = new JPanel(new GridLayout(1, 3, 20, 20));
 		tarjetas.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-		tarjetas.setPreferredSize(new Dimension(0, 150));
-
 		tarjetas.add(crearTarjeta("Proveedores", "15"));
 		tarjetas.add(crearTarjeta("Activos", "13"));
 		tarjetas.add(crearTarjeta("Órdenes", "5"));
-
 		contenido.add(tarjetas, BorderLayout.NORTH);
 
-		// TABLA
-		String[] columnas = { "ID", "Nombre", "Teléfono", "Email" };
+		modelo = new DefaultTableModel(columnas, 0) {
+			public boolean isCellEditable(int r, int c) {
+				return false;
+			}
+		};
 
 		DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
 			@Override
@@ -189,17 +205,15 @@ public class provedores extends JPanel {
 			}
 		};
 
-		JTable tabla = new JTable(modelo);
+		tabla = new JTable(modelo);
+		db.consultarProvedores(modelo);
+
 		JScrollPane scroll = new JScrollPane(tabla);
+		contenido.add(scroll, BorderLayout.CENTER);
 
-		JPanel tablaPanel = new JPanel(new BorderLayout());
-		tablaPanel.add(scroll, BorderLayout.CENTER);
-
-		contenido.add(tablaPanel, BorderLayout.CENTER);
-
-		JPanel botonesBottom = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
+		// ================= FOOTER =================
+		JPanel botonesBottom = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		JButton exportar = new JButton("Exportar");
-		exportar.setMaximumSize(new Dimension(120, 40));
 		botonesBottom.add(exportar);
 		contenedor.add(botonesBottom, BorderLayout.SOUTH);
 
