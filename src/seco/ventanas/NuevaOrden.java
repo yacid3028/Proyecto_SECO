@@ -12,7 +12,7 @@ import seco.ordenes; // panel principal con tabla
 
 public class NuevaOrden extends JFrame {
 
-    JTextField  campoTotal, campoCantidad;
+    JTextField campoTotal, campoCantidad;
     JComboBox<String> estado, Provedor, Productos;
     private ordenesDB db;
     private ordenes panelPrincipal;
@@ -21,9 +21,8 @@ public class NuevaOrden extends JFrame {
 
         this.panelPrincipal = panelPrincipal;
 
-
         setTitle("Nueva Orden");
-        setSize(450,400);
+        setSize(450, 400);
         setLocationRelativeTo(null);
         setLayout(null);
 
@@ -31,7 +30,6 @@ public class NuevaOrden extends JFrame {
         titulo.setFont(new Font("Arial", Font.BOLD, 18));
         titulo.setBounds(120, 20, 250, 30);
         add(titulo);
-        
 
         JLabel proveedorLabel = new JLabel("Proveedor:");
         proveedorLabel.setBounds(40, 70, 100, 25);
@@ -45,7 +43,13 @@ public class NuevaOrden extends JFrame {
         productosLabel.setBounds(40, 110, 100, 25);
         add(productosLabel);
 
+        ordenesDB ds= new ordenesDB();
+
         Productos = new JComboBox<>();
+        String[] productos = ds.cargarProductos();
+        for (String producto : productos) {
+            Productos.addItem(producto);
+        }
         Productos.setBounds(150, 110, 200, 25);
         add(Productos);
 
@@ -105,16 +109,17 @@ public class NuevaOrden extends JFrame {
 
                 String fecha = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-                db.insertarOrden(id, proveedorSeleccionado, productoSeleccionado, costo, cantidad, fecha, estadoSeleccionado);
+                db.insertarOrden(id, proveedorSeleccionado, productoSeleccionado, costo, cantidad, fecha,
+                        estadoSeleccionado);
 
                 JOptionPane.showMessageDialog(this, "Orden guardada correctamente.");
 
-               if (proveedorSeleccionado == null || productoSeleccionado == null
-                || campoCantidad.getText().isEmpty()
-                || campoTotal.getText().isEmpty()) {
+                if (proveedorSeleccionado == null || productoSeleccionado == null
+                        || campoCantidad.getText().isEmpty()
+                        || campoTotal.getText().isEmpty()) {
 
-                JOptionPane.showMessageDialog(this, "Por favor completa todos los campos.");
-                return;
+                    JOptionPane.showMessageDialog(this, "Por favor completa todos los campos.");
+                    return;
                 }
 
                 dispose();
@@ -128,7 +133,7 @@ public class NuevaOrden extends JFrame {
     }
 
     private String generarID() {
-        String valrey = "O"; 
+        String valrey = "O";
         for (int i = 0; i < 6; i++) {
             int random = (int) (Math.random() * 10);
             valrey += random;
@@ -136,34 +141,19 @@ public class NuevaOrden extends JFrame {
         return valrey;
     }
 
-
     private void cargarProvedores() {
-    try {
-        ResultSet rs = new provedoresDB().obtenerProvedores();
-        Provedor.removeAllItems();
+        try {
+            ResultSet rs = new provedoresDB().obtenerProvedores();
+            Provedor.removeAllItems();
 
-        while (rs.next()) {
-            Provedor.addItem(rs.getString("Empresa"));
+            while (rs.next()) {
+                Provedor.addItem(rs.getString("Empresa"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar proveedores");
         }
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error al cargar proveedores");
     }
+
 }
-
-//private void cargarProductos() {
-    //try {
-       // ResultSet rs = new productosDB();
-        //Productos.removeAllItems();
-
-        //while (rs.next()) {
-            //Productos.addItem(rs.getString("Nombre"));
-        //}
-
-   // } catch (Exception e) {
-      //  e.printStackTrace();
-        //JOptionPane.showMessageDialog(this, "Error al cargar productos");
-   // }
-}
-

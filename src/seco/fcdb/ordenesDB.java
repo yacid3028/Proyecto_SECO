@@ -1,9 +1,12 @@
 package seco.fcdb;
 
+import java.awt.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import seco.conexionbd;
 
@@ -123,6 +126,28 @@ public class ordenesDB {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public String[] cargarProductos() {
+        Connection con = conexionbd.conect();
+        String sql = "SELECT Nombre FROM Productos";
+        java.util.ArrayList<String> Productos = new java.util.ArrayList<>();
+
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            while (rs.next()) {
+                Productos.add(rs.getString("Nombre"));
+            }
+
+            return Productos.toArray(new String[0]);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al cargar productos");
+            return new String[0];
         }
     }
 }
