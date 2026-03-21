@@ -135,4 +135,17 @@ public void actualizarProveedor(String id, String empresa, String telefono, Stri
         e.printStackTrace();
     }
 }
+
+public ResultSet obtenerProvedores() {
+        Connection con = conexionbd.conect();
+        String sql = "SELECT Empresa FROM Provedores";
+
+        try {
+            Statement st = con.createStatement();
+            return st.executeQuery(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

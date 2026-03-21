@@ -38,25 +38,39 @@ public class EliminarOrden extends JFrame {
         add(eliminar);
 
         eliminar.addActionListener(e -> {
-            String idOrden = campoID.getText().trim();
-            if (idOrden.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Ingresa un ID válido.");
-                return;
-            }
+    String idOrden = campoID.getText().trim();
 
-            db.eliminarOrden(idOrden); // eliminar de la base de datos
-            JOptionPane.showMessageDialog(this, "Orden con ID " + idOrden + " eliminada.");
+    if (idOrden.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Ingresa un ID válido.");
+        return;
+    }
 
-            if (panelPrincipal != null) {
-                panelPrincipal.actualizarTabla(); // refrescar tabla
-            }
+    int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "¿Seguro que deseas eliminar la orden " + idOrden + "?",
+            "Confirmar eliminación",
+            JOptionPane.YES_NO_OPTION
+    );
 
-            dispose(); // cerrar ventana
-        });
+    if (confirm != JOptionPane.YES_OPTION) return;
 
-        JButton cancelar = new JButton("Cancelar");
-        cancelar.setBounds(60,120,100,30);
-        add(cancelar);
-        cancelar.addActionListener(e -> dispose());
+    boolean eliminado = db.eliminarOrden(idOrden);
+
+    if (eliminado) {
+        JOptionPane.showMessageDialog(this, "Orden eliminada correctamente.");
+
+        if (panelPrincipal != null) {
+            panelPrincipal.actualizarTabla();
+        }
+
+        dispose();
+    } else {
+        JOptionPane.showMessageDialog(this,
+                "No se encontró una orden con ese ID.",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+});
+
     }
 }

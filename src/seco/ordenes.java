@@ -26,7 +26,7 @@ import javax.swing.table.DefaultTableModel;
 public class ordenes extends JPanel {
 	private JTable tabla;
 	private executable executable;
-private DefaultTableModel modelo; // ya lo tienes
+private DefaultTableModel modelo;
 private ordenesDB db = new ordenesDB();
 	
 
@@ -124,7 +124,7 @@ private ordenesDB db = new ordenesDB();
 
 				cambiarEstado.addActionListener(e -> {
 
-				CambiarEstadoOrden cambiarEstadoOrdenVentana = new CambiarEstadoOrden();
+				CambiarEstadoOrden cambiarEstadoOrdenVentana = new CambiarEstadoOrden(this);
 				cambiarEstadoOrdenVentana.setVisible(true);
 				
 				}
@@ -164,23 +164,16 @@ private ordenesDB db = new ordenesDB();
 		content.add(panelTarjetas, BorderLayout.CENTER);
 
 		// PANEL INFERIOR (TABLA + BOTÓN EXPORTAR)
-		JPanel panelInferior = new JPanel(new BorderLayout());
 
-
-
-DefaultTableModel modelo;
-
+JPanel panelInferior = new JPanel(new BorderLayout());
 String[] columnas = { "ID Orden", "Proveedor", "Producto", "Costo", "Cantidad", "Fecha", "Estado" };
 
 modelo = new DefaultTableModel(columnas, 0);
 tabla = new JTable(modelo);
+db.consultarOrdenes(modelo);
 
 JScrollPane scroll = new JScrollPane(tabla);
 panelInferior.add(scroll, BorderLayout.CENTER);
-
-	
-		
-
 		// BOTÓN EXPORTAR EN ESQUINA INFERIOR DERECHA
 		JPanel panelBotonExportar = new JPanel(new BorderLayout());
 		panelBotonExportar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -221,8 +214,8 @@ panelInferior.add(scroll, BorderLayout.CENTER);
 	
 	public void actualizarTabla() {
 		if(modelo != null) {
-        modelo.setRowCount(0); // limpiar la tabla
-        db.consultarOrdenes(modelo); // recargar los datos desde la DB
+        modelo.setRowCount(0);
+        db.consultarOrdenes(modelo);
     }
 }
 }

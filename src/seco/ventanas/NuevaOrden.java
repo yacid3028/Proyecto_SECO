@@ -2,10 +2,12 @@ package seco.ventanas;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import seco.fcdb.ordenesDB;
+import seco.fcdb.provedoresDB;
 import seco.ordenes; // panel principal con tabla
 
 public class NuevaOrden extends JFrame {
@@ -18,7 +20,7 @@ public class NuevaOrden extends JFrame {
     public NuevaOrden(ordenes panelPrincipal) {
 
         this.panelPrincipal = panelPrincipal;
-        db = new ordenesDB();
+
 
         setTitle("Nueva Orden");
         setSize(450,400);
@@ -82,6 +84,8 @@ public class NuevaOrden extends JFrame {
         cancelar.setBounds(80, 280, 120, 30);
         add(cancelar);
 
+        cargarProvedores();
+        cargarProvedores();
         // Acción del botón guardar
         guardar.addActionListener(e -> {
             String proveedorSeleccionado = (String) Provedor.getSelectedItem();
@@ -105,8 +109,12 @@ public class NuevaOrden extends JFrame {
 
                 JOptionPane.showMessageDialog(this, "Orden guardada correctamente.");
 
-                if (panelPrincipal != null) {
-                    panelPrincipal.actualizarTabla();
+               if (proveedorSeleccionado == null || productoSeleccionado == null
+                || campoCantidad.getText().isEmpty()
+                || campoTotal.getText().isEmpty()) {
+
+                JOptionPane.showMessageDialog(this, "Por favor completa todos los campos.");
+                return;
                 }
 
                 dispose();
@@ -127,4 +135,35 @@ public class NuevaOrden extends JFrame {
         }
         return valrey;
     }
+
+
+    private void cargarProvedores() {
+    try {
+        ResultSet rs = new provedoresDB().obtenerProvedores();
+        Provedor.removeAllItems();
+
+        while (rs.next()) {
+            Provedor.addItem(rs.getString("Empresa"));
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error al cargar proveedores");
+    }
 }
+
+//private void cargarProductos() {
+    //try {
+       // ResultSet rs = new productosDB();
+        //Productos.removeAllItems();
+
+        //while (rs.next()) {
+            //Productos.addItem(rs.getString("Nombre"));
+        //}
+
+   // } catch (Exception e) {
+      //  e.printStackTrace();
+        //JOptionPane.showMessageDialog(this, "Error al cargar productos");
+   // }
+}
+

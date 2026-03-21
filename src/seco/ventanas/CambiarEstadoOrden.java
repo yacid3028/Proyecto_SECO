@@ -1,27 +1,36 @@
 package seco.ventanas;
 
 import javax.swing.*;
+
+import seco.ordenes;
+import seco.fcdb.ordenesDB;
+
 import java.awt.*;
 
 public class CambiarEstadoOrden extends JFrame {
-
     
     private JTextField campoID;
     private JComboBox<String> estado;
     private JButton guardar;
     private JButton cancelar;
 
-    public CambiarEstadoOrden(){
+    private ordenes panelPrincipal;
+private ordenesDB db;
 
-        setTitle("Cambiar Estado de Orden");
-        setSize(380,230);
-        setLocationRelativeTo(null);
-        setLayout(null);
-        setResizable(false);
+public CambiarEstadoOrden(ordenes panelPrincipal){
 
-        iniciarComponentes();
-        accionesBotones();
-    }
+    this.panelPrincipal = panelPrincipal;
+    this.db = new ordenesDB();
+
+    setTitle("Cambiar Estado de Orden");
+    setSize(380,230);
+    setLocationRelativeTo(null);
+    setLayout(null);
+    setResizable(false);
+
+    iniciarComponentes();
+    accionesBotones();
+}
 
     private void iniciarComponentes(){
 
@@ -65,30 +74,36 @@ public class CambiarEstadoOrden extends JFrame {
         cancelar.addActionListener(e -> dispose());
     }
 
-    private void actualizarEstado(){
+   private void actualizarEstado(){
 
-        String idOrden = campoID.getText().trim();
-        String estadoSeleccionado = (String) estado.getSelectedItem();
+    String idOrden = campoID.getText().trim();
+    String estadoSeleccionado = (String) estado.getSelectedItem();
 
-        if(idOrden.isEmpty()){
+    if(idOrden.isEmpty()){
+        JOptionPane.showMessageDialog(this, "Ingresa un ID de orden");
+        return;
+    }
 
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Ingresa un ID de orden",
-                    "Error",
-                    JOptionPane.WARNING_MESSAGE
-            );
-            return;
+    boolean actualizado = db.actualizarEstado(idOrden, estadoSeleccionado);
+
+    if(actualizado){
+
+        JOptionPane.showMessageDialog(this, "Estado actualizado correctamente");
+
+        if(panelPrincipal != null){
+            panelPrincipal.actualizarTabla();
         }
 
-        // Aquí irá la lógica real después (tabla o base de datos)
+        dispose();
+
+    } else {
 
         JOptionPane.showMessageDialog(
                 this,
-                "La orden " + idOrden + " ahora está: " + estadoSeleccionado
+                "No se encontró la orden",
+                "Error",
+                JOptionPane.ERROR_MESSAGE
         );
-
-        campoID.setText("");
-        estado.setSelectedIndex(0);
     }
+}
 }
