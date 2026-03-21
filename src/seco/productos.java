@@ -10,11 +10,9 @@ import java.awt.Image;
 
 import javax.swing.*;
 
-
 public class productos extends JPanel {
 	private executable executable;
 	// color used for button borders
-	
 
 	public productos(executable frame) {
 		this.executable = frame;
@@ -71,8 +69,6 @@ public class productos extends JPanel {
 		boton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
 		boton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
 
-		boton.addActionListener(e -> executable.mostrarVista(vista));
-
 		return boton;
 	}
 
@@ -103,18 +99,12 @@ public class productos extends JPanel {
 				BorderFactory.createLineBorder(new Color(241, 241, 241)),
 				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
-		
-
 		JButton Eliminar = new JButton("Eliminar");
 		Eliminar.setBackground(new Color(255, 140, 0));
 		Eliminar.setForeground(Color.WHITE);
 		Eliminar.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(new Color(241, 241, 241)),
 				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
-
-	
-
-
 
 		botonesPanel.add(Editar_Producto);
 		botonesPanel.add(Eliminar);

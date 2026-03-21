@@ -26,9 +26,8 @@ import javax.swing.table.DefaultTableModel;
 public class ordenes extends JPanel {
 	private JTable tabla;
 	private executable executable;
-private DefaultTableModel modelo;
-private ordenesDB db = new ordenesDB();
-	
+	private DefaultTableModel modelo;
+	private ordenesDB db = new ordenesDB();
 
 	public ordenes(executable frame) {
 		this.executable = frame;
@@ -85,8 +84,6 @@ private ordenesDB db = new ordenesDB();
 		boton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
 		boton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
 
-		boton.addActionListener(e -> executable.mostrarVista(vista));
-
 		return boton;
 	}
 
@@ -111,9 +108,9 @@ private ordenesDB db = new ordenesDB();
 				BorderFactory.createLineBorder(new Color(241, 241, 241)),
 				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
-			nuevaOrden.addActionListener(e -> {
-        new NuevaOrden(this).setVisible(true);
-    });
+		nuevaOrden.addActionListener(e -> {
+			new NuevaOrden(this).setVisible(true);
+		});
 
 		JButton cambiarEstado = new JButton("Cambiar estado");
 		cambiarEstado.setBackground(new Color(255, 140, 0));
@@ -122,13 +119,12 @@ private ordenesDB db = new ordenesDB();
 				BorderFactory.createLineBorder(new Color(241, 241, 241)),
 				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
-				cambiarEstado.addActionListener(e -> {
+		cambiarEstado.addActionListener(e -> {
 
-				CambiarEstadoOrden cambiarEstadoOrdenVentana = new CambiarEstadoOrden(this);
-				cambiarEstadoOrdenVentana.setVisible(true);
-				
-				}
-				);
+			CambiarEstadoOrden cambiarEstadoOrdenVentana = new CambiarEstadoOrden(this);
+			cambiarEstadoOrdenVentana.setVisible(true);
+
+		});
 
 		JButton eliminar = new JButton("Eliminar");
 		eliminar.setBackground(new Color(255, 140, 0));
@@ -137,13 +133,11 @@ private ordenesDB db = new ordenesDB();
 				BorderFactory.createLineBorder(new Color(241, 241, 241)),
 				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
-			eliminar.addActionListener(e -> {
-    EliminarOrden eliminarOrdenVentana = new EliminarOrden(this); // pasar panel principal
-    eliminarOrdenVentana.setVisible(true);
+		eliminar.addActionListener(e -> {
+			EliminarOrden eliminarOrdenVentana = new EliminarOrden(this); // pasar panel principal
+			eliminarOrdenVentana.setVisible(true);
 
-			});
-
-
+		});
 
 		botonesTop.add(cambiarEstado);
 		botonesTop.add(eliminar);
@@ -165,15 +159,15 @@ private ordenesDB db = new ordenesDB();
 
 		// PANEL INFERIOR (TABLA + BOTÓN EXPORTAR)
 
-JPanel panelInferior = new JPanel(new BorderLayout());
-String[] columnas = { "ID Orden", "Proveedor", "Producto", "Costo", "Cantidad", "Fecha", "Estado" };
+		JPanel panelInferior = new JPanel(new BorderLayout());
+		String[] columnas = { "ID Orden", "Proveedor", "Producto", "Costo", "Cantidad", "Fecha", "Estado" };
 
-modelo = new DefaultTableModel(columnas, 0);
-tabla = new JTable(modelo);
-db.consultarOrdenes(modelo);
+		modelo = new DefaultTableModel(columnas, 0);
+		tabla = new JTable(modelo);
+		db.consultarOrdenes(modelo);
 
-JScrollPane scroll = new JScrollPane(tabla);
-panelInferior.add(scroll, BorderLayout.CENTER);
+		JScrollPane scroll = new JScrollPane(tabla);
+		panelInferior.add(scroll, BorderLayout.CENTER);
 		// BOTÓN EXPORTAR EN ESQUINA INFERIOR DERECHA
 		JPanel panelBotonExportar = new JPanel(new BorderLayout());
 		panelBotonExportar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -211,11 +205,10 @@ panelInferior.add(scroll, BorderLayout.CENTER);
 		return tarjeta;
 	}
 
-	
 	public void actualizarTabla() {
-		if(modelo != null) {
-        modelo.setRowCount(0);
-        db.consultarOrdenes(modelo);
-    }
-}
+		if (modelo != null) {
+			modelo.setRowCount(0);
+			db.consultarOrdenes(modelo);
+		}
+	}
 }
