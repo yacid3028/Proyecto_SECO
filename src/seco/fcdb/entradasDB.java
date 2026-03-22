@@ -15,6 +15,23 @@ public class entradasDB {
         int numero = 10000 + r.nextInt(90000); // Genera 5 dígitos
         return "A" + numero;
     }
+    
+    // ==========================================
+    // AQUÍ ESTÁ EL MÉTODO BASADO EN TU CÓDIGO
+    // ==========================================
+    public ResultSet obtenerProvedores() {
+        Connection con = conexionbd.conect();
+        String sql = "SELECT Empresa FROM Provedores";
+
+        try {
+            Statement st = con.createStatement();
+            return st.executeQuery(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    // ==========================================
 
     public void consultarEntradas(DefaultTableModel modelo) throws Exception {
         modelo.setRowCount(0);

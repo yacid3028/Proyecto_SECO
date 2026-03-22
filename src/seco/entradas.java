@@ -1,6 +1,7 @@
 package seco;
 
 import java.awt.*;
+import java.sql.ResultSet;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -229,20 +230,43 @@ public class entradas extends JPanel {
         form.setBorder(new EmptyBorder(15, 15, 15, 15));
 
         JTextField tfProducto = new JTextField(producto);
-        JTextField tfProveedor = new JTextField(proveedor);
+        
+        // --- AQUÍ APLICAMOS TU CÓDIGO ---
+        JComboBox<String> cbProveedor = new JComboBox<>();
+        try {
+            ResultSet rs = db.obtenerProvedores();
+            if (rs != null) {
+                while (rs.next()) {
+                    cbProveedor.addItem(rs.getString("Empresa"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar proveedores");
+        }
+        
+        // Si es edición y el proveedor ya estaba, lo seleccionamos en la lista
+        if (esEdicion && proveedor != null && !proveedor.isEmpty()) {
+            cbProveedor.setSelectedItem(proveedor);
+        }
+        // ---------------------------------
+
         JSpinner spCantidad = new JSpinner(new SpinnerNumberModel(cantidad, 1, 9999, 1));
 
         form.add(new JLabel("Producto:")); form.add(tfProducto);
-        form.add(new JLabel("Proveedor:")); form.add(tfProveedor);
+        form.add(new JLabel("Proveedor:")); form.add(cbProveedor); // Añadimos el desplegable
         form.add(new JLabel("Cantidad:")); form.add(spCantidad);
 
         JButton btnAccion = new JButton(botonTexto);
         btnAccion.addActionListener(e -> {
             try {
+                // Obtenemos el proveedor seleccionado del JComboBox
+                String provSeleccionado = cbProveedor.getSelectedItem() != null ? cbProveedor.getSelectedItem().toString() : "";
+                
                 if (esEdicion) {
-                    db.actualizarEntrada(idSeleccionado[0], tfProducto.getText(), tfProveedor.getText(), (int) spCantidad.getValue());
+                    db.actualizarEntrada(idSeleccionado[0], tfProducto.getText(), provSeleccionado, (int) spCantidad.getValue());
                 } else {
-                    db.agregarEntrada(tfProducto.getText(), tfProveedor.getText(), (int) spCantidad.getValue());
+                    db.agregarEntrada(tfProducto.getText(), provSeleccionado, (int) spCantidad.getValue());
                 }
                 cargarEntradas();
                 dialog.dispose();
