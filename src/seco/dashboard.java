@@ -14,6 +14,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import seco.fcdb.dashboardDB;
+import seco.fcdb.entradasDB;
 
 public class dashboard extends JPanel {
     public executable executable;
@@ -55,7 +56,7 @@ public class dashboard extends JPanel {
 
         ImageIcon dashi = new ImageIcon("img/casa_icono.jpg");
         Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
-        
+
         p.add(crearBoton("Dashboard", "dashboard", dsh));
         p.add(crearBoton("Productos", "productos", dsh));
         p.add(crearBoton("Entradas", "entradas", dsh));
@@ -99,6 +100,8 @@ public class dashboard extends JPanel {
         btNuevo.setForeground(Color.WHITE);
         btNuevo.setFont(new Font("Arial", Font.BOLD, 12));
         btNuevo.setFocusPainted(false);
+        dashboardDB dr = new dashboardDB();
+        btNuevo.addActionListener(e -> dr.iniciarDia());
 
         JButton btCerrar = new JButton("Cerrar Dia");
         btCerrar.setBackground(new Color(250, 250, 249));
@@ -106,6 +109,7 @@ public class dashboard extends JPanel {
         btCerrar.setFont(new Font("Arial", Font.BOLD, 12));
         btCerrar.setForeground(fontColor);
         btCerrar.setFocusPainted(false);
+        btCerrar.addActionListener(e -> dr.cerrarDia());
 
         btPanel.add(btNuevo);
         btPanel.add(btCerrar);
@@ -232,9 +236,9 @@ public class dashboard extends JPanel {
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
                 Color[] colores = {
-                    new Color(52, 152, 219), new Color(46, 204, 113), new Color(241, 196, 15),
-                    new Color(155, 89, 182), new Color(52, 73, 94), new Color(211, 84, 0),
-                    new Color(192, 57, 43), new Color(44, 62, 80), new Color(149, 165, 166)
+                        new Color(52, 152, 219), new Color(46, 204, 113), new Color(241, 196, 15),
+                        new Color(155, 89, 182), new Color(52, 73, 94), new Color(211, 84, 0),
+                        new Color(192, 57, 43), new Color(44, 62, 80), new Color(149, 165, 166)
                 };
 
                 int x = 20;
@@ -265,7 +269,7 @@ public class dashboard extends JPanel {
         p.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(230, 230, 230)),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-        
+
         JLabel t = new JLabel("Bajo Stock");
         t.setFont(new Font("Segoe UI", Font.BOLD, 14));
         p.add(t, BorderLayout.NORTH);
@@ -305,7 +309,7 @@ public class dashboard extends JPanel {
         p.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(230, 230, 230)),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-        
+
         JLabel t = new JLabel("Órdenes Pendientes");
         t.setFont(new Font("Segoe UI", Font.BOLD, 14));
         p.add(t, BorderLayout.NORTH);
