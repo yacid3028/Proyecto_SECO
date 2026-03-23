@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 import seco.conexionbd;
 
@@ -187,6 +188,7 @@ public class dashboardDB {
                     int nuevaSemana;
 
                     if (dia >= 7) {
+                        actualizarPromedios();
                         nuevoDia = 1;
                         nuevaSemana = semana + 1;
                     } else {
@@ -208,7 +210,155 @@ public class dashboardDB {
                 }
             }
         } catch (Exception e) {
-
+            JOptionPane.showMessageDialog(null, "No se pudo cerrar el día.");
         }
+    }
+
+    public void cargarOrdenesPendientes(DefaultTableModel modelo) {
+        int contador = 0;
+        Connection con = conexionbd.conect();
+        String sql = "SELECT id_Odenes, Provedor, Costo FROM Ordenes WHERE Estado = 'Pendiente' OR Estado = 'En Camino'";
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                if (contador >= 5) {
+                    break;
+
+                } else {
+                    String id = rs.getString("id_Odenes");
+                    String provedor = rs.getString("Provedor");
+                    double costo = rs.getDouble("Costo");
+                    modelo.addRow(new Object[] { id, provedor, costo });
+                    contador++;
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.println("No se pudieron cargar las ordenes pendientes." + e.getMessage());
+        }
+
+    }
+
+    public void cargarBajoStock(DefaultTableModel modelo) {
+        int contador = 0;
+        try (Connection con = conexionbd.conect();
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT id_Productos, Nombre, Stock FROM Productos ")) {
+
+            while (rs.next()) {
+                if (rs.getInt("Stock") < 8 && contador < 5) {
+                    String id = rs.getString("id_Productos");
+                    String nombre = rs.getString("Nombre");
+                    int stock = rs.getInt("Stock");
+                    modelo.addRow(new Object[] { id, nombre, stock });
+                    contador++;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("No se pudieron cargar las alertas de bajo stock." + e.getMessage());
+        }
+    }
+
+    public void UltimosMovimientos(DefaultTableModel modelo) {
+        int contador = 0;
+        try (Connection con = conexionbd.conect();
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery(
+                        "SELECT id_Venta, Producto, Fecha, Cantidad FROM Salidas ORDER BY id_Venta DESC LIMIT 5")) {
+
+            while (rs.next()) {
+                if (contador >= 5) {
+                    break;
+                } else {
+                    String id = rs.getString("id_Venta");
+                    String producto = rs.getString("Producto");
+                    String fecha = rs.getString("Fecha");
+                    int cantidad = rs.getInt("Cantidad");
+                    modelo.addRow(new Object[] { fecha, id, producto, cantidad });
+                    contador++;
+                }
+
+            }
+        } catch (SQLException e) {
+            System.out.println("No se pudieron cargar las últimas ventas." + e.getMessage());
+        }
+    }
+
+    public void cargarAlertasBajoStock() {
+        int contador = 0;
+        try (Connection con = conexionbd.conect();
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM Alertas ")) {
+            while (rs.next()) {
+                String producto = rs.getString("Nombre");
+                int cantidad = rs.getInt("Cantidad");
+                boolean Estatus = rs.getBoolean("Estatus");
+                if (!Estatus) {
+                    JOptionPane.showMessageDialog(null,
+                            "Alerta: El producto '" + producto
+                                    + "' está bajo stock.\nCantidad recomendada para reordenar: " + cantidad);
+                    contador++;
+                }
+
+            }
+            if (contador == 0) {
+                JOptionPane.showMessageDialog(null, "No hay alertas de bajo stock en este momento.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("No se pudieron cargar las alertas de bajo stock." + e.getMessage());
+        }
+    }
+
+    private void actualizarPromedios() {
+        try (Connection con = conexionbd.conect();
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT Producto,Cantidad, Semana FROM Salidas")) {
+
+            while (rs.next()) {
+                String nombre = rs.getString("Producto");
+                int cantidad = rs.getInt("Cantidad");
+                int semana = rs.getInt("Semana");
+
+                insertarPromedio(nombre, cantidad, semana);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al actualizar promedios de ventas");
+            e.printStackTrace();
+        }
+    }
+
+    private void insertarPromedio(String nombre, int cantidad, int semana) {
+        try (Connection con = conexionbd.conect();
+                Statement st = con.createStatement()) {
+
+            int semanaActual = conaultaSem();
+            if (semana == semanaActual) {
+                String sql = "UPDATE Promedio SET Vendidos = " + cantidad + ", Promedio = " + (cantidad / 7)
+                        + " WHERE Producto = '" + nombre + "'";
+                st.executeUpdate(sql);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error al insertar producto en tabla de promedio");
+            e.printStackTrace();
+        }
+
+    }
+
+    private int conaultaSem() {
+        try (Connection con = conexionbd.conect();
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT Semana_act FROM Config")) {
+
+            if (rs.next()) {
+                return rs.getInt("Semana_act");
+            }
+        } catch (Exception e) {
+            System.out.println("Error al consultar semana actual");
+            e.printStackTrace();
+        }
+        return -1; // Retorna -1 si no se pudo obtener la semana actual
     }
 }

@@ -14,7 +14,6 @@ public class ventasDB {
 
         Connection con = conexionbd.conect();
         String sql = "SELECT * FROM Salidas";
-        int cantV = 0;
 
         try {
             Statement st = con.createStatement();
@@ -28,7 +27,6 @@ public class ventasDB {
                 int total = rs.getInt("Total");
                 String factura = rs.getString("Factura");
                 String fecha = rs.getString("Fecha");
-                cantV += 1;
 
                 modelo.addRow(new Object[] {
                         idVenta,

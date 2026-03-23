@@ -46,14 +46,35 @@ public class reportes extends JPanel {
         ImageIcon dashi = new ImageIcon("img/casa_icono.jpg");
         Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
 
+        ImageIcon repos = new ImageIcon("img/reporte_icon.png");
+        Icon rps = new ImageIcon(repos.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+        ImageIcon entrad = new ImageIcon("img/entradas_icon.png");
+        Icon etd = new ImageIcon(entrad.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+        ImageIcon salids = new ImageIcon("img/guayaba.png");
+        Icon slds = new ImageIcon(salids.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+        ImageIcon ordns = new ImageIcon("img/camioncitorunrun.png");
+        Icon ord = new ImageIcon(ordns.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+        ImageIcon vents = new ImageIcon("img/ventas_icon.png");
+        Icon vts = new ImageIcon(vents.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+        ImageIcon provs = new ImageIcon("img/sexo.png");
+        Icon prvs = new ImageIcon(provs.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+        ImageIcon prod = new ImageIcon("img/papaya.png");
+        Icon prd = new ImageIcon(prod.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
         p.add(crearBoton("Dashboard", "dashboard", dsh));
-        p.add(crearBoton("Productos", "productos", dsh));
-        p.add(crearBoton("Entradas", "entradas", dsh));
-        p.add(crearBoton("Salidas", "salidas", dsh));
-        p.add(crearBoton("Provedores", "provedores", dsh));
-        p.add(crearBoton("Ordenes", "ordenes", dsh));
-        p.add(crearBoton("Reportes", "reportes", dsh));
-        p.add(crearBoton("Servicio", "ventas", dsh));
+        p.add(crearBoton("Productos", "productos", prd));
+        p.add(crearBoton("Entradas", "entradas", etd));
+        p.add(crearBoton("Salidas", "salidas", slds));
+        p.add(crearBoton("Provedores", "provedores", prvs));
+        p.add(crearBoton("Ordenes", "ordenes", ord));
+        p.add(crearBoton("Reportes", "reportes", rps));
+        p.add(crearBoton("Servicio", "ventas", vts));
     }
 
     private JButton crearBoton(String texto, String vista, Icon icono) {
@@ -88,24 +109,20 @@ public class reportes extends JPanel {
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         panelSuperior.add(titulo, BorderLayout.WEST);
 
-        
         JPanel botones = new JPanel();
 
         JButton nuevo = new JButton("Nuevo Reporte");
         JButton editar = new JButton("Editar Reporte");
         JButton eliminar = new JButton("Eliminar Reporte");
 
-        
         nuevo.addActionListener(e -> {
             new Nuevo_Reporte(this).setVisible(true);
         });
 
-        
         editar.addActionListener(e -> {
             new Editar_Reportes().setVisible(true);
         });
 
-        
         eliminar.addActionListener(e -> {
             new Eliminar_Reportes(this).setVisible(true);
         });
@@ -118,7 +135,6 @@ public class reportes extends JPanel {
 
         content.add(panelSuperior, BorderLayout.NORTH);
 
-        
         String columnas[] = { "ID", "Categoria", "Descripción", "Usuario", "Fecha" };
 
         modelo = new DefaultTableModel(null, columnas);
@@ -133,7 +149,6 @@ public class reportes extends JPanel {
         content.add(scroll, BorderLayout.CENTER);
     }
 
-    
     public void actualizarTabla() {
         modelo.setRowCount(0);
         seco.fcdb.reportesDB.reportes(modelo);

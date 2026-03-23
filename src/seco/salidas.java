@@ -53,17 +53,38 @@ public class salidas extends JPanel {
         ImageIcon dashi = new ImageIcon("img/casa_icono.jpg");
         Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
 
-        p.add(crearBotonNavegacion("Dashboard", "dashboard", dsh));
-        p.add(crearBotonNavegacion("Productos", "productos", dsh));
-        p.add(crearBotonNavegacion("Entradas", "entradas", dsh));
-        p.add(crearBotonNavegacion("Salidas", "salidas", dsh));
-        p.add(crearBotonNavegacion("Provedores", "provedores", dsh));
-        p.add(crearBotonNavegacion("Ordenes", "ordenes", dsh));
-        p.add(crearBotonNavegacion("Reportes", "reportes", dsh));
-        p.add(crearBotonNavegacion("Servicio", "ventas", dsh));
+        ImageIcon repos = new ImageIcon("img/reporte_icon.png");
+        Icon rps = new ImageIcon(repos.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+        ImageIcon entrad = new ImageIcon("img/entradas_icon.png");
+        Icon etd = new ImageIcon(entrad.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+        ImageIcon salids = new ImageIcon("img/guayaba.png");
+        Icon slds = new ImageIcon(salids.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+        ImageIcon ordns = new ImageIcon("img/camioncitorunrun.png");
+        Icon ord = new ImageIcon(ordns.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+        ImageIcon vents = new ImageIcon("img/ventas_icon.png");
+        Icon vts = new ImageIcon(vents.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+        ImageIcon provs = new ImageIcon("img/sexo.png");
+        Icon prvs = new ImageIcon(provs.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+        ImageIcon prod = new ImageIcon("img/papaya.png");
+        Icon prd = new ImageIcon(prod.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+        p.add(crearBoton("Dashboard", "dashboard", dsh));
+        p.add(crearBoton("Productos", "productos", prd));
+        p.add(crearBoton("Entradas", "entradas", etd));
+        p.add(crearBoton("Salidas", "salidas", slds));
+        p.add(crearBoton("Provedores", "provedores", prvs));
+        p.add(crearBoton("Ordenes", "ordenes", ord));
+        p.add(crearBoton("Reportes", "reportes", rps));
+        p.add(crearBoton("Servicio", "ventas", vts));
     }
 
-    private JButton crearBotonNavegacion(String texto, String vista, Icon icono) {
+    private JButton crearBoton(String texto, String vista, Icon icono) {
         JButton boton = new JButton(texto, icono);
         if (texto.equals("Salidas")) {
             boton.setBackground(COLOR_AZUL_ACTIVO);
@@ -256,5 +277,5 @@ public class salidas extends JPanel {
     }
 
     ImageIcon dashi = new ImageIcon("img/cajitafeli.png");
-		Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+    Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
 }

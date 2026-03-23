@@ -201,7 +201,8 @@ public class dashboard extends JPanel {
 
 		alertas.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				mostrarAlertas();
+				dashboardDB db = new dashboardDB();
+				db.cargarAlertasBajoStock();
 			}
 		});
 
@@ -253,7 +254,7 @@ public class dashboard extends JPanel {
 	}
 
 	private JPanel tablaBajoStock() {
-		String[] cols = { "Producto", "Stock", "Estado" };
+		String[] cols = { "ID", "Producto", "Stock" };
 		DefaultTableModel modelo = new DefaultTableModel(cols, 0);
 		JTable table = new JTable(modelo);
 		configurarTabla(table);
@@ -268,12 +269,14 @@ public class dashboard extends JPanel {
 		t.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		p.add(t, BorderLayout.NORTH);
 		p.add(new JScrollPane(table), BorderLayout.CENTER);
+		dashboardDB db = new dashboardDB();
+		db.cargarBajoStock(modelo);
 
 		return p;
 	}
 
 	private JPanel tablaMovimientos() {
-		String[] cols = { "Fecha", "Tipo", "Producto", "Cant." };
+		String[] cols = { "Fecha", "ID", "Producto", "Cant." };
 		DefaultTableModel modelo = new DefaultTableModel(cols, 0);
 		JTable table = new JTable(modelo);
 		configurarTabla(table);
@@ -288,6 +291,8 @@ public class dashboard extends JPanel {
 		t.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		p.add(t, BorderLayout.NORTH);
 		p.add(new JScrollPane(table), BorderLayout.CENTER);
+		dashboardDB db = new dashboardDB();
+		db.UltimosMovimientos(modelo);
 
 		return p;
 	}
@@ -308,6 +313,8 @@ public class dashboard extends JPanel {
 		t.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		p.add(t, BorderLayout.NORTH);
 		p.add(new JScrollPane(table), BorderLayout.CENTER);
+		dashboardDB db = new dashboardDB();
+		db.cargarOrdenesPendientes(modelo);
 
 		return p;
 	}
@@ -320,17 +327,4 @@ public class dashboard extends JPanel {
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
 	}
 
-	private void mostrarAlertas() {
-		JFrame frame = new JFrame("Alertas de Inventario");
-		frame.setSize(500, 400);
-		frame.setLocationRelativeTo(null);
-
-		String[] cols = { "Producto", "Stock", "Estado" };
-		DefaultTableModel modelo = new DefaultTableModel(cols, 0);
-		JTable table = new JTable(modelo);
-		configurarTabla(table);
-
-		frame.add(new JScrollPane(table));
-		frame.setVisible(true);
-	}
 }
