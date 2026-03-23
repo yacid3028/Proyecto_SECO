@@ -56,14 +56,23 @@ public class dashboard extends JPanel {
 		ImageIcon dashi = new ImageIcon("img/casa_icono.jpg");
 		Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
 
+		ImageIcon repos = new ImageIcon("img/reporte_icon.png");
+		Icon rps = new ImageIcon(repos.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+		ImageIcon entrad = new ImageIcon("img/entradas_icon.png");
+		Icon etd = new ImageIcon(entrad.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
+		ImageIcon vents = new ImageIcon("img/ventas_icon.png");
+		Icon vts = new ImageIcon(vents.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
+
 		p.add(crearBoton("Dashboard", "dashboard", dsh));
 		p.add(crearBoton("Productos", "productos", dsh));
-		p.add(crearBoton("Entradas", "entradas", dsh));
+		p.add(crearBoton("Entradas", "entradas", etd));
 		p.add(crearBoton("Salidas", "salidas", dsh));
 		p.add(crearBoton("Provedores", "provedores", dsh));
 		p.add(crearBoton("Ordenes", "ordenes", dsh));
-		p.add(crearBoton("Reportes", "reportes", dsh));
-		p.add(crearBoton("Servicio", "ventas", dsh));
+		p.add(crearBoton("Reportes", "reportes", rps));
+		p.add(crearBoton("Servicio", "ventas", vts));
 	}
 
 	private JButton crearBoton(String texto, String vista, Icon icono) {
