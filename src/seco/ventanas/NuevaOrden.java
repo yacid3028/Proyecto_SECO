@@ -14,7 +14,6 @@ public class NuevaOrden extends JFrame {
 
     JTextField campoTotal, campoCantidad;
     JComboBox<String> estado, Provedor, Productos;
-    private ordenesDB db;
     private ordenes panelPrincipal;
 
     public NuevaOrden(ordenes panelPrincipal) {
@@ -43,7 +42,7 @@ public class NuevaOrden extends JFrame {
         productosLabel.setBounds(40, 110, 100, 25);
         add(productosLabel);
 
-        ordenesDB ds= new ordenesDB();
+        ordenesDB ds = new ordenesDB();
 
         Productos = new JComboBox<>();
         String[] productos = ds.cargarProductos();
@@ -109,17 +108,19 @@ public class NuevaOrden extends JFrame {
 
                 String fecha = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-                db.insertarOrden(id, proveedorSeleccionado, productoSeleccionado, costo, cantidad, fecha,
-                        estadoSeleccionado);
-
-                JOptionPane.showMessageDialog(this, "Orden guardada correctamente.");
-
                 if (proveedorSeleccionado == null || productoSeleccionado == null
                         || campoCantidad.getText().isEmpty()
                         || campoTotal.getText().isEmpty()) {
 
                     JOptionPane.showMessageDialog(this, "Por favor completa todos los campos.");
                     return;
+                } else {
+                    ordenesDB db = new ordenesDB();
+
+                    db.insertarOrden(id, proveedorSeleccionado, productoSeleccionado, costo, cantidad, fecha,
+                            estadoSeleccionado);
+
+                    JOptionPane.showMessageDialog(this, "Orden guardada correctamente.");
                 }
 
                 dispose();

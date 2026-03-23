@@ -1,52 +1,63 @@
 package seco;
 
 import java.awt.*;
+import java.sql.ResultSet;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 public class entradas extends JPanel {
 
-    // VARIABLES Y CONSTANTES
     private executable executable;
-    private final Color COLOR_FONDO = new Color(240, 242, 245); // Color grisáceo para el fondo general
-    private final Color COLOR_AZUL_LATERAL = new Color(10, 20, 100); // Azul oscuro para el menú
-    private final Color COLOR_AZUL_ACTIVO = new Color(33, 150, 243); // Resalta el botón de la vista actual
-    private final Color COLOR_NARANJA = new Color(255, 133, 27); // Color de marca para botones principales
-    private final Color COLOR_DINERO_VERDE = new Color(40, 167, 69); // Color estándar para valores monetarios
-    private final Color COLOR_BORDE_GRIS = new Color(225, 230, 235); // Color sutil para marcos y divisiones
-    private final Color COLOR_TEXTO_SEC = new Color(110, 115, 130); // Gris para etiquetas menos importantes
+    private final Color COLOR_FONDO = new Color(240, 242, 245);
+    private final Color COLOR_AZUL_LATERAL = new Color(10, 20, 100);
+    private final Color COLOR_AZUL_ACTIVO = new Color(33, 150, 243);
+    private final Color COLOR_NARANJA = new Color(255, 133, 27);
+    private final Color COLOR_DINERO_VERDE = new Color(40, 167, 69);
+    private final Color COLOR_BORDE_GRIS = new Color(225, 230, 235);
+    private final Color COLOR_TEXTO_SEC = new Color(110, 115, 130);
+
+    private DefaultTableModel modelo;
+    private JTable tabla;
+    private final seco.fcdb.entradasDB db = new seco.fcdb.entradasDB();
+
+    private JPanel tarjetaEntradasHoy;
+    private JPanel tarjetaProductos;
+    private JPanel tarjetaValor;
 
     public entradas(executable frame) {
         this.executable = frame;
-        this.setLayout(new BorderLayout()); // Divide el panel en secciones (Norte, Sur, Centro, etc.)
+        this.setLayout(new BorderLayout());
         this.setBackground(COLOR_FONDO);
 
         Menu_lateral();
         crearPanelCentral();
+        try {
+            cargarEntradas();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void Menu_lateral() {
         JPanel p = new JPanel();
-        p.setPreferredSize(new Dimension(200, 0)); // Define el ancho fijo del menú izquierdo
-        p.setBackground(COLOR_AZUL_LATERAL);
-        p.setLayout(new GridLayout(10, 1, 0, 1)); // Crea filas iguales para los botones
+        p.setPreferredSize(new Dimension(200, 0));
+        p.setBackground(new Color(10, 20, 100));
+        p.setLayout(new GridLayout(10, 1, 0, 1));
         add(p, BorderLayout.WEST);
 
-        // LOGO Y TÍTULO
         ImageIcon lg = new ImageIcon("img/logo.png");
-        Icon in = new ImageIcon(lg.getImage().getScaledInstance(70, 60, Image.SCALE_SMOOTH)); // Suaviza la imagen al
-                                                                                              // reducirla
+        Icon in = new ImageIcon(lg.getImage().getScaledInstance(70, 60, Image.SCALE_SMOOTH));
         JButton titulo = new JButton("Stock System", in);
-        titulo.setHorizontalTextPosition(SwingConstants.RIGHT); // Pone el texto a la derecha del icono
-        titulo.setBackground(new Color(0, 0, 0, 0)); // Hace el fondo del botón totalmente transparente
+        titulo.setHorizontalTextPosition(SwingConstants.RIGHT);
+        titulo.setVerticalTextPosition(SwingConstants.CENTER);
+        titulo.setBackground(new Color(0, 0, 0, 0));
         titulo.setFocusPainted(false);
         titulo.setBorder(null);
         titulo.setForeground(Color.white);
         titulo.setFont(new Font("Arial", Font.ITALIC, 15));
         p.add(titulo);
 
-        // ICONO DE NAVEGACIÓN
         ImageIcon dashi = new ImageIcon("img/casa_icono.jpg");
         Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
 
@@ -83,79 +94,80 @@ public class entradas extends JPanel {
 
     private JButton crearBoton(String texto, String vista, Icon icono) {
         JButton boton = new JButton(texto, icono);
-        if (texto.equals("Entradas")) {
-            boton.setBackground(COLOR_AZUL_ACTIVO); // Marca visual de "estás aquí"
-        } else {
-            boton.setBackground(COLOR_AZUL_LATERAL);
-        }
+        boton.setBackground(texto.equals("Entradas") ? COLOR_AZUL_ACTIVO : COLOR_AZUL_LATERAL);
         boton.setForeground(Color.WHITE);
-        boton.setFocusPainted(false); // Elimina el recuadro de puntos al hacer click
-        boton.setHorizontalAlignment(SwingConstants.LEFT); // Alinea contenido a la izquierda
-        boton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16)); // Margen interno del botón
-        boton.addActionListener(e -> executable.mostrarVista(vista)); // Cambia la pantalla mediante la interfaz
+        boton.setFocusPainted(false);
+        boton.setHorizontalAlignment(SwingConstants.LEFT);
+        boton.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
+        boton.addActionListener(e -> executable.mostrarVista(vista));
         return boton;
     }
 
     private void crearPanelCentral() {
-        JPanel main = new JPanel(new BorderLayout(0, 25)); // Espacio vertical de 25px entre componentes
+        JPanel main = new JPanel(new BorderLayout(0, 25));
         main.setBackground(COLOR_FONDO);
-        main.setBorder(new EmptyBorder(30, 40, 30, 40)); // Margen de respiro para todo el contenido central
+        main.setBorder(new EmptyBorder(30, 40, 30, 40));
 
-        // CABECERA
         JPanel header = new JPanel(new BorderLayout());
-        header.setOpaque(false); // Permite que se vea el fondo gris del panel padre
+        header.setOpaque(false);
         JLabel lblTitle = new JLabel("Historial de Entradas");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 28));
 
         JPanel pBotones = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         pBotones.setOpaque(false);
 
-        pBotones.add(crearBotonBlanco("Editar"));
-        pBotones.add(crearBotonBlanco("Eliminar"));
+        JButton btnEditar = crearBotonBlanco("Editar");
+        JButton btnEliminar = crearBotonBlanco("Eliminar");
+        JButton btnNueva = new JButton("Nueva Entrada");
 
-        JButton btnNu = new JButton("Nueva Entrada");
-        btnNu.setBackground(COLOR_NARANJA);
-        btnNu.setForeground(Color.WHITE);
-        btnNu.setFocusPainted(false);
-        btnNu.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
-                BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-        ));
-        pBotones.add(btnNu);
+        btnEditar.addActionListener(e -> mostrarDialogoEntrada(true));
+        btnEliminar.addActionListener(e -> eliminarEntradaSeleccionada());
+        btnNueva.addActionListener(e -> mostrarDialogoEntrada(false));
+
+        btnNueva.setBackground(COLOR_NARANJA);
+        btnNueva.setForeground(Color.WHITE);
+        btnNueva.setFocusPainted(false);
+        btnNueva.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(COLOR_BORDE_GRIS),
+                BorderFactory.createEmptyBorder(8, 15, 8, 15)));
+
+        pBotones.add(btnEditar);
+        pBotones.add(btnEliminar);
+        pBotones.add(btnNueva);
 
         header.add(lblTitle, BorderLayout.WEST);
         header.add(pBotones, BorderLayout.EAST);
 
-        // TARJETAS INFORMATIVAS
-        JPanel tarjetas = new JPanel(new GridLayout(1, 3, 20, 0)); // Rejilla de 1 fila y 3 columnas iguales
+        JPanel tarjetas = new JPanel(new GridLayout(1, 3, 20, 0));
         tarjetas.setOpaque(false);
-        tarjetas.add(crearTarjeta("Entradas Hoy", "12", Color.BLACK));
-        tarjetas.add(crearTarjeta("Productos", "145", Color.BLACK));
-        tarjetas.add(crearTarjeta("Valor Ingreso", "$4,520", COLOR_DINERO_VERDE));
+        tarjetaEntradasHoy = crearTarjeta("Entradas Hoy", "0", Color.BLACK);
+        tarjetaProductos = crearTarjeta("Productos", "0", Color.BLACK);
+        tarjetaValor = crearTarjeta("Valor Ingreso", "$0", COLOR_DINERO_VERDE);
+        tarjetas.add(tarjetaEntradasHoy);
+        tarjetas.add(tarjetaProductos);
+        tarjetas.add(tarjetaValor);
 
-        // CUADRO DE LA TABLA (EL "BOX")
         JPanel contenedorTabla = new JPanel(new BorderLayout());
         contenedorTabla.setBackground(Color.WHITE);
-        contenedorTabla.setBorder(BorderFactory.createLineBorder(COLOR_BORDE_GRIS)); // Dibuja el contorno del cuadro
+        contenedorTabla.setBorder(BorderFactory.createLineBorder(COLOR_BORDE_GRIS));
 
-        String[] columnas = { "ID", "FECHA", "PRODUCTO", "PROVEEDOR", "CANTIDAD", "ESTADO" };
-        DefaultTableModel modelo = new DefaultTableModel(columnas, 0) {
+        String[] columnas = { "ID", "FECHA", "PRODUCTO", "PROVEDOR", "CANTIDAD", "ESTADO" };
+        modelo = new DefaultTableModel(columnas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        JTable tabla = new JTable(modelo);
-        tabla.setRowHeight(40); // Espaciado cómodo para las filas
+        tabla = new JTable(modelo);
+        tabla.setRowHeight(40);
+        tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JScrollPane scroll = new JScrollPane(tabla);
-        scroll.setBorder(BorderFactory.createEmptyBorder()); // Quita el borde por defecto del scroll para no duplicar
-                                                             // marcos
-        scroll.getViewport().setBackground(Color.WHITE); // Fondo blanco para el área donde no hay filas
+        scroll.setBorder(BorderFactory.createEmptyBorder());
+        scroll.getViewport().setBackground(Color.WHITE);
 
-        // PAGINACIÓN
-        JPanel paginacion = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 10)); // Botones alineados a la derecha
+        JPanel paginacion = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 10));
         paginacion.setBackground(Color.WHITE);
         paginacion.add(new JLabel("Páginas: "));
         paginacion.add(new JButton("<"));
@@ -167,45 +179,198 @@ public class entradas extends JPanel {
         paginacion.add(new JButton(">"));
 
         contenedorTabla.add(scroll, BorderLayout.CENTER);
-        contenedorTabla.add(paginacion, BorderLayout.SOUTH); // Pone los botones debajo de la tabla dentro del cuadro
+        contenedorTabla.add(paginacion, BorderLayout.SOUTH);
 
-        // ENSAMBLADO
         JPanel areaSuperior = new JPanel(new BorderLayout(0, 20));
         areaSuperior.setOpaque(false);
         areaSuperior.add(header, BorderLayout.NORTH);
         areaSuperior.add(tarjetas, BorderLayout.CENTER);
 
         main.add(areaSuperior, BorderLayout.NORTH);
-        main.add(contenedorTabla, BorderLayout.CENTER); // La tabla ocupa el espacio restante
+        main.add(contenedorTabla, BorderLayout.CENTER);
         add(main, BorderLayout.CENTER);
+    }
+
+    private void cargarEntradas() {
+        try {
+            db.consultarEntradas(modelo);
+            refrescarTarjetas();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void refrescarTarjetas() {
+        try {
+            int entradasHoy = db.contarEntradasHoy();
+            int totalProductos = db.sumarCantidadesTotales();
+            actualizarTarjeta(tarjetaEntradasHoy, "Entradas Hoy", String.valueOf(entradasHoy), Color.BLACK);
+            actualizarTarjeta(tarjetaProductos, "Productos", String.valueOf(totalProductos), Color.BLACK);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void actualizarTarjeta(JPanel tarjeta, String titulo, String valor, Color colorValor) {
+        tarjeta.removeAll();
+        JLabel t = new JLabel(titulo);
+        t.setForeground(COLOR_TEXTO_SEC);
+        JLabel v = new JLabel(valor);
+        v.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        v.setForeground(colorValor);
+        tarjeta.add(t, BorderLayout.NORTH);
+        tarjeta.add(v, BorderLayout.CENTER);
+        tarjeta.revalidate();
+        tarjeta.repaint();
+    }
+
+    private void mostrarDialogoEntrada(boolean esEdicion) {
+        String titulo = esEdicion ? "Editar Entrada" : "Nueva Entrada";
+        String botonTexto = esEdicion ? "Guardar" : "Agregar";
+        final String[] idSeleccionado = new String[] { "" };
+        String producto = "", proveedor = "";
+        int cantidad = 1;
+
+        if (esEdicion) {
+            int fila = tabla.getSelectedRow();
+
+            // Verificamos que se haya seleccionado una fila (Evita el error de índice -1)
+            if (fila < 0) {
+                JOptionPane.showMessageDialog(this, "Seleccione una fila para editar.");
+                return;
+            }
+
+            // Verificamos que la celda no sea nula antes de usar toString()
+            Object objId = tabla.getValueAt(fila, 0);
+            if (objId == null) {
+                JOptionPane.showMessageDialog(this, "La fila seleccionada no contiene un ID válido.");
+                return;
+            }
+
+            idSeleccionado[0] = objId.toString();
+            producto = String.valueOf(tabla.getValueAt(fila, 2));
+            proveedor = String.valueOf(tabla.getValueAt(fila, 3));
+
+            Object objCant = tabla.getValueAt(fila, 4);
+            cantidad = (objCant != null) ? Integer.parseInt(objCant.toString()) : 1;
+        }
+
+        JDialog dialog = new JDialog(SwingUtilities.getWindowAncestor(this), titulo,
+                Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.setSize(350, 250);
+        dialog.setLocationRelativeTo(this);
+        JPanel form = new JPanel(new GridLayout(0, 2, 10, 10));
+        form.setBorder(new EmptyBorder(15, 15, 15, 15));
+
+        JTextField tfProducto = new JTextField(producto);
+
+        // --- AQUÍ APLICAMOS TU CÓDIGO ---
+        JComboBox<String> cbProveedor = new JComboBox<>();
+        try {
+            ResultSet rs = db.obtenerProvedores();
+            if (rs != null) {
+                while (rs.next()) {
+                    cbProveedor.addItem(rs.getString("Empresa"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar proveedores");
+        }
+
+        // Si es edición y el proveedor ya estaba, lo seleccionamos en la lista
+        if (esEdicion && proveedor != null && !proveedor.isEmpty()) {
+            cbProveedor.setSelectedItem(proveedor);
+        }
+        // ---------------------------------
+
+        JSpinner spCantidad = new JSpinner(new SpinnerNumberModel(cantidad, 1, 9999, 1));
+
+        form.add(new JLabel("Producto:"));
+        form.add(tfProducto);
+        form.add(new JLabel("Proveedor:"));
+        form.add(cbProveedor); // Añadimos el desplegable
+        form.add(new JLabel("Cantidad:"));
+        form.add(spCantidad);
+
+        JButton btnAccion = new JButton(botonTexto);
+        btnAccion.addActionListener(e -> {
+            try {
+                // Obtenemos el proveedor seleccionado del JComboBox
+                String provSeleccionado = cbProveedor.getSelectedItem() != null
+                        ? cbProveedor.getSelectedItem().toString()
+                        : "";
+
+                if (esEdicion) {
+                    db.actualizarEntrada(idSeleccionado[0], tfProducto.getText(), provSeleccionado,
+                            (int) spCantidad.getValue());
+                } else {
+                    db.agregarEntrada(tfProducto.getText(), provSeleccionado, (int) spCantidad.getValue());
+                }
+                cargarEntradas();
+                dialog.dispose();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        dialog.add(form, BorderLayout.CENTER);
+        dialog.add(btnAccion, BorderLayout.SOUTH);
+        dialog.setVisible(true);
+
+    }
+
+    // ==========================================
+    // AQUÍ ELIMINAR
+    // ==========================================
+    private void eliminarEntradaSeleccionada() {
+        int fila = tabla.getSelectedRow();
+
+        // Validación para evitar error si no hay fila seleccionada
+        if (fila < 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione una fila para eliminar.");
+            return;
+        }
+
+        // Validación para evitar NullPointerException al invocar toString()
+        Object objId = tabla.getValueAt(fila, 0);
+        if (objId == null) {
+            JOptionPane.showMessageDialog(this, "No se puede obtener el ID de la fila seleccionada.");
+            return;
+        }
+
+        String id = objId.toString();
+
+        if (JOptionPane.showConfirmDialog(this, "¿Eliminar entrada con ID: " + id + "?") == JOptionPane.YES_OPTION) {
+            try {
+                db.eliminarEntrada(id);
+                cargarEntradas();
+                JOptionPane.showMessageDialog(this, "Entrada eliminada con éxito.");
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error al eliminar: " + e.getMessage());
+            }
+        }
     }
 
     private JButton crearBotonBlanco(String t) {
         JButton b = new JButton(t);
         b.setBackground(Color.WHITE);
-        b.setForeground(Color.BLACK);
-        b.setFocusPainted(false);
-        b.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Borde exterior
-                BorderFactory.createEmptyBorder(8, 15, 8, 15) // Margen interno (padding)
-        ));
+        b.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(COLOR_BORDE_GRIS),
+                BorderFactory.createEmptyBorder(8, 15, 8, 15)));
         return b;
     }
 
     private JPanel crearTarjeta(String titulo, String valor, Color colorValor) {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(Color.WHITE);
-        p.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(COLOR_BORDE_GRIS), // Marco de la tarjeta
-                new EmptyBorder(15, 15, 15, 15) // Espacio para que el texto no toque el marco
-        ));
-
+        p.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(COLOR_BORDE_GRIS),
+                new EmptyBorder(15, 15, 15, 15)));
         JLabel t = new JLabel(titulo);
-        t.setForeground(COLOR_TEXTO_SEC); // Título en gris
+        t.setForeground(COLOR_TEXTO_SEC);
         JLabel v = new JLabel(valor);
         v.setFont(new Font("Segoe UI", Font.BOLD, 24));
         v.setForeground(colorValor);
-
         p.add(t, BorderLayout.NORTH);
         p.add(v, BorderLayout.CENTER);
         return p;

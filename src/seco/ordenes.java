@@ -144,8 +144,15 @@ public class ordenes extends JPanel {
 
 		cambiarEstado.addActionListener(e -> {
 
-			CambiarEstadoOrden cambiarEstadoOrdenVentana = new CambiarEstadoOrden(this);
-			cambiarEstadoOrdenVentana.setVisible(true);
+			String idSeleccionado = null;
+			int filaSeleccionada = tabla.getSelectedRow();
+			if (filaSeleccionada == -1) {
+				javax.swing.JOptionPane.showMessageDialog(this, "Selecciona una orden para cambiar su estado");
+			} else {
+				idSeleccionado = (String) modelo.getValueAt(filaSeleccionada, 0);
+				CambiarEstadoOrden cambiarEstadoOrdenVentana = new CambiarEstadoOrden(this, idSeleccionado);
+				cambiarEstadoOrdenVentana.setVisible(true);
+			}
 
 		});
 

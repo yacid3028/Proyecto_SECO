@@ -154,7 +154,12 @@ public class productosDB {
             while (rs.next()) {
                 if (rs.getInt("Stock") < 8) {
                     String nombre = rs.getString("Nombre");
-                    updateAlert(nombre);
+                    String idP = rs.getString("id_Productos");
+                    updateAlert(nombre, idP);
+                } else {
+                    String idP = rs.getString("id_Productos");
+                    ConsultaIDalerta(idP);
+
                 }
 
             }
@@ -164,7 +169,37 @@ public class productosDB {
         }
     }
 
-    private void updateAlert(String nombre) {
+    private void ConsultaIDalerta(String idProducto) {
+        try (Connection con = conexionbd.conect();
+                Statement st = con.createStatement();
+                ResultSet rs = st.executeQuery("SELECT id_Alertas FROM Alertas WHERE Producto = '" + idProducto
+                        + "'")) {
+
+            if (rs.next()) {
+                String idA = rs.getString("id_Alertas");
+                statusAlert(idA, idProducto);
+            }
+        } catch (Exception e) {
+            System.out.println("Error al consultar ID de alerta de bajo stock");
+            e.printStackTrace();
+        }
+    }
+
+    private void statusAlert(String idAlerta, String idProducto) {
+        try (Connection con = conexionbd.conect();
+                Statement st = con.createStatement()) {
+
+            String sql = "UPDATE Alertas SET Estatus = true WHERE id_Alertas = '" + idAlerta + "' AND Producto = '"
+                    + idProducto + "'";
+            st.executeUpdate(sql); // Si ya existe una alerta para este producto, no hacemos nada
+
+        } catch (Exception e) {
+            System.out.println("Error al actualizar estatus de alerta de bajo stock");
+            e.printStackTrace();
+        }
+    }
+
+    private void updateAlert(String nombre, String idProducto) {
         try (Connection con = conexionbd.conect();
                 Statement st = con.createStatement()) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -175,6 +210,8 @@ public class productosDB {
                 String id = idAleratoria();
                 String sql = "INSERT INTO Alertas (id_Alertas,Producto, Nombre, Cantidad, Fecha, Estatus) VALUES ('"
                         + id
+                        + "', '"
+                        + idProducto
                         + "', '"
                         + nombre
                         + "', " + cantidad + ", '" + fechaActual + "', false) ";
