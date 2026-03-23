@@ -180,8 +180,8 @@ public class dashboard extends JPanel {
 		alertas.setBackground(Color.WHITE);
 		alertas.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-		JLabel alerta = new JLabel(" Alertas de Inventario");
-		alerta.setFont(new Font("Arial", Font.BOLD, 14));
+		JLabel alerta = new JLabel("\u26A0 Alertas de Inventario");
+		alerta.setFont(new Font("Segoe UI Emoji", Font.BOLD, 15));
 		JLabel info = new JLabel("Revisar productos en bajo stock");
 
 		alertas.add(alerta, BorderLayout.NORTH);
