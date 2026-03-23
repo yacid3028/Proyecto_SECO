@@ -8,7 +8,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import seco.fcdb.productosDB;
 import seco.fcdb.ventasDB;
 import seco.ventanas.ventanaFactura;
 
@@ -255,4 +254,7 @@ public class salidas extends JPanel {
                 break;
         }
     }
+
+    ImageIcon dashi = new ImageIcon("img/cajitafeli.png");
+		Icon dsh = new ImageIcon(dashi.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
 }
