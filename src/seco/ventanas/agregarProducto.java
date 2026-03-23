@@ -136,10 +136,4 @@ public class agregarProducto extends JFrame {
     public String crearRandom() {
         return "P" + (int) (Math.random() * 900000 + 100000);
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new agregarProducto().setVisible(true);
-        });
-    }
 }
