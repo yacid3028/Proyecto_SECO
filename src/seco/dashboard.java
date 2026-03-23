@@ -62,7 +62,7 @@ public class dashboard extends JPanel {
 		ImageIcon entrad = new ImageIcon("img/entradas_icon.png");
 		Icon etd = new ImageIcon(entrad.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
 
-			ImageIcon salids = new ImageIcon("img/guayaba.png");
+		ImageIcon salids = new ImageIcon("img/guayaba.png");
 		Icon slds = new ImageIcon(salids.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
 
 		ImageIcon ordns = new ImageIcon("img/camioncitorunrun.png");
@@ -73,7 +73,6 @@ public class dashboard extends JPanel {
 
 		ImageIcon provs = new ImageIcon("img/sexo.png");
 		Icon prvs = new ImageIcon(provs.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
-
 
 		ImageIcon prod = new ImageIcon("img/papaya.png");
 		Icon prd = new ImageIcon(prod.getImage().getScaledInstance(30, 25, Image.SCALE_SMOOTH));
@@ -209,32 +208,6 @@ public class dashboard extends JPanel {
 		bottom.add(reportes);
 		bottom.add(alertas);
 		p.add(bottom, BorderLayout.SOUTH);
-	}
-
-	private JPanel card(String titulo, String valor, String desc) {
-		JPanel card = new JPanel(new BorderLayout());
-		card.setBackground(Color.WHITE);
-		card.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(new Color(230, 230, 230), 1, true),
-				BorderFactory.createEmptyBorder(15, 20, 15, 20)));
-
-		JLabel t = new JLabel(titulo);
-		t.setForeground(new Color(120, 120, 120));
-		t.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-
-		JLabel v = new JLabel(valor);
-		v.setFont(new Font("Segoe UI", Font.BOLD, 28));
-		v.setForeground(fontColor);
-
-		JLabel d = new JLabel(desc);
-		d.setForeground(new Color(140, 140, 140));
-		d.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-
-		card.add(t, BorderLayout.NORTH);
-		card.add(v, BorderLayout.CENTER);
-		card.add(d, BorderLayout.SOUTH);
-
-		return card;
 	}
 
 	private JPanel panelGrafica() {
