@@ -2,6 +2,9 @@ package seco.ventanas;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import seco.reportes;
 
 public class Nuevo_Reporte extends JFrame {
@@ -44,7 +47,10 @@ public class Nuevo_Reporte extends JFrame {
         add(campoUsuario);
 
         add(new JLabel("Fecha:"));
+        String fechaActual = new SimpleDateFormat("dd/MM/yy").format(new Date());
         campoFecha = new JTextField();
+        campoFecha.setText(fechaActual);
+        campoFecha.setEditable(false);
         add(campoFecha);
 
         JButton guardar = new JButton("Guardar");
