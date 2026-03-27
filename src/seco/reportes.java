@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import seco.ventanas.Eliminar_Reportes;
+import seco.fcdb.dashboardDB;
 import seco.ventanas.Editar_Reportes;
 import seco.ventanas.Nuevo_Reporte;
 
@@ -114,9 +115,15 @@ public class reportes extends JPanel {
         JButton nuevo = new JButton("Nuevo Reporte");
         JButton editar = new JButton("Editar Reporte");
         JButton eliminar = new JButton("Eliminar Reporte");
-
+        dashboardDB dr = new dashboardDB();
         nuevo.addActionListener(e -> {
-            new Nuevo_Reporte(this).setVisible(true);
+            if (dr.consultarDiaIniciado()) {
+                new Nuevo_Reporte(this).setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "No se ha iniciado el día. Por favor, inicie el día desde el dashboard.", "Día no iniciado",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         editar.addActionListener(e -> {

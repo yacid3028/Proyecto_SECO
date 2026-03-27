@@ -169,6 +169,23 @@ public class dashboardDB {
 
     }
 
+    public boolean consultarDiaIniciado() {
+        Connection con = null;
+        try {
+            con = conexionbd.conect();
+            String selectSql = "SELECT Iniciado FROM Config";
+            PreparedStatement ps = con.prepareStatement(selectSql);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getBoolean("Iniciado");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false; // Retorna false si no se pudo consultar o si no está iniciado
+    }
+
     public void cerrarDia() {
         Connection con = null;
         try {

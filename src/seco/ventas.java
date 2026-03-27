@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -25,6 +26,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import seco.fcdb.dashboardDB;
 import seco.fcdb.salidasDB;
 
 public class ventas extends JPanel {
@@ -309,27 +311,34 @@ public class ventas extends JPanel {
 		cobrar.setBackground(new Color(255, 140, 0));
 		cobrar.setForeground(Color.WHITE);
 		cobrar.setFont(buttonFont);
+		dashboardDB dy = new dashboardDB();
 		cobrar.addActionListener(ActionListener -> {
-			salidasDB db = new salidasDB();
-			String idVenta = "V" + db.crearRandom();
-			String fact = db.facturacount();
-			String producto = "";
-			int cantidad = 0;
+			if (dy.consultarDiaIniciado()) {
+				salidasDB db = new salidasDB();
+				String idVenta = "V" + db.crearRandom();
+				String fact = db.facturacount();
+				String producto = "";
+				int cantidad = 0;
+				while (modelo.getRowCount() > 0) {
+					producto = (String) modelo.getValueAt(0, 1);
+					String cant = (String) modelo.getValueAt(0, 2);
+					cantidad = Integer.parseInt(cant.replace("$", "").trim());
+					double subtotal = Double.parseDouble(((String) modelo.getValueAt(0, 4)).replace("$ ", ""));
+					double total = Double.parseDouble(totalValor.getText().replace("$ ", ""));
+					modelo.removeRow(0);
+					db.registrarVenta(idVenta, fechaActual, producto, cantidad, subtotal, total, fact);
 
-			while (modelo.getRowCount() > 0) {
-				producto = (String) modelo.getValueAt(0, 1);
-				String cant = (String) modelo.getValueAt(0, 2);
-				cantidad = Integer.parseInt(cant.replace("$", "").trim());
-				double subtotal = Double.parseDouble(((String) modelo.getValueAt(0, 4)).replace("$ ", ""));
-				double total = Double.parseDouble(totalValor.getText().replace("$ ", ""));
-				modelo.removeRow(0);
-				db.registrarVenta(idVenta, fechaActual, producto, cantidad, subtotal, total, fact);
+				}
 
+				subtotalValor.setText("$ ");
+				impuestoValor.setText("$ ");
+				totalValor.setText("$ ");
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"No se ha iniciado el día. Por favor, inicie el día desde el dashboard.", "Día no iniciado",
+						JOptionPane.WARNING_MESSAGE);
 			}
 
-			subtotalValor.setText("$ ");
-			impuestoValor.setText("$ ");
-			totalValor.setText("$ ");
 		});
 
 		botones.add(cancelar);

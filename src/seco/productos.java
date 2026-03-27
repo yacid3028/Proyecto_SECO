@@ -11,6 +11,7 @@ import java.awt.Image;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import seco.fcdb.dashboardDB;
 import seco.fcdb.productosDB;
 import seco.ventanas.agregarProducto;
 import seco.ventanas.prodcutodeditar;
@@ -131,9 +132,16 @@ public class productos extends JPanel {
         JPanel botonesPanel = new JPanel();
 
         JButton agregar = new JButton("Agregar Producto");
+        dashboardDB dr = new dashboardDB();
         agregar.addActionListener(e -> {
-            agregarProducto ventana = new agregarProducto();
-            ventana.setVisible(true);
+            if (dr.consultarDiaIniciado()) {
+                agregarProducto ventana = new agregarProducto();
+                ventana.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "No se ha iniciado el día. Por favor, inicie el día desde el dashboard.", "Día no iniciado",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         agregar.setBackground(new Color(255, 140, 0));

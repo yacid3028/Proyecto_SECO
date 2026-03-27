@@ -24,6 +24,7 @@ import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
+import seco.fcdb.dashboardDB;
 import seco.fcdb.provedoresDB;
 
 import java.awt.FlowLayout;
@@ -164,9 +165,15 @@ public class provedores extends JPanel {
 		JButton nuevoProveedor = new JButton("Nuevo Proveedor");
 		nuevoProveedor.setBackground(new Color(255, 140, 0));
 		nuevoProveedor.setForeground(Color.WHITE);
-
+		dashboardDB dr = new dashboardDB();
 		nuevoProveedor.addActionListener(e -> {
-			new ProvedoresAgregar(this).setVisible(true);
+			if (dr.consultarDiaIniciado()) {
+				new ProvedoresAgregar(this).setVisible(true);
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"No se ha iniciado el día. Por favor, inicie el día desde el dashboard.", "Día no iniciado",
+						JOptionPane.WARNING_MESSAGE);
+			}
 		});
 
 		editar.addActionListener(e -> {

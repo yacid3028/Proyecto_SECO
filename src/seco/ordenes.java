@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import seco.ventanas.NuevaOrden;
 import seco.ventanas.EliminarOrden;
+import seco.fcdb.dashboardDB;
 import seco.fcdb.ordenesDB;
 import seco.ventanas.CambiarEstadoOrden;
 
@@ -16,6 +17,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -123,6 +125,7 @@ public class ordenes extends JPanel {
 		panelTop.add(titulo, BorderLayout.WEST);
 
 		JPanel botonesTop = new JPanel();
+		dashboardDB dr = new dashboardDB();
 
 		JButton nuevaOrden = new JButton("Nueva orden");
 		nuevaOrden.setBackground(new Color(255, 140, 0));
@@ -132,7 +135,14 @@ public class ordenes extends JPanel {
 				BorderFactory.createEmptyBorder(8, 15, 8, 15)));
 
 		nuevaOrden.addActionListener(e -> {
-			new NuevaOrden(this).setVisible(true);
+			if (dr.consultarDiaIniciado()) {
+				new NuevaOrden(this).setVisible(true);
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"No se ha iniciado el día. Por favor, inicie el día desde el dashboard.", "Día no iniciado",
+						JOptionPane.WARNING_MESSAGE);
+			}
+
 		});
 
 		JButton cambiarEstado = new JButton("Cambiar estado");

@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import seco.fcdb.dashboardDB;
+
 public class entradas extends JPanel {
 
     private executable executable;
@@ -122,7 +124,16 @@ public class entradas extends JPanel {
 
         btnEditar.addActionListener(e -> mostrarDialogoEntrada(true));
         btnEliminar.addActionListener(e -> eliminarEntradaSeleccionada());
-        btnNueva.addActionListener(e -> mostrarDialogoEntrada(false));
+        dashboardDB dr = new dashboardDB();
+        btnNueva.addActionListener(e -> {
+            if (dr.consultarDiaIniciado()) {
+                mostrarDialogoEntrada(false);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "No se ha iniciado el día. Por favor, inicie el día desde el dashboard.", "Día no iniciado",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        });
 
         btnNueva.setBackground(COLOR_NARANJA);
         btnNueva.setForeground(Color.WHITE);
