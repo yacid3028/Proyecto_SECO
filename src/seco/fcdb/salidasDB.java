@@ -125,7 +125,8 @@ public class salidasDB {
         int semana = 0;
 
         if (!descontarStock(producto, cantidad)) {
-            JOptionPane.showMessageDialog(null, "⚠️ La venta se registró pero no se pudo descontar el stock.");
+            JOptionPane.showMessageDialog(null, "La venta NO se registró por falta de stock.", "Error de Stock",
+                    JOptionPane.ERROR_MESSAGE);
         } else {
 
             try {

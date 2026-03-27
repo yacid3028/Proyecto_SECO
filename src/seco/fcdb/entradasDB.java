@@ -16,9 +16,6 @@ public class entradasDB {
         return "A" + numero;
     }
 
-    // ==========================================
-    // AQUÍ ESTÁ EL MÉTODO BASADO EN TU CÓDIGO
-    // ==========================================
     public ResultSet obtenerProvedores() {
         Connection con = conexionbd.conect();
         String sql = "SELECT Empresa FROM Provedores";
@@ -71,13 +68,27 @@ public class entradasDB {
             ps.setString(3, proveedor);
             ps.setString(4, String.valueOf(cantidad));
             ps.setString(5, fecha);
-
+            añadirProducto(producto, cantidad);
             int res = ps.executeUpdate();
             con.close();
             return res > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    private void añadirProducto(String producto, int cantidad) {
+        try {
+            Connection con = conexionbd.conect();
+            String sql = "UPDATE Productos SET Stock = Stock + ? WHERE Nombre = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, cantidad);
+            ps.setString(2, producto);
+            ps.executeUpdate();
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -146,6 +157,18 @@ public class entradasDB {
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+
+    public ResultSet obtenerProductos() {
+        try {
+            Connection con = conexionbd.conect();
+            String sql = "SELECT Nombre FROM Productos";
+            Statement stmt = con.createStatement();
+            return stmt.executeQuery(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

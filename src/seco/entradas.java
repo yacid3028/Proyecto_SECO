@@ -262,7 +262,18 @@ public class entradas extends JPanel {
         JPanel form = new JPanel(new GridLayout(0, 2, 10, 10));
         form.setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        JTextField tfProducto = new JTextField(producto);
+        JComboBox<String> cbProducto = new JComboBox<>();
+        try {
+            ResultSet rs = db.obtenerProductos();
+            if (rs != null) {
+                while (rs.next()) {
+                    cbProducto.addItem(rs.getString("Nombre"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al cargar productos");
+        }
 
         // --- AQUÍ APLICAMOS TU CÓDIGO ---
         JComboBox<String> cbProveedor = new JComboBox<>();
@@ -287,7 +298,7 @@ public class entradas extends JPanel {
         JSpinner spCantidad = new JSpinner(new SpinnerNumberModel(cantidad, 1, 9999, 1));
 
         form.add(new JLabel("Producto:"));
-        form.add(tfProducto);
+        form.add(cbProducto);
         form.add(new JLabel("Proveedor:"));
         form.add(cbProveedor); // Añadimos el desplegable
         form.add(new JLabel("Cantidad:"));
@@ -302,10 +313,11 @@ public class entradas extends JPanel {
                         : "";
 
                 if (esEdicion) {
-                    db.actualizarEntrada(idSeleccionado[0], tfProducto.getText(), provSeleccionado,
+                    db.actualizarEntrada(idSeleccionado[0], cbProducto.getSelectedItem().toString(), provSeleccionado,
                             (int) spCantidad.getValue());
                 } else {
-                    db.agregarEntrada(tfProducto.getText(), provSeleccionado, (int) spCantidad.getValue());
+                    db.agregarEntrada(cbProducto.getSelectedItem().toString(), provSeleccionado,
+                            (int) spCantidad.getValue());
                 }
                 cargarEntradas();
                 dialog.dispose();
@@ -320,9 +332,6 @@ public class entradas extends JPanel {
 
     }
 
-    // ==========================================
-    // AQUÍ ELIMINAR
-    // ==========================================
     private void eliminarEntradaSeleccionada() {
         int fila = tabla.getSelectedRow();
 
