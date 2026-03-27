@@ -108,6 +108,7 @@ public class reportes extends JPanel {
 
         JLabel titulo = new JLabel("Reportes");
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
+        titulo.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0)); // ← AQUÍ el espacio
         panelSuperior.add(titulo, BorderLayout.WEST);
 
         JPanel botones = new JPanel();

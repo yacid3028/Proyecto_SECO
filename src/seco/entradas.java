@@ -239,7 +239,7 @@ public class entradas extends JPanel {
         String titulo = esEdicion ? "Editar Entrada" : "Nueva Entrada";
         String botonTexto = esEdicion ? "Guardar" : "Agregar";
         final String[] idSeleccionado = new String[] { "" };
-        String producto = "", proveedor = "";
+        String proveedor = "", producto = "";
         int cantidad = 1;
 
         if (esEdicion) {

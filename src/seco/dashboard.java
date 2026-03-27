@@ -11,6 +11,8 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import seco.fcdb.dashboardDB;
@@ -20,6 +22,7 @@ public class dashboard extends JPanel {
 	Color fontColor = new Color(9, 8, 48);
 	// Variable para guardar los datos de la gráfica
 	private int[] valoresGrafica;
+	private String[] nombresGrafica;
 
 	public dashboard(executable frame) {
 		this.executable = frame;
@@ -29,6 +32,7 @@ public class dashboard extends JPanel {
 		// Cargamos los datos de la base de datos al iniciar
 		dashboardDB db = new dashboardDB();
 		this.valoresGrafica = db.obtenerTop9ProductosVendidos();
+		this.nombresGrafica = db.obtenerNombresTop9ProductosVendidos();
 
 		Cont_central();
 		Menu_lateral();
@@ -108,6 +112,7 @@ public class dashboard extends JPanel {
 
 		JLabel titulo = new JLabel("Dashboard");
 		titulo.setFont(new Font("Arial", Font.BOLD, 20));
+		titulo.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
 		titulo.setForeground(fontColor);
 		logoPanel.add(titulo, BorderLayout.WEST);
 
@@ -236,13 +241,57 @@ public class dashboard extends JPanel {
 						new Color(192, 57, 43), new Color(44, 62, 80), new Color(149, 165, 166)
 				};
 
-				int x = 20;
-				if (valoresGrafica != null) {
+				int baseY = getHeight() - 40; // base de la gráfica
+				int x = 60; // dejamos espacio para números del eje Y
+
+				// 🔹 Dibujar eje Y (números laterales)
+				g2.setColor(Color.GRAY);
+				int alturaMax = getHeight() - 80; // espacio disponible real
+
+				int max = 0;
+				for (int v : valoresGrafica) {
+					if (v > max)
+						max = v;
+				}
+
+				// evitar división entre 0
+				if (max == 0)
+					max = 1;
+
+				int pasos = 5; // cantidad de divisiones
+				for (int i = 0; i <= pasos; i++) {
+					int valor = (max * i) / pasos;
+					int y = baseY - (valor * alturaMax / max);
+
+					g2.drawString(String.valueOf(valor), 10, y); // números lado izquierdo
+					g2.drawLine(50, y, getWidth(), y); // línea horizontal guía (opcional)
+				}
+
+				// 🔹 Dibujar barras + nombres
+				if (valoresGrafica != null && nombresGrafica != null) {
 					for (int i = 0; i < valoresGrafica.length; i++) {
+
+						int altura = (valoresGrafica[i] * alturaMax) / max;
+
+						// barra
 						g2.setColor(colores[i % colores.length]);
-						// Ajustamos la altura para que no se salga del panel
-						int altura = Math.min(getHeight() - 40, valoresGrafica[i] * 5);
-						g2.fillRoundRect(x, getHeight() - altura - 10, 30, altura, 10, 10);
+						g2.fillRoundRect(x, baseY - altura, 30, altura, 10, 10);
+
+						// nombre abajo
+						g2.setColor(Color.BLACK);
+						String nombre = nombresGrafica[i];
+
+						// Guardar estado
+						AffineTransform original = g2.getTransform();
+
+						// Rotar
+						g2.rotate(-Math.PI / 4, x, baseY + 15); // -45 grados
+
+						g2.drawString(nombre, x, baseY + 15);
+
+						// Restaurar
+						g2.setTransform(original);
+
 						x += 45;
 					}
 				}

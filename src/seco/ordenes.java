@@ -122,6 +122,7 @@ public class ordenes extends JPanel {
 
 		JLabel titulo = new JLabel("Órdenes");
 		titulo.setFont(new Font("Arial", Font.BOLD, 22));
+		titulo.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
 		panelTop.add(titulo, BorderLayout.WEST);
 
 		JPanel botonesTop = new JPanel();

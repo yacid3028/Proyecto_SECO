@@ -1,7 +1,6 @@
 package seco.fcdb;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -20,49 +19,64 @@ public class dashboardDB {
     private int contadorMas = 0;
     private int contadorHig = 0;
 
+    public String[] obtenerNombresTop9ProductosVendidos() {
+
+        String[] resultado = new String[9];
+
+        try (Connection con = conexionbd.conect();
+                PreparedStatement ps = con.prepareStatement(
+                        "SELECT Producto, SUM(Cantidad) as total " +
+                                "FROM Salidas WHERE Semana = ? " +
+                                "GROUP BY Producto ORDER BY total DESC LIMIT 9")) {
+
+            ps.setInt(1, conaultaSem());
+
+            ResultSet rs = ps.executeQuery();
+
+            int i = 0;
+            while (rs.next() && i < 9) {
+                resultado[i] = rs.getString("Producto");
+                i++;
+            }
+
+            // llenar vacíos si hay menos de 9
+            while (i < 9) {
+                resultado[i] = "";
+                i++;
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "No se pudieron cargar los productos más vendidos.");
+        }
+
+        return resultado;
+    }
+
     public int[] obtenerTop9ProductosVendidos() {
-        ArrayList<String> nombres = new ArrayList<>();
-        ArrayList<Integer> totales = new ArrayList<>();
         int[] resultado = new int[9];
 
         try (Connection con = conexionbd.conect();
-                Statement st = con.createStatement();
-                ResultSet rs = st.executeQuery("SELECT Producto, Cantidad FROM Salidas")) {
+                PreparedStatement ps = con.prepareStatement(
+                        "SELECT Producto, SUM(Cantidad) as total " +
+                                "FROM Salidas WHERE Semana = ? " +
+                                "GROUP BY Producto ORDER BY total DESC LIMIT 9")) {
 
-            while (rs.next()) {
-                String prod = rs.getString("Producto");
-                int cant = rs.getInt("Cantidad");
+            ps.setInt(1, conaultaSem());
 
-                int index = nombres.indexOf(prod);
-                if (index != -1) {
-                    totales.set(index, totales.get(index) + cant);
-                } else {
-                    nombres.add(prod);
-                    totales.add(cant);
-                }
+            ResultSet rs = ps.executeQuery();
+
+            int i = 0;
+            while (rs.next() && i < 9) {
+                resultado[i] = rs.getInt("total");
+                i++;
             }
 
-            for (int i = 0; i < 9; i++) {
-                if (totales.isEmpty()) {
-                    resultado[i] = 0;
-                } else {
-                    int maxVal = -1;
-                    int maxIdx = -1;
-
-                    for (int j = 0; j < totales.size(); j++) {
-                        if (totales.get(j) > maxVal) {
-                            maxVal = totales.get(j);
-                            maxIdx = j;
-                        }
-                    }
-
-                    if (maxIdx != -1) {
-                        resultado[i] = maxVal;
-                        totales.remove(maxIdx);
-                        nombres.remove(maxIdx);
-                    }
-                }
+            // llenar con 0 si faltan datos
+            while (i < 9) {
+                resultado[i] = 0;
+                i++;
             }
+
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "No se pudieron cargar los productos más vendidos.");
         }
